@@ -15,13 +15,6 @@ public class NetworkSimulator {
 
     private int curRound;
 
-    @Builder
-    @Getter
-    public class Task {
-        private final Player targetPlayer;
-        private final Message message;
-    }
-
     private final Map<Integer, Queue<Task>> messageQueue;
 
     public NetworkSimulator() {
@@ -34,7 +27,7 @@ public class NetworkSimulator {
      * If there are messages scheduled for current round, then pop all of them and send them to the player
      * @param round
      */
-    public void UpdateRound(int round) {
+    public void endRound(int round) {
         curRound = round;
         if (messageQueue.containsKey(curRound)) {
             final Queue<Task> q = messageQueue.remove(curRound);

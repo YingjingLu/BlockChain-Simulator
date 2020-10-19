@@ -19,7 +19,7 @@ public class CryptographyAuthenticator {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(message.getRound().toString());
         stringBuilder.append(SPLITTER);
-        stringBuilder.append(message.getMessage());
+        stringBuilder.append(message.messageToString());
         stringBuilder.append(SPLITTER);
         stringBuilder.append(message.getFromPlayerId().toString());
         stringBuilder.append(SPLITTER);
