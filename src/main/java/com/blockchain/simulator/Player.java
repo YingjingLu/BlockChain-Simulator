@@ -10,4 +10,8 @@ public abstract class Player {
 
     public abstract void receiveMessage(final Message message, int round);
 
+    public int getId() {
+        return this.id;
+    }
+
 }

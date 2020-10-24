@@ -1,0 +1,16 @@
+com\blockchain\simulator\DolevStrongRoundSimulator.class
+com\blockchain\simulator\Message.class
+com\blockchain\simulator\DolevStrongCorruptPlayerController.class
+com\blockchain\simulator\Player.class
+com\blockchain\simulator\DolevStrongHonestPlayerController.class
+com\blockchain\simulator\DolevStrongMessage.class
+com\blockchain\simulator\NetworkSimulator.class
+com\blockchain\simulator\DolevStrongPlayer.class
+com\blockchain\simulator\Message$1.class
+com\blockchain\simulator\RoundSimulator.class
+com\blockchain\simulator\PlayerController.class
+com\blockchain\simulator\Task.class
+com\blockchain\simulator\Bit.class
+com\blockchain\simulator\CryptographyAuthenticator.class
+com\blockchain\simulator\App.class
+com\blockchain\simulator\DolevStrongConfig.class

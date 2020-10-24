@@ -6,23 +6,26 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
     // total number of rounds to simulate
     // -1 if runs until terminating condition
     public final int totalRounds;
+    private final DolevStrongConfig config;
 
     DolevStrongCorruptPlayerController corruptPlayerController;
     DolevStrongHonestPlayerController honestPlayerController;
 
-    public DolevStrongRoundSimulator(
-            final int totalRounds,
-            final int totalPlayer,
-            final int corruptPlayer) {
-        this.totalRounds = totalRounds;
+    public DolevStrongRoundSimulator( DolevStrongConfig configuration) {
+        this.totalRounds = configuration.round;
+        this.config = configuration;
+        final int totalPlayer = configuration.numTotalPlayer;
+        final int corruptPlayer = configuration.numCorruptPlayer;
 
         corruptPlayerController = new DolevStrongCorruptPlayerController(
                 networkSimulator,
+                authenticator,
                 honestPlayerMap,
                 corruptPlayerMap
         );
         honestPlayerController = new DolevStrongHonestPlayerController(
                 networkSimulator,
+                authenticator,
                 honestPlayerMap,
                 corruptPlayerMap
         );
@@ -39,35 +42,44 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
 
     public int run() {
         int curRound = 0;
-        final int sender = 0;
-        final Bit initialBit = Bit.ONE;
+        final int sender = config.senderId;
+        final Bit initialBit = config.inputBit;
         List<Bit> initialArray = new LinkedList<Bit>();
         initialArray.add(initialBit);
         final DolevStrongMessage initialMessage = new DolevStrongMessage(0, initialArray, -1, sender);
-        corruptPlayerController.updateRound(0);
-        honestPlayerController.updateRound(0);
+        corruptPlayerController.beginRound(0);
+        honestPlayerController.beginRound(0);
         // give input to the player
         // start round 0
         // sender sends message to other players
         giveMessageToPlayer(sender, initialMessage, curRound);
         if (isPlayerHonest(sender)) {
-            honestPlayerController.playerSendMessageToOtherPlayers(curRound);
+            honestPlayerController.sendInitialBitToOtherPlayersViaNetwork(sender);
         } else {
-            corruptPlayerController.playerSendMessageToOtherPlayers(curRound);
+            corruptPlayerController.sendInitialBitToOtherPlayersViaNetwork(sender);
         }
+        networkSimulator.beginRound(curRound);
+        honestPlayerController.endRoundForPlayers(curRound);
+        corruptPlayerController.endRoundForPlayers(curRound);
 
         for (int round = 1; round < totalRounds; round ++) {
-            honestPlayerController.sendMessagesToOtherPlayersViaNetwork(curRound);
-            corruptPlayerController.sendMessagesToOtherPlayersViaNetwork(curRound);
-            networkSimulator.endRound(curRound);
-            honestPlayerController.endRoundForPlayers(curRound);
-            corruptPlayerController.endRoundForPlayers(curRound);
+            networkSimulator.beginRound(round);
+            honestPlayerController.beginRound(round);
+            corruptPlayerController.beginRound(round);
+            honestPlayerController.sendMessagesToOtherPlayersViaNetwork(round);
+            corruptPlayerController.sendMessagesToOtherPlayersViaNetwork(round);
+            honestPlayerController.endRoundForPlayers(round);
+            corruptPlayerController.endRoundForPlayers(round);
         }
 
         // the end of last round
         // every player reach an output
+        networkSimulator.beginRound(totalRounds);
+        honestPlayerController.endRoundForPlayers(totalRounds);
+        corruptPlayerController.endRoundForPlayers(totalRounds);
         honestPlayerController.createOutputForEveryPlayer(totalRounds);
         corruptPlayerController.createOutputForEveryPlayer(totalRounds);
+        honestPlayerController.printOutput();
         return 1;
     }
 

@@ -1,9 +1,5 @@
 package com.blockchain.simulator;
 
-import lombok.Builder;
-import lombok.Setter;
-import lombok.Getter;
-
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
@@ -27,7 +23,7 @@ public class NetworkSimulator {
      * If there are messages scheduled for current round, then pop all of them and send them to the player
      * @param round
      */
-    public void endRound(int round) {
+    public void beginRound(int round) {
         curRound = round;
         if (messageQueue.containsKey(curRound)) {
             final Queue<Task> q = messageQueue.remove(curRound);
@@ -50,10 +46,11 @@ public class NetworkSimulator {
         }
         final int targetRound = curRound + delay;
         if (!messageQueue.containsKey(targetRound)) {
-            messageQueue.put(targetRound, new LinkedList<>());
+            messageQueue.put(targetRound, new LinkedList<Task>());
         }
-        Task task = Task.builder().targetPlayer(player).message(message).build();
+        Task task = new Task(player, message);
         messageQueue.get(targetRound).add(task);
+        System.out.println("Round " + message.getRound() + "From Player " + message.getFromPlayerId() + " To Player " + message.getToPlayerId() + "Bit" + message.getMessage().get(0).toString() );
     }
 
 }

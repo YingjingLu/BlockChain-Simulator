@@ -1,0 +1,10 @@
+{
+    "protocol": "dolev_strong",
+    "dolev_strong_config": {
+        "round": 2,
+        "num_corrupt_player": 2,
+        "num_total_player": 4,
+        "sender": 3,
+        "initial_bit": 1
+    }
+}

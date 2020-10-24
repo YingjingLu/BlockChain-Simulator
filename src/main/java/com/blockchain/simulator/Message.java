@@ -1,23 +1,22 @@
 package com.blockchain.simulator;
-import lombok.Getter;
-import lombok.Setter;
+
+import java.util.LinkedList;
 import java.util.List;
 import java.lang.StringBuilder;
 
-@Getter
 public abstract class Message {
-    @Setter protected String signature;
-    @Setter int round;
-    protected final List<Bit> message;
-    protected final int fromPlayerId;
-    protected final int toPlayerId;
+    protected List<String> signatures;
+    int round;
+    protected List<Bit> message;
+    protected int fromPlayerId;
+    protected int toPlayerId;
 
     public Message(final int inRound, final List<Bit> inMessage, final int inFromPlayerId, final int inToPlayerId) {
         round = inRound;
         message = inMessage;
         fromPlayerId = inFromPlayerId;
         toPlayerId = inToPlayerId;
-        signature = "";
+        signatures = new LinkedList<>();
     }
 
     public abstract Message deepCopy();
@@ -41,5 +40,43 @@ public abstract class Message {
             }
         }
         return builder.toString();
+    }
+
+    public void addSignature(final String signature) {
+        this.signatures.add(signature);
+    }
+
+
+
+    public void setRound(final int round) {
+        this.round = round;
+    }
+
+    public void setFromPlayerId(final int id) {
+        this.fromPlayerId = id;
+    }
+
+    public void setToPlayerId(final int id) {
+        this.toPlayerId = id;
+    }
+
+    public int getRound() {
+        return this.round;
+    }
+
+    public int getFromPlayerId() {
+        return this.fromPlayerId;
+    }
+
+    public int getToPlayerId() {
+        return this.toPlayerId;
+    }
+
+    public List<Bit> getMessage() {
+        return this.message;
+    }
+
+    public List<String> getSignatures() {
+        return signatures;
     }
 }

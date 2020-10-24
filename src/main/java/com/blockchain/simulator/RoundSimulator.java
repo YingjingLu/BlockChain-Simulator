@@ -10,6 +10,8 @@ public abstract class RoundSimulator {
     public final Map<Integer, Player> corruptPlayerMap = new HashMap<>();
     public final NetworkSimulator networkSimulator = new NetworkSimulator();
 
+    public final CryptographyAuthenticator authenticator = new CryptographyAuthenticator();
+
     public abstract int run();
 
     public boolean isPlayerHonest(final int playerId) {
