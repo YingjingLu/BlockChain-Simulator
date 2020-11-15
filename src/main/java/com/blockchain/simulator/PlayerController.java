@@ -21,8 +21,4 @@ public abstract class PlayerController {
         this.authenticator = authenticator;
         curRound = 0;
     }
-
-    public abstract void sendMessagesToOtherPlayersViaNetwork(final int round);
-
-    public abstract void endRoundForPlayers(final int round);
 }

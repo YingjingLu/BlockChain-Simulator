@@ -3,10 +3,12 @@ package com.blockchain.simulator;
 public class Task {
     private final Player targetPlayer;
     private final Message message;
+    private final int delay;
 
-    public Task(final Player targetPlayer, final Message message) {
+    public Task(final Player targetPlayer, final Message message, final int delay) {
         this.targetPlayer = targetPlayer;
         this.message = message;
+        this.delay = delay;
     }
 
     public Player getTargetPlayer() {
@@ -15,5 +17,8 @@ public class Task {
 
     public Message getMessage() {
         return message;
+    }
+    public int getDelay() {
+        return delay;
     }
 }

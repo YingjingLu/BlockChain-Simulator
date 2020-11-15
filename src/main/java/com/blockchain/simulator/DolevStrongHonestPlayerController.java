@@ -1,7 +1,6 @@
 package com.blockchain.simulator;
 
 import java.util.Map;
-import java.util.HashMap;
 
 public class DolevStrongHonestPlayerController extends PlayerController{
 
@@ -41,7 +40,7 @@ public class DolevStrongHonestPlayerController extends PlayerController{
             final DolevStrongMessage newMessage = (DolevStrongMessage) receivedMessage.deepCopy();
             newMessage.setFromPlayerId(sender.getId());
             newMessage.setToPlayerId(destPlayer.getId());
-            authenticator.fAuth(newMessage);
+            authenticator.dolevStrongFAuth(newMessage);
             networkSimulator.sendMessage(destPlayer, newMessage, 0);
         }
 
@@ -50,7 +49,7 @@ public class DolevStrongHonestPlayerController extends PlayerController{
             final DolevStrongMessage newMessage = DolevStrongMessage.CreateMessageFromBit(
                     0, messageBit, sender.getId(), destPlayer.getId()
             );
-            authenticator.fAuth(newMessage);
+            authenticator.dolevStrongFAuth(newMessage);
             networkSimulator.sendMessage(destPlayer, newMessage, 0);
         }
     }
@@ -73,7 +72,7 @@ public class DolevStrongHonestPlayerController extends PlayerController{
                     destMessage.setRound(round);
                     destMessage.setFromPlayerId(honestPlayer.getId());
                     destMessage.setToPlayerId(destPlayer.getId());
-                    authenticator.fAuth(destMessage);
+                    authenticator.dolevStrongFAuth(destMessage);
                     networkSimulator.sendMessage(destPlayer, destMessage, 1);
                 }
 
@@ -83,7 +82,7 @@ public class DolevStrongHonestPlayerController extends PlayerController{
                     destMessage.setRound(round);
                     destMessage.setFromPlayerId(honestPlayer.getId());
                     destMessage.setToPlayerId(destPlayer.getId());
-                    authenticator.fAuth(destMessage);
+                    authenticator.dolevStrongFAuth(destMessage);
                     networkSimulator.sendMessage(destPlayer, destMessage, 1);
                 }
             }

@@ -31,17 +31,13 @@ public class DolevStrongCorruptPlayerController extends PlayerController{
         assert sender.curRoundMessages.size() == 1 : "Sender should receive an initial bit of 1";
         DolevStrongMessage receivedMessage = sender.curRoundMessages.get(0);
         Bit receivedBit = sender.curRoundMessages.get(0).getMessage().get(0);
-        if (receivedBit == Bit.ZERO) {
-            negatedBit = Bit.ONE;
-        } else {
-            negatedBit = Bit.ZERO;
-        }
+        negatedBit = receivedBit.negateBit();
         for (Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
             final DolevStrongPlayer destPlayer = (DolevStrongPlayer) entry.getValue();
             final DolevStrongMessage newMessage = DolevStrongMessage.CreateMessageFromBit(
                     0, negatedBit, sender.getId(), destPlayer.getId()
             );
-            authenticator.fAuth(newMessage);
+            authenticator.dolevStrongFAuth(newMessage);
             networkSimulator.sendMessage(destPlayer, newMessage, 0);
         }
         final int honestPlayerCount = honestPlayerMap.size();
@@ -60,7 +56,7 @@ public class DolevStrongCorruptPlayerController extends PlayerController{
                 );
             }
             cur ++;
-            authenticator.fAuth(newMessage);
+            authenticator.dolevStrongFAuth(newMessage);
             networkSimulator.sendMessage(destPlayer, newMessage, 0);
         }
 
@@ -86,7 +82,7 @@ public class DolevStrongCorruptPlayerController extends PlayerController{
                         destMessage.setRound(round);
                         destMessage.setFromPlayerId(corruptPlayer.getId());
                         destMessage.setToPlayerId(destPlayer.getId());
-                        authenticator.fAuth(destMessage);
+                        authenticator.dolevStrongFAuth(destMessage);
                         networkSimulator.sendMessage(destPlayer, destMessage, 1);
                     }
 
@@ -96,7 +92,7 @@ public class DolevStrongCorruptPlayerController extends PlayerController{
                         destMessage.setRound(round);
                         destMessage.setFromPlayerId(corruptPlayer.getId());
                         destMessage.setToPlayerId(destPlayer.getId());
-                        authenticator.fAuth(destMessage);
+                        authenticator.dolevStrongFAuth(destMessage);
                         networkSimulator.sendMessage(destPlayer, destMessage, 1);
                     }
                 }

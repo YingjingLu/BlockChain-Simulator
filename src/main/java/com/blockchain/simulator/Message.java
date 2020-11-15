@@ -42,6 +42,22 @@ public abstract class Message {
         return builder.toString();
     }
 
+    public static List<Bit> stringToBitMessage(String str) {
+        List<Bit> res = new LinkedList<Bit>();
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == '2') {
+                res.add(Bit.FLOOR);
+            } else if (str.charAt(i) == '1') {
+                res.add(Bit.ONE);
+            } else if (str.charAt((i)) == '0') {
+                res.add(Bit.ZERO);
+            } else {
+                assert false : "Given string should be valid bit values";
+            }
+        }
+        return res;
+    }
+
     public void addSignature(final String signature) {
         this.signatures.add(signature);
     }

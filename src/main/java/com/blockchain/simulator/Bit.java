@@ -13,4 +13,14 @@ public enum Bit {
     public String toString() {
         return this.name;
     }
+
+    public Bit negateBit() {
+        if (this.name.equals("0")) {
+            return Bit.ONE;
+        } else if (this.name.equals("1")) {
+            return Bit.ZERO;
+        } else {
+            return Bit.FLOOR;
+        }
+    }
 }

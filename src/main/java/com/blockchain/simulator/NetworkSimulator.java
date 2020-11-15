@@ -41,16 +41,20 @@ public class NetworkSimulator {
      * @param delay the number of rounds that delays the message
      */
     public void sendMessage(Player player, final Message message, final int delay) {
-        if (delay == INFINITE_ROUND) {
+        Task task = new Task(player, message, delay);
+        addTaskToNetworkQueue(curRound, task);
+        System.out.println("Round " + message.getRound() + "From Player " + message.getFromPlayerId() + " To Player " + message.getToPlayerId() + "Bit" + message.getMessage().get(0).toString() );
+    }
+
+    public void addTaskToNetworkQueue(final int curRound, final Task task) {
+        if (task.getDelay() == INFINITE_ROUND) {
             return;
         }
-        final int targetRound = curRound + delay;
+        final int targetRound = curRound + task.getDelay();
         if (!messageQueue.containsKey(targetRound)) {
             messageQueue.put(targetRound, new LinkedList<Task>());
         }
-        Task task = new Task(player, message);
         messageQueue.get(targetRound).add(task);
-        System.out.println("Round " + message.getRound() + "From Player " + message.getFromPlayerId() + " To Player " + message.getToPlayerId() + "Bit" + message.getMessage().get(0).toString() );
     }
 
 }

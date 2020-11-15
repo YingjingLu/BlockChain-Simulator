@@ -41,7 +41,7 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
     }
 
     public int run() {
-        int curRound = 0;
+        int initialRound = 0;
         final int sender = config.senderId;
         final Bit initialBit = config.inputBit;
         List<Bit> initialArray = new LinkedList<Bit>();
@@ -52,15 +52,15 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
         // give input to the player
         // start round 0
         // sender sends message to other players
-        giveMessageToPlayer(sender, initialMessage, curRound);
+        giveMessageToPlayer(sender, initialMessage, initialRound);
         if (isPlayerHonest(sender)) {
             honestPlayerController.sendInitialBitToOtherPlayersViaNetwork(sender);
         } else {
             corruptPlayerController.sendInitialBitToOtherPlayersViaNetwork(sender);
         }
-        networkSimulator.beginRound(curRound);
-        honestPlayerController.endRoundForPlayers(curRound);
-        corruptPlayerController.endRoundForPlayers(curRound);
+        networkSimulator.beginRound(initialRound);
+        honestPlayerController.endRoundForPlayers(initialRound);
+        corruptPlayerController.endRoundForPlayers(initialRound);
 
         for (int round = 1; round < totalRounds; round ++) {
             networkSimulator.beginRound(round);
