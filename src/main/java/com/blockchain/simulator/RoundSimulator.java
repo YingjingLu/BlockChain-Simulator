@@ -12,8 +12,6 @@ public abstract class RoundSimulator {
 
     public final CryptographyAuthenticator authenticator = new CryptographyAuthenticator();
 
-    public abstract int run();
-
     public boolean isPlayerHonest(final int playerId) {
         return honestPlayerMap.containsKey(playerId);
     }

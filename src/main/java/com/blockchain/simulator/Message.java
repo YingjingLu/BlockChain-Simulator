@@ -62,7 +62,9 @@ public abstract class Message {
         this.signatures.add(signature);
     }
 
-
+    public void addSignatures(final List<String> signature) {
+        this.signatures.addAll(signature);
+    }
 
     public void setRound(final int round) {
         this.round = round;

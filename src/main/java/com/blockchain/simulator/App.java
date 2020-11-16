@@ -52,7 +52,8 @@ public class App
             DolevStrongRoundSimulator simulator = new DolevStrongRoundSimulator(config);
             simulator.run();
         } else if (protocol.equals("streamlet")) {
-
+            StreamletRoundSimulator simulator = new StreamletRoundSimulator(args[0]);
+            simulator.run();
         } else {
             throw new IllegalArgumentException("Protocol in Config is not implemented");
         }

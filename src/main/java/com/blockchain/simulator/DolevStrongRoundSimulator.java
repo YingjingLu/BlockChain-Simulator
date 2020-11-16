@@ -40,7 +40,7 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
         }
     }
 
-    public int run() {
+    public void run() {
         int initialRound = 0;
         final int sender = config.senderId;
         final Bit initialBit = config.inputBit;
@@ -80,7 +80,6 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
         honestPlayerController.createOutputForEveryPlayer(totalRounds);
         corruptPlayerController.createOutputForEveryPlayer(totalRounds);
         honestPlayerController.printOutput();
-        return 1;
     }
 
     private void giveMessageToPlayer(final int playerId, final DolevStrongMessage message, final int curRound) {
