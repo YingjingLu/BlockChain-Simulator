@@ -27,8 +27,28 @@
     }
 }
 
-## Streamlet Sequence
+### DolevStrongMessageTrace
+[
+    Task 1 Object,
+    Task 2 object,
+    ....
+]
 
+### DolevStrongMessage
+{
+    "round": "3",
+    "message": ["0"],
+    "signatures": ["string 1", "string 2", ...],
+    "from_player_id": "3",
+    "to_player_id": "5"
+}
+
+### DolevStrongPlayerState
+{
+    "extracted_set": ["0", "1"]
+}
+
+### StreamletMessageTrace
 {
     "leader": "0",
     "proposal": block proposal block object json
@@ -44,7 +64,7 @@
     ]
 }
 
-## Streamlet Block
+### StreamletBlock
 {
     "round": "5",
     "proposer_id": "3",
@@ -55,7 +75,7 @@
     "level": "34"
 }
 
-## Streamlet Message
+### StreamletMessage
 {
     "is_vote": true,
     "approved": "0" or "1" or "2",
@@ -71,10 +91,33 @@
     "to_player_id": "6"
 }
 
-## Task
+### Task
 {
     "target_player": "1",
     "message": message object json,
     "delay": "0", "1", ...
 }
+
+### StreamletPlayerState
+[
+    {
+        "player_id": "5",
+        "chains": { // each key represent the level
+            "0": [
+                streamlet block object 1,
+                streamlet block object 2,
+                ...
+            ],
+            "1": {
+                [
+                    streamlet block object 1,
+                    streamlet block object 2,
+                    ...
+                ]
+            }
+        }
+    },
+    ...
+]
+
 
