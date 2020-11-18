@@ -188,7 +188,7 @@ public class StreamletJsonifier extends Jsonifer {
             message.add(b.toString());
         }
         blockObject.put("message", message);
-        return blockObject
+        return blockObject;
     }
 
     public JSONObject playerToJSONObject(StreamletPlayer player) {

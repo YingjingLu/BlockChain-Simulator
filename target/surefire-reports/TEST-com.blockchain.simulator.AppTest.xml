@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.blockchain.simulator.AppTest" time="0.059" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.blockchain.simulator.AppTest" time="0.078" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="15"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="C:\Users\StevenLu\Documents\jdk-15\bin"/>
-    <property name="sun.java.command" value="C:\Users\StevenLu\AppData\Local\Temp\surefire16607274672059830258\surefirebooter6419461536355488526.jar C:\Users\StevenLu\AppData\Local\Temp\surefire16607274672059830258 2020-10-23T21-11-38_755-jvmRun1 surefire2255090791521581012tmp surefire_014710690959885785698tmp"/>
+    <property name="sun.java.command" value="C:\Users\StevenLu\AppData\Local\Temp\surefire9527618605196820086\surefirebooter7511767573730619260.jar C:\Users\StevenLu\AppData\Local\Temp\surefire9527618605196820086 2020-11-18T18-28-52_948-jvmRun1 surefire13607957289997967701tmp surefire_03124476234448459994tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\StevenLu\Desktop\BlockchainSimulator\blockchain-simulator\target\test-classes;C:\Users\StevenLu\Desktop\BlockchainSimulator\blockchain-simulator\target\classes;C:\Users\StevenLu\.m2\repository\junit\junit\4.11\junit-4.11.jar;C:\Users\StevenLu\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\StevenLu\.m2\repository\org\projectlombok\lombok\1.18.16\lombok-1.18.16.jar;C:\Users\StevenLu\.m2\repository\com\googlecode\json-simple\json-simple\1.1.1\json-simple-1.1.1.jar;C:\Users\StevenLu\.m2\repository\commons-cli\commons-cli\1.4\commons-cli-1.4.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\StevenLu\AppData\Local\Temp\surefire16607274672059830258\surefirebooter6419461536355488526.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\StevenLu\AppData\Local\Temp\surefire9527618605196820086\surefirebooter7511767573730619260.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="15+36-1562"/>

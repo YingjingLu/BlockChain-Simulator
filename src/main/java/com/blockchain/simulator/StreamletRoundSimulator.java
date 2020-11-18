@@ -19,7 +19,6 @@ public class StreamletRoundSimulator extends RoundSimulator {
         this.config = jsonifier.getConfig();
         this.totalRounds = config.round;
 
-
         final int totalPlayer = config.numTotalPlayer;
         final int corruptPlayer = config.numCorruptPlayer;
 

@@ -19,7 +19,7 @@ public class StreamletPlayerState {
             final StreamletBlock block = entry.getValue();
             final int level = block.getLevel();
             if (!chains.containsKey(level)) {
-                chains.put(level, new LinkedList<>());
+                chains.put(level, new LinkedList<StreamletBlock>());
             }
             chains.get(level).add(block);
         }
