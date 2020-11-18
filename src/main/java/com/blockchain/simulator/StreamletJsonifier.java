@@ -7,7 +7,8 @@ import java.lang.IllegalArgumentException;
 import org.json.simple.parser.ParseException;
 import java.util.List;
 import java.util.LinkedList;
-import java.util.stream.Stream;
+import java.util.Map;
+import java.util.Collections;
 
 public class StreamletJsonifier extends Jsonifer {
     private final StreamletRoundSimulator roundSimulator;
@@ -104,16 +105,112 @@ public class StreamletJsonifier extends Jsonifer {
         );
     }
 
+    public void writeMessageTrace(
+            final int leaderId,
+            final int round,
+            final StreamletBlock blockProposal,
+            final List<Task> proposalTaskList,
+            final List<Task> proposalVoteList) throws IOException {
+        final JSONObject traceObject = new JSONObject();
+        traceObject.put("leader", leaderId);
+        traceObject.put("proposal", blockToJSONObject(blockProposal));
+        final JSONArray proposalTaskArray = new JSONArray();
+        for(Task t : proposalTaskList) {
+            proposalTaskArray.add(taskToJSONObject(t));
+        }
+        traceObject.put("proposal_task", proposalTaskArray);
+
+        final JSONArray voteTaskArray = new JSONArray();
+        for (Task t : proposalVoteList) {
+            voteTaskArray.add(taskToJSONObject(t));
+        }
+        traceObject.put("vote_task", voteTaskArray);
+
+        final String path = getMessageTracePath(round);
+
+        jsonObjectToFile(traceObject, path);
+    }
+
+    public void writeStateTracePath (final int round) throws IOException {
+        final String path = getStateTracePath(round);
+        final JSONArray playerStateArray = new JSONArray();
+        for(Map.Entry<Integer, Player> entry : roundSimulator.corruptPlayerMap.entrySet()) {
+            playerStateArray.add(playerToJSONObject((StreamletPlayer) entry.getValue()));
+        }
+        for (Map.Entry<Integer, Player> entry : roundSimulator.honestPlayerMap.entrySet()) {
+            playerStateArray.add(playerToJSONObject((StreamletPlayer) entry.getValue()));
+        }
+        jsonArrayToFile(playerStateArray, path);
+    }
+
     public JSONObject taskToJSONObject(Task task) {
-        return null;
+        final JSONObject messageObject = messageToJSONObject((StreamletMessage) task.getMessage());
+        final JSONObject taskObject = new JSONObject();
+        taskObject.put("target_player", task.getTargetPlayer());
+        taskObject.put("message", messageObject);
+        taskObject.put("delay", task.getDelay());
+        return taskObject;
     }
 
     public JSONObject messageToJSONObject(StreamletMessage streamletMessage) {
-        return null;
+        JSONObject messageObject = new JSONObject();
+        messageObject.put("is_vote", streamletMessage.getIsVote());
+        messageObject.put("approved", streamletMessage.approved.toString());
+        messageObject.put("proposer_id", streamletMessage.getProposerId());
+        messageObject.put("round", streamletMessage.getRound());
+        messageObject.put("from_player_id", streamletMessage.getFromPlayerId());
+        messageObject.put("to_player_id", streamletMessage.getToPlayerId());
+
+        JSONArray signatureArray = new JSONArray();
+        for (String str : streamletMessage.getSignatures()) {
+            signatureArray.add(str);
+        }
+        messageObject.put("signatures", signatureArray);
+
+        JSONArray messageArray = new JSONArray();
+        for (Bit b : streamletMessage.getMessage()) {
+            messageArray.add(b.toString());
+        }
+        messageObject.put("message", messageArray);
+        return messageObject;
     }
 
     public JSONObject blockToJSONObject(StreamletBlock streamletBlock) {
-        return null;
+        JSONObject blockObject = new JSONObject();
+        blockObject.put("round", streamletBlock.getRound());
+        blockObject.put("proposer_id", streamletBlock.getProposerId());
+        blockObject.put("prev", streamletBlock.getPrev().getRound());
+        blockObject.put("notarized", streamletBlock.getNotorized());
+        blockObject.put("finalized", streamletBlock.getFinalized());
+        blockObject.put("level", streamletBlock.getLevel());
+        JSONArray message = new JSONArray();
+        for(Bit b : streamletBlock.getMessage()) {
+            message.add(b.toString());
+        }
+        blockObject.put("message", message);
+        return blockObject
+    }
+
+    public JSONObject playerToJSONObject(StreamletPlayer player) {
+        JSONObject playerObject = new JSONObject();
+        StreamletPlayerState playerState = new StreamletPlayerState(player);
+        playerObject.put("player_id", playerState.playerId);
+
+        JSONArray levelArray = new JSONArray();
+        List<Integer> lArray = new LinkedList<>();
+        for(Map.Entry<Integer, List<StreamletBlock>> entry : playerState.chains.entrySet()) {
+            lArray.add(entry.getKey());
+        }
+        Collections.sort(lArray);
+        for(int level : lArray) {
+            JSONArray blockArray = new JSONArray();
+            for (StreamletBlock block : playerState.chains.get(level)) {
+                blockArray.add(blockToJSONObject(block));
+            }
+            levelArray.add(blockArray);
+        }
+        playerObject.put("chains", levelArray);
+        return playerObject;
     }
 
     public StreamletMessage jsonObjectToMessage(JSONObject jsonObject) throws IllegalArgumentException {

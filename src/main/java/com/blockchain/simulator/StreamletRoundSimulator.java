@@ -47,6 +47,7 @@ public class StreamletRoundSimulator extends RoundSimulator {
     }
 
     public void run() throws IOException, IllegalArgumentException, ParseException {
+        jsonifier.writeStateTracePath(-1);
         for (int curRound = 0; curRound < totalRounds; curRound ++) {
             List<Bit> dummyMessage = new LinkedList<>();
             dummyMessage.add(Bit.ONE);
@@ -88,6 +89,7 @@ public class StreamletRoundSimulator extends RoundSimulator {
                         curRound,
                         proposedBlock
                 );
+
             }
             // send the block to the network
             corruptPlayerController.sendMessageListViaNetwork(curRound, blockProposalMessageCommunicationList);
@@ -102,6 +104,15 @@ public class StreamletRoundSimulator extends RoundSimulator {
             } else {
                 voteMessageList = corruptPlayerController.generateVoteMessageList(curRound, leaderId, proposedBlock);
             }
+
+            if (!config.useTrace) {
+                jsonifier.writeMessageTrace(
+                        leaderId,
+                        curRound,
+                        proposedBlock,
+                        blockProposalMessageCommunicationList,
+                        voteMessageList);
+            }
             // send vote to each other via network
             corruptPlayerController.sendMessageListViaNetwork(curRound, voteMessageList);
             // transact votes in the network of this round
@@ -110,6 +121,8 @@ public class StreamletRoundSimulator extends RoundSimulator {
             corruptPlayerController.processVotesForEachPlayer(curRound);
             corruptPlayerController.finalizeChainForEachPlayer(curRound);
             corruptPlayerController.endRoundForPlayers(curRound);
+
+            jsonifier.writeStateTracePath(curRound);
         }
     }
 
