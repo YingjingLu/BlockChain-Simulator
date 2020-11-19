@@ -78,6 +78,9 @@ public class StreamletRoundSimulator extends RoundSimulator {
             } else {
                 proposedBlock = corruptPlayerController.proposeBlock(leaderId, curRound, dummyMessage);
             }
+            assert proposedBlock != null : "proposedBlock cannot be null";
+            assert proposedBlock.getPrev() != null : "proposed block has to have not null prev block";
+
             final List<Task> blockProposalMessageCommunicationList;
             // generate the block as message to other players with delay (trace)
             if (config.useTrace) {

@@ -19,8 +19,12 @@ public class StreamletJsonifier extends Jsonifer {
 
     public StreamletConfig getConfig() throws IOException, ParseException, IllegalArgumentException {
         final String configPath = getConfigPath();
-        JSONObject jsonObj = fileToJSONObject(configPath);
-        return jsonObjectToConfig(jsonObj);
+        JSONObject configObject = fileToJSONObject(configPath);
+        if (!configObject.containsKey("streamlet_config")) {
+            throw new IllegalArgumentException("Streamlet Config file should contain streamlet_config key");
+        }
+        JSONObject streamletConfigObject = (JSONObject) configObject.get("streamlet_config");
+        return jsonObjectToConfig(streamletConfigObject);
     }
 
     public StreamletMessageTrace getRoundMessageTrace(final int round)
@@ -133,14 +137,18 @@ public class StreamletJsonifier extends Jsonifer {
 
     public void writeStateTracePath (final int round) throws IOException {
         final String path = getStateTracePath(round);
-        final JSONArray playerStateArray = new JSONArray();
+        final JSONObject stateObject = new JSONObject();
+        final JSONArray honestPlayerStateArray = new JSONArray();
+        final JSONArray corruptPlayerStateArray = new JSONArray();
         for(Map.Entry<Integer, Player> entry : roundSimulator.corruptPlayerMap.entrySet()) {
-            playerStateArray.add(playerToJSONObject((StreamletPlayer) entry.getValue()));
+            corruptPlayerStateArray.add(playerToJSONObject((StreamletPlayer) entry.getValue()));
         }
         for (Map.Entry<Integer, Player> entry : roundSimulator.honestPlayerMap.entrySet()) {
-            playerStateArray.add(playerToJSONObject((StreamletPlayer) entry.getValue()));
+            honestPlayerStateArray.add(playerToJSONObject((StreamletPlayer) entry.getValue()));
         }
-        jsonArrayToFile(playerStateArray, path);
+        stateObject.put("honest", honestPlayerStateArray);
+        stateObject.put("corrupt", corruptPlayerStateArray);
+        jsonObjectToFile(stateObject, path);
     }
 
     public JSONObject taskToJSONObject(Task task) {
@@ -179,7 +187,12 @@ public class StreamletJsonifier extends Jsonifer {
         JSONObject blockObject = new JSONObject();
         blockObject.put("round", streamletBlock.getRound());
         blockObject.put("proposer_id", streamletBlock.getProposerId());
-        blockObject.put("prev", streamletBlock.getPrev().getRound());
+        if (streamletBlock.getPrev() == null) {
+            blockObject.put("prev", -1);
+        } else {
+            blockObject.put("prev", streamletBlock.getPrev().getRound());
+        }
+
         blockObject.put("notarized", streamletBlock.getNotorized());
         blockObject.put("finalized", streamletBlock.getFinalized());
         blockObject.put("level", streamletBlock.getLevel());
@@ -313,8 +326,13 @@ public class StreamletJsonifier extends Jsonifer {
             throw new IllegalArgumentException("Poropose block in Message Trace file should contain level");
         }
 
-        if (jsonObject.containsKey("prevBlockRound")) {
-            prevBlockRound = Integer.parseInt(jsonObject.get("prevBlockRound").toString());
+        if (jsonObject.containsKey("prev")) {
+            prevBlockRound = Integer.parseInt(jsonObject.get("prev").toString());
+            if (prevBlockRound == -1) {
+                assert level == 0 : "Genesis block should have level 0";
+                assert proposerId == -1 : "Genesis bloc should have proposer id -1";
+                return StreamletBlock.getGenesisBlock();
+            }
             // get the prev block pointer from proposer
             final StreamletPlayer proposer;
             if (roundSimulator.honestPlayerMap.containsKey(proposerId)) {
@@ -327,7 +345,7 @@ public class StreamletJsonifier extends Jsonifer {
             assert proposer.blockMap.get(prevBlockRound).getNotorized() : "Proposed block in trace should be notarlized";
             prevBlock = proposer.blockMap.get(prevBlockRound);
         } else {
-            throw new IllegalArgumentException("Poropose block in Message Trace file should contain prevBlockRound");
+            throw new IllegalArgumentException("Poropose block in Message Trace file should contain prev");
         }
 
         if (jsonObject.containsKey("round")) {

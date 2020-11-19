@@ -25,11 +25,16 @@ public class StreamletCorruptPlayerController extends PlayerController {
             final Map<Integer, Player> honestPlayerMap,
             final Map<Integer, Player> corruptPlayerMap) {
         super(networkSimulator, authenticator, honestPlayerMap, corruptPlayerMap);
+        corruptPlayerIdList = new LinkedList<>();
+        for (Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
+            corruptPlayerIdList.add(entry.getKey());
+        }
+
         blockRoundProposedByCorruptPlayerSet = new HashSet<>();
         // divide honest players into two groups
         honestPlayerIdList = new LinkedList<>();
-        List<Integer> honestG1 = new LinkedList<>();
-        List<Integer> honestG2 = new LinkedList<>();
+        honestG1 = new LinkedList<>();
+        honestG2 = new LinkedList<>();
         for (Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {
             honestPlayerIdList.add(entry.getKey());
         }
@@ -195,7 +200,14 @@ public class StreamletCorruptPlayerController extends PlayerController {
             final StreamletBlock block) {
         assert honestPlayerMap.containsKey(leaderId) : "calling generating proposal should provide with an honest leader";
         List<Task> taskList = new LinkedList<>();
-        final StreamletPlayer srcPlayer = (StreamletPlayer) honestPlayerMap.get(leaderId);
+        final StreamletPlayer srcPlayer;
+        if (honestPlayerMap.containsKey(leaderId)) {
+            srcPlayer = (StreamletPlayer) honestPlayerMap.get(leaderId);
+        } else {
+            assert corruptPlayerMap.containsKey(leaderId) : "leader id shuld be a valid leader id";
+            srcPlayer = (StreamletPlayer) corruptPlayerMap.get(leaderId);
+        }
+
         for (Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {
             final StreamletPlayer destPlayer = (StreamletPlayer) entry.getValue();
             addProposalMessageTask(srcPlayer, destPlayer, block, taskList);
@@ -232,42 +244,6 @@ public class StreamletCorruptPlayerController extends PlayerController {
                 srcPlayer.getId(),
                 destPlayer.getId(),
                 prevBlock.getProposerId()
-        );
-        newMessage.addSignature(prevSign);
-        final Task newTask = new Task(
-                destPlayer,
-                newMessage,
-                0
-        );
-        taskList.add(newTask);
-    }
-
-    public void addProposalMessageTask(
-            final StreamletPlayer srcPlayer,
-            final StreamletPlayer destPlayer,
-            final List<Bit> message,
-            final int curBlockRound,
-            final int prevBlockRound,
-            final int curBlockProposerId,
-            final int prevBlockProposerId,
-            final List<Task> taskList) {
-
-        final StreamletMessage newMessage = new StreamletMessage(
-                false,
-                curBlockRound,
-                new LinkedList<Bit>(message),
-                srcPlayer.getId(),
-                destPlayer.getId(),
-                curBlockProposerId
-        );
-        authenticator.streamletFAuth(newMessage);
-        final String prevSign = authenticator.getStreamletFAuth(
-                false,
-                prevBlockRound,
-                "0",
-                srcPlayer.getId(),
-                destPlayer.getId(),
-                prevBlockProposerId
         );
         newMessage.addSignature(prevSign);
         final Task newTask = new Task(

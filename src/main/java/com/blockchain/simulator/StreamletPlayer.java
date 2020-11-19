@@ -21,13 +21,13 @@ public class StreamletPlayer extends Player {
         super(id, playerController);
         chainHead = StreamletBlock.getGenesisBlock();
         chainTailMap = new HashMap<>();
+        blockMap = new HashMap<>();
         addTailToMap(chainHead);
         blockMap.put(chainHead.getRound(), chainHead);
-
         curRoundMessageList = new LinkedList<>();
         blockIdToBlockMessageMap = new HashMap<>();
         blockIdToVoteCountMap = new HashMap<>();
-        blockMap = new HashMap<>();
+
         // starting from genesis block
         longestNotarizedChainLevel = 0;
     }
@@ -83,36 +83,26 @@ public class StreamletPlayer extends Player {
             assert signatures.size() >= 2 : "Message should have at least 2 signatures";
             final int size = signatures.size();
             final StreamletMessage prevMessage = CryptographyAuthenticator.signatureToStreamletMessage(
-                    signatures.get(size - 2)
-            );
-            final StreamletMessage curMessage = CryptographyAuthenticator.signatureToStreamletMessage(
                     signatures.get(size - 1)
             );
+            final StreamletMessage curMessage = CryptographyAuthenticator.signatureToStreamletMessage(
+                    signatures.get(size - 2)
+            );
+            System.out.println(signatures.get(size - 1));
+            System.out.println(signatures.get(size - 2));
 
             assert block.getRound() == curMessage.getRound() : "Current signature should be the same as the block";
-
-            StreamletBlock prev = null;
+            assert blockMap.containsKey(prevMessage.getRound()) : "Prev signature should be block that this player has";
+            final StreamletBlock prev = blockMap.get(prevMessage.getRound());
             // if the chain is not stemming from tail
-            if (!chainTailMap.containsKey(prevMessage.getRound())) {
-                boolean found = false;
-                for (Map.Entry<Integer, StreamletBlock> entry : chainTailMap.entrySet()) {
-                    for(StreamletBlock cur = entry.getValue(); cur != null; cur = cur.getPrev()) {
-                        if (cur.getRound() == prevMessage.getRound()) {
-                            prev = cur;
-                            found = true;
-                            break;
-                        }
-                    }
-                }
-                assert found : "Given block to append should have existing predecessor";
-            } else {
-                prev = chainTailMap.get(prevMessage.getRound());
-            }
-
+            assert prev != null : "prev block cannot be null";
+            System.out.println("Prev: " + prev.getLevel());
             // set prev
             block.setPrev(prev);
             // set level
             block.setLevel(prev.getLevel() + 1);
+
+            blockMap.put(block.getRound(), block);
             // update head
             if (!prev.isGenesisBlock() && chainTailMap.containsKey(prev.getRound())) {
                 chainTailMap.remove(prev.getRound());

@@ -1,4 +1,5 @@
 package com.blockchain.simulator;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,6 +16,17 @@ public class Jsonifer {
 
     public Jsonifer(final String traceRootPath) {
         this.traceRootPath = traceRootPath;
+        // create directories if not exists
+        final String messageFolder = traceRootPath + "/" + "message_trace/";
+        final String stateFolder = traceRootPath + "/" + "player_state_trace/";
+        final File messageF = new File(messageFolder);
+        final File stateF = new File(stateFolder);
+        if (!messageF.exists()) {
+            messageF.mkdir();
+        }
+        if (!stateF.exists()) {
+            stateF.mkdir();
+        }
     }
 
     public JSONObject fileToJSONObject(final String path) throws IOException, ParseException {
@@ -25,15 +37,24 @@ public class Jsonifer {
 
     public void jsonObjectToFile(final JSONObject jsonObject, final String path) throws IOException {
         FileWriter writer = new FileWriter(path);
-        JSONValue.writeJSONString(jsonObject, writer);
+        writer.write(jsonObject.toJSONString());
+        writer.flush();
+        writer.close();
     }
 
     public void jsonArrayToFile(final JSONArray jsonArray, final String path) throws IOException {
+        System.out.println(path);
         FileWriter writer = new FileWriter(path);
-        JSONValue.writeJSONString(jsonArray, writer);
+        writer.write(jsonArray.toJSONString());
+        writer.flush();
+        writer.close();
     }
 
     public String getConfigPath() {
+        return traceRootPath + "/" + "config.json";
+    }
+
+    public static String getConfigPathForApp(final String traceRootPath) {
         return traceRootPath + "/" + "config.json";
     }
 

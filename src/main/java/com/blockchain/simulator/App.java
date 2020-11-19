@@ -17,7 +17,7 @@ public class App
     {
         System.out.println("Hello\n");
         JSONParser parser = new JSONParser();
-        FileReader fileReader = new FileReader(args[0]);
+        FileReader fileReader = new FileReader(Jsonifer.getConfigPathForApp(args[0]));
         JSONObject jsonObj = (JSONObject) parser.parse(fileReader);
         if (!jsonObj.containsKey("protocol")) {
             throw new IllegalArgumentException("Should specify protocol in config");

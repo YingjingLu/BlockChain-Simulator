@@ -73,7 +73,7 @@ public class CryptographyAuthenticator {
         return stringBuilder.toString();
     }
 
-    public static DolevStrongMessage signatureToDolevStringMessage(final String sign) {
+    public static DolevStrongMessage signatureToDolevStrongMessage(final String sign) {
         String[] rawArr = sign.split(SPLITTER, 0);
         return new DolevStrongMessage(Integer.parseInt(rawArr[0]), null, Integer.parseInt(rawArr[2]), Integer.parseInt(rawArr[3]));
     }

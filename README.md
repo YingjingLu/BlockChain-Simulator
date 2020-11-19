@@ -99,25 +99,43 @@
 }
 
 ### StreamletPlayerState
-[
-    {
-        "player_id": "5",
-        "chains": { // each key represent the level
-            "0": [
-                streamlet block object 1,
-                streamlet block object 2,
-                ...
-            ],
-            "1": {
+{
+    "honest": [
+        {
+            "player_id": "5",
+            "chains": [ // each key represent the level
                 [
                     streamlet block object 1,
                     streamlet block object 2,
                     ...
-                ]
-            }
-        }
-    },
-    ...
-]
-
-
+                ],
+                [
+                    streamlet block object 1,
+                    streamlet block object 2,
+                    ...
+                ],
+                ...
+            ]
+        },
+        ...
+    ],
+    "corrupt": [
+        {
+            "player_id": "5",
+            "chains": [ // each key represent the level
+                [
+                    streamlet block object 1,
+                    streamlet block object 2,
+                    ...
+                ],
+                [
+                    streamlet block object 1,
+                    streamlet block object 2,
+                    ...
+                ],
+                ...
+            ]
+        },
+        ...
+    ]
+}
