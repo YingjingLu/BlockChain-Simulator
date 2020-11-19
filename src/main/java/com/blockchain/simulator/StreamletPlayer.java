@@ -88,15 +88,11 @@ public class StreamletPlayer extends Player {
             final StreamletMessage curMessage = CryptographyAuthenticator.signatureToStreamletMessage(
                     signatures.get(size - 2)
             );
-            System.out.println(signatures.get(size - 1));
-            System.out.println(signatures.get(size - 2));
-
             assert block.getRound() == curMessage.getRound() : "Current signature should be the same as the block";
             assert blockMap.containsKey(prevMessage.getRound()) : "Prev signature should be block that this player has";
             final StreamletBlock prev = blockMap.get(prevMessage.getRound());
             // if the chain is not stemming from tail
             assert prev != null : "prev block cannot be null";
-            System.out.println("Prev: " + prev.getLevel());
             // set prev
             block.setPrev(prev);
             // set level
@@ -108,6 +104,14 @@ public class StreamletPlayer extends Player {
                 chainTailMap.remove(prev.getRound());
             }
             chainTailMap.put(block.getRound(), block);
+            if (blockIdToVoteCountMap.containsKey(block.getRound())) {
+                System.out.println("Error: Should not have vote count");
+            }
+            blockIdToVoteCountMap.put(block.getRound(), 1);
+            System.out.println("Added block to vote count: " + block.getRound() + " Player " + getId());
+            if (!blockIdToVoteCountMap.containsKey(block.getRound())) {
+                System.out.println("Failed to put into vote count map");
+            }
         }
     }
 
@@ -137,20 +141,23 @@ public class StreamletPlayer extends Player {
     public void processVotes(final int notorizedThreshold) {
         List<Integer> pendingNotorizedBlockList = new LinkedList<>();
         for (Message msg : curRoundMessageList) {
-            StreamletMessage streamletMessage = (StreamletMessage) msg;
-            // drop votes that have already been notorized or for blocks not yet received
-            // drop votes for rejection also
-            if (streamletMessage.getApproved()) {
-                final int blockRound = streamletMessage.getRound();
-                if (blockIdToVoteCountMap.containsKey(blockRound)) {
-                    blockIdToVoteCountMap.put(blockRound, blockIdToVoteCountMap.get(blockRound) + 1);
-                    // check if surpassing more than 2/3 vote
-                    // if so then notorize the block, place the block into the chain
-                    if (blockIdToVoteCountMap.get(blockRound) >= notorizedThreshold) {
-                        // construct block from message
-                        pendingNotorizedBlockList.add(blockRound);
-                        // remove the block id from both maps
-                        blockIdToVoteCountMap.remove(blockRound);
+            if (((StreamletMessage)msg).getIsVote()) {
+                StreamletMessage streamletMessage = (StreamletMessage) msg;
+                // drop votes that have already been notorized or for blocks not yet received
+                // drop votes for rejection also
+                if (streamletMessage.getApproved()) {
+                    final int blockRound = streamletMessage.getRound();
+                    if (blockIdToVoteCountMap.containsKey(blockRound)) {
+                        blockIdToVoteCountMap.put(blockRound, blockIdToVoteCountMap.get(blockRound) + 1);
+                        // check if surpassing more than 2/3 vote
+                        // if so then notorize the block, place the block into the chain
+                        if (blockIdToVoteCountMap.get(blockRound) >= notorizedThreshold) {
+                            // construct block from message
+                            pendingNotorizedBlockList.add(blockRound);
+                            // remove the block id from both maps
+                            blockIdToVoteCountMap.remove(blockRound);
+
+                        }
                     }
                 }
             }
@@ -159,6 +166,7 @@ public class StreamletPlayer extends Player {
             assert blockMap.containsKey(blockRound) : "Block map should contain blocks for received votes";
             blockMap.get(blockRound).setNotorized();
             longestNotarizedChainLevel = Math.max(longestNotarizedChainLevel, blockMap.get(blockRound).getLevel());
+            System.out.println("Notarized block " + blockRound + " for player  " + getId());
         }
     }
 

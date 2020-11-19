@@ -6,11 +6,18 @@ import java.util.HashMap;
 public abstract class RoundSimulator {
 
 
-    public final Map<Integer, Player> honestPlayerMap= new HashMap<>();
-    public final Map<Integer, Player> corruptPlayerMap = new HashMap<>();
-    public final NetworkSimulator networkSimulator = new NetworkSimulator();
+    public final Map<Integer, Player> honestPlayerMap;
+    public final Map<Integer, Player> corruptPlayerMap;
+    public final NetworkSimulator networkSimulator;
 
-    public final CryptographyAuthenticator authenticator = new CryptographyAuthenticator();
+    public final CryptographyAuthenticator authenticator;
+
+    public RoundSimulator() {
+        honestPlayerMap = new HashMap<>();
+        corruptPlayerMap = new HashMap<>();
+        networkSimulator = new NetworkSimulator();
+        authenticator = new CryptographyAuthenticator();
+    }
 
     public boolean isPlayerHonest(final int playerId) {
         return honestPlayerMap.containsKey(playerId);

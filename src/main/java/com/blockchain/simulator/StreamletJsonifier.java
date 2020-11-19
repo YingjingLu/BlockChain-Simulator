@@ -154,7 +154,7 @@ public class StreamletJsonifier extends Jsonifer {
     public JSONObject taskToJSONObject(Task task) {
         final JSONObject messageObject = messageToJSONObject((StreamletMessage) task.getMessage());
         final JSONObject taskObject = new JSONObject();
-        taskObject.put("target_player", task.getTargetPlayer());
+        taskObject.put("target_player", task.getTargetPlayer().getId());
         taskObject.put("message", messageObject);
         taskObject.put("delay", task.getDelay());
         return taskObject;
@@ -418,5 +418,29 @@ public class StreamletJsonifier extends Jsonifer {
         }
 
         return new Task(targetPlayer, message, delay);
+    }
+
+    public void printPlayerState(StreamletPlayer player) {
+        System.out.println("Player: " + player.getId());
+        for (Map.Entry<Integer, StreamletBlock> entry : player.chainTailMap.entrySet()) {
+            StreamletBlock curBlock = entry.getValue();
+            while (curBlock != null) {
+                if (curBlock.getRound() == -1) {
+                    System.out.print("G");
+                } else {
+                    System.out.print(curBlock.getRound());
+                }
+
+                if (curBlock.getNotorized()) {
+                    System.out.print("*");
+                }
+                if (curBlock.getFinalized()) {
+                    System.out.print("*");
+                }
+                System.out.print("-");
+                curBlock = curBlock.getPrev();
+            }
+            System.out.println("|");
+        }
     }
 }

@@ -349,6 +349,7 @@ public class StreamletCorruptPlayerController extends PlayerController {
             );
             voteMessageList.add(newTask);
         }
+        System.out.println("Vote message generated: " + voteMessageList.size());
     }
 
     public void processBlockProposal(final int round) {
@@ -365,6 +366,7 @@ public class StreamletCorruptPlayerController extends PlayerController {
     public void processVotesForEachPlayer(final int round) {
         final int totalNumPlayer = honestPlayerMap.size() + corruptPlayerMap.size();
         final int notorizedThreshold = (int)Math.ceil((double)totalNumPlayer * 2.0 / 3.0);
+        System.out.println("Notarized thresh : " + notorizedThreshold);
         // look at each of the blocks that are accumulating votes
         // if contains at least 2/3 votes, notorize it and put it in the chain
         for (Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {

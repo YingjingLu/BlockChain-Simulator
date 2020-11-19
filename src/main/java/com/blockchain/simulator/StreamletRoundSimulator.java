@@ -1,5 +1,6 @@
 package com.blockchain.simulator;
 import java.util.List;
+import java.util.Map;
 import java.util.LinkedList;
 import java.io.IOException;
 import java.lang.IllegalArgumentException;
@@ -15,12 +16,22 @@ public class StreamletRoundSimulator extends RoundSimulator {
 
     public StreamletRoundSimulator (final String configRootFolderPath)
             throws IOException, IllegalArgumentException, ParseException {
+        super();
         jsonifier = new StreamletJsonifier(this, configRootFolderPath);
         this.config = jsonifier.getConfig();
         this.totalRounds = config.round;
 
         final int totalPlayer = config.numTotalPlayer;
         final int corruptPlayer = config.numCorruptPlayer;
+
+        final int startCorrupt = totalPlayer - corruptPlayer;
+        for (int i = 0; i < totalPlayer; i++) {
+            if (i >= startCorrupt) {
+                corruptPlayerMap.put(i, new StreamletPlayer(i, corruptPlayerController));
+            } else {
+                honestPlayerMap.put(i, new StreamletPlayer(i, honestPlayerController));
+            }
+        }
 
         corruptPlayerController = new StreamletCorruptPlayerController(
                 networkSimulator,
@@ -35,14 +46,7 @@ public class StreamletRoundSimulator extends RoundSimulator {
                 corruptPlayerMap
         );
 
-        final int startCorrupt = totalPlayer - corruptPlayer;
-        for (int i = 0; i < totalPlayer; i++) {
-            if (i >= startCorrupt) {
-                corruptPlayerMap.put(i, new StreamletPlayer(i, corruptPlayerController));
-            } else {
-                honestPlayerMap.put(i, new StreamletPlayer(i, honestPlayerController));
-            }
-        }
+
     }
 
     public void run() throws IOException, IllegalArgumentException, ParseException {
@@ -106,7 +110,6 @@ public class StreamletRoundSimulator extends RoundSimulator {
             } else {
                 voteMessageList = corruptPlayerController.generateVoteMessageList(curRound, leaderId, proposedBlock);
             }
-
             if (!config.useTrace) {
                 jsonifier.writeMessageTrace(
                         leaderId,
@@ -125,6 +128,18 @@ public class StreamletRoundSimulator extends RoundSimulator {
             corruptPlayerController.endRoundForPlayers(curRound);
 
             jsonifier.writeStateTracePath(curRound);
+            System.out.println("---------------------------");
+            System.out.println("Round " + curRound);
+            System.out.println("HonestPlayer: ");
+            for(Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {
+                jsonifier.printPlayerState((StreamletPlayer) entry.getValue());
+            }
+
+            System.out.println("CorruptPlayer: ");
+            for(Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
+                jsonifier.printPlayerState((StreamletPlayer) entry.getValue());
+            }
+
         }
     }
 

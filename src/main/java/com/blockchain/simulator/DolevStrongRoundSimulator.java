@@ -12,6 +12,7 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
     DolevStrongHonestPlayerController honestPlayerController;
 
     public DolevStrongRoundSimulator( DolevStrongConfig configuration) {
+        super();
         this.totalRounds = configuration.round;
         this.config = configuration;
         final int totalPlayer = configuration.numTotalPlayer;
