@@ -45,8 +45,6 @@ public class StreamletRoundSimulator extends RoundSimulator {
                 honestPlayerMap,
                 corruptPlayerMap
         );
-
-
     }
 
     public void run() throws IOException, IllegalArgumentException, ParseException {
@@ -63,22 +61,23 @@ public class StreamletRoundSimulator extends RoundSimulator {
             }
 
             // At the start of the round, make sure the scheduled messages are delivered and processed
-            networkSimulator.beginRound(curRound);
-            corruptPlayerController.processBlockProposal(curRound);
-            corruptPlayerController.processVotesForEachPlayer(curRound);
-            corruptPlayerController.finalizeChainForEachPlayer(curRound);
+//            networkSimulator.beginRound(curRound);
+//            corruptPlayerController.processBlockProposal(curRound);
+//            corruptPlayerController.processVotesForEachPlayer(curRound);
+//            corruptPlayerController.finalizeChainForEachPlayer(curRound);
 
             // start current round new block proposal
             final int leaderId;
-            if (config.useTrace) {
+            if (roundMessageTrace != null) {
                 leaderId = roundMessageTrace.leader;
             } else {
                 leaderId = electLeader(curRound);
             }
             // propose a leader with a block of a given round (trace)
             final StreamletBlock proposedBlock;
-            if (config.useTrace) {
+            if (roundMessageTrace != null && roundMessageTrace.proposal != null) {
                 proposedBlock = roundMessageTrace.proposal;
+                System.out.println("get block proposal " + proposedBlock.getRound() + " " + proposedBlock.getPrev().getRound());
             } else {
                 proposedBlock = corruptPlayerController.proposeBlock(leaderId, curRound, dummyMessage);
             }
@@ -87,7 +86,7 @@ public class StreamletRoundSimulator extends RoundSimulator {
 
             final List<Task> blockProposalMessageCommunicationList;
             // generate the block as message to other players with delay (trace)
-            if (config.useTrace) {
+            if (roundMessageTrace != null && roundMessageTrace.proposalMessage.size() > 0) {
                 blockProposalMessageCommunicationList = roundMessageTrace.proposalMessage;
             } else {
                 blockProposalMessageCommunicationList = corruptPlayerController.generateProposalMessageCommunicationList(
@@ -95,7 +94,6 @@ public class StreamletRoundSimulator extends RoundSimulator {
                         curRound,
                         proposedBlock
                 );
-
             }
             // send the block to the network
             corruptPlayerController.sendMessageListViaNetwork(curRound, blockProposalMessageCommunicationList);
@@ -105,7 +103,7 @@ public class StreamletRoundSimulator extends RoundSimulator {
             // for those players received the proposed block,
             // process the message and generate the votes to other players (trace)
             final List<Task> voteMessageList;
-            if (config.useTrace) {
+            if (roundMessageTrace != null && roundMessageTrace.voteMessage.size() > 0) {
                 voteMessageList = roundMessageTrace.voteMessage;
             } else {
                 voteMessageList = corruptPlayerController.generateVoteMessageList(curRound, leaderId, proposedBlock);
@@ -139,7 +137,6 @@ public class StreamletRoundSimulator extends RoundSimulator {
             for(Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
                 jsonifier.printPlayerState((StreamletPlayer) entry.getValue());
             }
-
         }
     }
 

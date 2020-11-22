@@ -19,4 +19,16 @@ public class StreamletMessageTrace {
         this.proposalMessage = proposalMessage;
         this.voteMessage = voteMessage;
     }
+
+    public boolean containsBlockProposal() {
+        return proposal != null;
+    }
+
+    public boolean containsProposalTrace() {
+        return proposalMessage.size() != 0;
+    }
+
+    public boolean containsVoteTrace() {
+        return voteMessage.size() != 0;
+    }
 }

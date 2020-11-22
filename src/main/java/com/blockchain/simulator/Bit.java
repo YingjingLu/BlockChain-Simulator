@@ -23,4 +23,14 @@ public enum Bit {
             return Bit.FLOOR;
         }
     }
+
+    public static Bit stringToBit(String s) {
+        if (s.equals("0")) {
+            return Bit.ZERO;
+        } else if (s.equals("1")) {
+            return Bit.ONE;
+        } else {
+            return Bit.FLOOR;
+        }
+    }
 }

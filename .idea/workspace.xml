@@ -1,14 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="f10d52e4-617a-4952-b037-d82b75acf101" name="Default Changelist" comment="" />
+    <list default="true" id="eb84c35f-f74c-4943-8031-644289372395" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/lib.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/lib2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/target.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/target2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/0.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/0.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/1.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/1.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/2.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/2.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/3.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/3.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/4.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/4.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/5.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/5.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/1.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/1.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/2.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/2.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/3.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/3.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/4.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/4.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/5.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/5.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Bit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Bit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Jsonifer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Jsonifer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletCorruptPlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletCorruptPlayerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletJsonifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletJsonifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletMessageTrace.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletMessageTrace.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletRoundSimulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletRoundSimulator.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -17,33 +46,24 @@
       </MavenGeneralSettings>
     </option>
   </component>
-  <component name="ProjectId" id="1j4WEFVR9GgDv8VG3w0nsOfQ0hb" />
+  <component name="ProjectId" id="1kaQcruA3qBF8288MHoa75bvxUj" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="f10d52e4-617a-4952-b037-d82b75acf101" name="Default Changelist" comment="" />
-      <created>1603063733853</created>
+      <changelist id="eb84c35f-f74c-4943-8031-644289372395" name="Default Changelist" comment="" />
+      <created>1605936307530</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1603063733853</updated>
+      <updated>1605936307530</updated>
     </task>
     <servers />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="1060" y="417" key="FileChooserDialogImpl" timestamp="1603063748351">
-      <screen x="0" y="0" width="2560" height="1400" />
-    </state>
-    <state x="1060" y="417" key="FileChooserDialogImpl/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1603063748351" />
-    <state x="945" y="404" key="NewModule_or_Project.wizard" timestamp="1603063766414">
-      <screen x="0" y="0" width="2560" height="1400" />
-    </state>
-    <state x="945" y="404" key="NewModule_or_Project.wizard/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1603063766414" />
   </component>
 </project>

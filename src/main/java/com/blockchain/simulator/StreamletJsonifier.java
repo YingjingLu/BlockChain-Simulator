@@ -35,18 +35,24 @@ public class StreamletJsonifier extends Jsonifer {
         final StreamletBlock proposal;
 
         final String path = getMessageTracePath(round);
+        if (!hasMessageTrace(round)) {
+            return null;
+        }
+
         JSONObject jsonObject = fileToJSONObject(path);
 
         if (jsonObject.containsKey("leader")) {
             leader = Integer.parseInt(jsonObject.get("leader").toString());
+
         } else {
             throw new IllegalArgumentException("Message Trace file should contain leader");
         }
 
         if (jsonObject.containsKey("proposal")) {
             proposal = jsonObjectToBlock((JSONObject) jsonObject.get("proposal"));
+            System.out.println("Did create block" + proposal.getRound());
         } else {
-            throw new IllegalArgumentException("Message Trace file should contain proposal");
+            proposal = null;
         }
 
         if (jsonObject.containsKey("proposal_task")) {
@@ -56,7 +62,7 @@ public class StreamletJsonifier extends Jsonifer {
                 proposalTaskList.add(jsonObjectToTask((JSONObject) obj));
             }
         } else {
-            throw new IllegalArgumentException("Message Trace file should contain proposal_message");
+            proposalTaskList = new LinkedList<>();
         }
 
         if (jsonObject.containsKey("vote_message")) {
@@ -66,7 +72,7 @@ public class StreamletJsonifier extends Jsonifer {
                 voteTaskList.add(jsonObjectToTask((JSONObject) obj));
             }
         } else {
-            throw new IllegalArgumentException("Message Trace file should contain vote_message");
+            voteTaskList = new LinkedList<>();
         }
 
         return new StreamletMessageTrace(
@@ -328,11 +334,6 @@ public class StreamletJsonifier extends Jsonifer {
 
         if (jsonObject.containsKey("prev")) {
             prevBlockRound = Integer.parseInt(jsonObject.get("prev").toString());
-            if (prevBlockRound == -1) {
-                assert level == 0 : "Genesis block should have level 0";
-                assert proposerId == -1 : "Genesis bloc should have proposer id -1";
-                return StreamletBlock.getGenesisBlock();
-            }
             // get the prev block pointer from proposer
             final StreamletPlayer proposer;
             if (roundSimulator.honestPlayerMap.containsKey(proposerId)) {
@@ -344,6 +345,7 @@ public class StreamletJsonifier extends Jsonifer {
             assert proposer.blockMap.containsKey(prevBlockRound) : "Proposed block in trace should exist in proposer's chain";
             assert proposer.blockMap.get(prevBlockRound).getNotorized() : "Proposed block in trace should be notarlized";
             prevBlock = proposer.blockMap.get(prevBlockRound);
+
         } else {
             throw new IllegalArgumentException("Poropose block in Message Trace file should contain prev");
         }
@@ -358,7 +360,7 @@ public class StreamletJsonifier extends Jsonifer {
             JSONArray arr = (JSONArray)(jsonObject.get("message"));
             message = new LinkedList<>();
             for (Object obj : arr) {
-                message.add(Bit.valueOf(((JSONObject)obj).toString()));
+                message.add(Bit.stringToBit((String)obj));
             }
         } else {
             throw new IllegalArgumentException("Poropose block in Message Trace file should contain message");

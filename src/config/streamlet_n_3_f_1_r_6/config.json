@@ -4,6 +4,6 @@
         "round": "6",
         "num_corrupt_player": "1",
         "num_total_player": "3",
-        "use_trace": false
+        "use_trace": true
     }
 }

@@ -104,14 +104,7 @@ public class StreamletPlayer extends Player {
                 chainTailMap.remove(prev.getRound());
             }
             chainTailMap.put(block.getRound(), block);
-            if (blockIdToVoteCountMap.containsKey(block.getRound())) {
-                System.out.println("Error: Should not have vote count");
-            }
             blockIdToVoteCountMap.put(block.getRound(), 1);
-            System.out.println("Added block to vote count: " + block.getRound() + " Player " + getId());
-            if (!blockIdToVoteCountMap.containsKey(block.getRound())) {
-                System.out.println("Failed to put into vote count map");
-            }
         }
     }
 
@@ -166,7 +159,6 @@ public class StreamletPlayer extends Player {
             assert blockMap.containsKey(blockRound) : "Block map should contain blocks for received votes";
             blockMap.get(blockRound).setNotorized();
             longestNotarizedChainLevel = Math.max(longestNotarizedChainLevel, blockMap.get(blockRound).getLevel());
-            System.out.println("Notarized block " + blockRound + " for player  " + getId());
         }
     }
 
@@ -174,17 +166,23 @@ public class StreamletPlayer extends Player {
         // iterate through each of tail heads in the map
         for (Map.Entry<Integer, StreamletBlock> entry : chainTailMap.entrySet()) {
             StreamletBlock tailBlock = entry.getValue();
+            while(tailBlock != null && !tailBlock.getNotorized()) {
+                tailBlock = tailBlock.getPrev();
+            }
+            if (tailBlock == null) {
+                 continue;
+            }
             List<StreamletBlock> blockList = new ArrayList<StreamletBlock>();
             // try accumulate three blocks
             StreamletBlock cur = tailBlock;
             blockList.add(cur);
-            if (cur.getPrev() != null) {
+            if (cur.getPrev() != null && cur.getPrev().getNotorized()) {
                 cur = cur.getPrev();
                 blockList.add(cur);
             } else {
                 continue;
             }
-            if (cur.getPrev() != null) {
+            if (cur.getPrev() != null && cur.getPrev().getNotorized()) {
                 cur = cur.getPrev();
                 blockList.add(cur);
             } else {
@@ -194,8 +192,14 @@ public class StreamletPlayer extends Player {
             if (blockList.get(0).getRound() - blockList.get(1).getRound() == 1
                 && blockList.get(1).getRound() - blockList.get(2).getRound() == 1) {
                 // finalize the first two
-                blockList.get(1).setFinalized();
-                blockList.get(2).setFinalized();
+                cur = blockList.get(1);
+                while(cur != null && !cur.getFinalized()) {
+                    assert cur.getNotorized() : "the finalized chain should only contains notarized blocks";
+                    cur.setFinalized();
+                    cur = cur.getPrev();
+                }
+//                blockList.get(1).setFinalized();
+//                blockList.get(2).setFinalized();
             }
         }
     }

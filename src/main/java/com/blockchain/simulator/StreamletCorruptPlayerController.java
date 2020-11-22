@@ -48,11 +48,6 @@ public class StreamletCorruptPlayerController extends PlayerController {
                 honestG2.add(id);
             }
         }
-
-        // extract all corrupt player id
-        for (Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
-            corruptPlayerIdList.add(entry.getKey());
-        }
     }
 
     public StreamletBlock proposeBlock(final int leaderId, final int curRound, final List<Bit> message) {
@@ -290,12 +285,14 @@ public class StreamletCorruptPlayerController extends PlayerController {
         for (int fromId : honestG1) {
             generateVoteMessages(res, fromId, corruptPlayerIdList, block, 0);
             generateVoteMessages(res, fromId, honestG1, block, 0);
-            generateVoteMessages(res, fromId, honestG2, block, attackDelay);
+//            generateVoteMessages(res, fromId, honestG2, block, attackDelay);
+            generateVoteMessages(res, fromId, honestG2, block, 0);
         }
         for (int fromId : honestG2) {
             generateVoteMessages(res, fromId, corruptPlayerIdList, block, 0);
             generateVoteMessages(res, fromId, honestG2, block, 0);
-            generateVoteMessages(res, fromId, honestG1, block, attackDelay);
+//            generateVoteMessages(res, fromId, honestG1, block, attackDelay);
+            generateVoteMessages(res, fromId, honestG1, block, 0);
         }
         return res;
     }
@@ -349,7 +346,6 @@ public class StreamletCorruptPlayerController extends PlayerController {
             );
             voteMessageList.add(newTask);
         }
-        System.out.println("Vote message generated: " + voteMessageList.size());
     }
 
     public void processBlockProposal(final int round) {
@@ -366,7 +362,6 @@ public class StreamletCorruptPlayerController extends PlayerController {
     public void processVotesForEachPlayer(final int round) {
         final int totalNumPlayer = honestPlayerMap.size() + corruptPlayerMap.size();
         final int notorizedThreshold = (int)Math.ceil((double)totalNumPlayer * 2.0 / 3.0);
-        System.out.println("Notarized thresh : " + notorizedThreshold);
         // look at each of the blocks that are accumulating votes
         // if contains at least 2/3 votes, notorize it and put it in the chain
         for (Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {

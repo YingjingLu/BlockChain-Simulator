@@ -50,6 +50,12 @@ public class Jsonifer {
         writer.close();
     }
 
+    public boolean hasMessageTrace(final int round) {
+        final String messageTracePath = getMessageTracePath(round);
+        final File f = new File(messageTracePath);
+        return f.exists();
+    }
+
     public String getConfigPath() {
         return traceRootPath + "/" + "config.json";
     }
