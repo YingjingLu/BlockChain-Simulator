@@ -312,13 +312,15 @@ public class StreamletCorruptPlayerController extends PlayerController {
             final List<Integer> toPlayerIdList,
             final StreamletBlock block,
             final int delay) {
-        StreamletPlayer player;
+        final StreamletPlayer player;
+        final boolean decision;
         if (corruptPlayerMap.containsKey(fromPlayerId)) {
             player = (StreamletPlayer) corruptPlayerMap.get(fromPlayerId);
+            decision = true;
         } else {
             player = (StreamletPlayer) honestPlayerMap.get(fromPlayerId);
+            decision = player.determineBlockVote(block);
         }
-        boolean decision = player.determineBlockVote(block);
         for (int toPlayerId : toPlayerIdList) {
             StreamletMessage newMessage = new StreamletMessage(
                     true,

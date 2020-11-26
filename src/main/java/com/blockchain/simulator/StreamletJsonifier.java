@@ -247,7 +247,7 @@ public class StreamletJsonifier extends Jsonifer {
         }
 
         if (jsonObject.containsKey("approved")) {
-            approved = Bit.valueOf(jsonObject.get("approved").toString());
+            approved = Bit.stringToBit(jsonObject.get("approved").toString());
         } else {
             throw new IllegalArgumentException("Message Trace file should contain approved");
         }
@@ -279,7 +279,7 @@ public class StreamletJsonifier extends Jsonifer {
             JSONArray messageList = (JSONArray) (jsonObject.get("message"));
             message = new LinkedList<Bit>();
             for (Object obj : messageList) {
-                message.add(Bit.valueOf((String)obj));
+                message.add(Bit.stringToBit((String)obj));
             }
 
         } else {

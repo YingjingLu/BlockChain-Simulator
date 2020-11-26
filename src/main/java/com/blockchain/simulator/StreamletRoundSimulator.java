@@ -60,12 +60,6 @@ public class StreamletRoundSimulator extends RoundSimulator {
                 roundMessageTrace = null;
             }
 
-            // At the start of the round, make sure the scheduled messages are delivered and processed
-//            networkSimulator.beginRound(curRound);
-//            corruptPlayerController.processBlockProposal(curRound);
-//            corruptPlayerController.processVotesForEachPlayer(curRound);
-//            corruptPlayerController.finalizeChainForEachPlayer(curRound);
-
             // start current round new block proposal
             final int leaderId;
             if (roundMessageTrace != null) {
@@ -108,14 +102,12 @@ public class StreamletRoundSimulator extends RoundSimulator {
             } else {
                 voteMessageList = corruptPlayerController.generateVoteMessageList(curRound, leaderId, proposedBlock);
             }
-            if (!config.useTrace) {
-                jsonifier.writeMessageTrace(
-                        leaderId,
-                        curRound,
-                        proposedBlock,
-                        blockProposalMessageCommunicationList,
-                        voteMessageList);
-            }
+            jsonifier.writeMessageTrace(
+                    leaderId,
+                    curRound,
+                    proposedBlock,
+                    blockProposalMessageCommunicationList,
+                    voteMessageList);
             // send vote to each other via network
             corruptPlayerController.sendMessageListViaNetwork(curRound, voteMessageList);
             // transact votes in the network of this round

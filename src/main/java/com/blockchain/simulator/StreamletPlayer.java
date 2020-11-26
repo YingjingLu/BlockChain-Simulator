@@ -104,7 +104,7 @@ public class StreamletPlayer extends Player {
                 chainTailMap.remove(prev.getRound());
             }
             chainTailMap.put(block.getRound(), block);
-            blockIdToVoteCountMap.put(block.getRound(), 1);
+            blockIdToVoteCountMap.put(block.getRound(), 0);
         }
     }
 
