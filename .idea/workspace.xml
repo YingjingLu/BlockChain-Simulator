@@ -2,26 +2,30 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="eb84c35f-f74c-4943-8031-644289372395" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongJsonifier.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongPlayerController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/0.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/0.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/1.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/1.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/2.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/2.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/3.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/3.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/4.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/4.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/5.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/5.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/2.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/2.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/3.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/3.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/4.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/4.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/5.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/5.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletCorruptPlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletCorruptPlayerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletJsonifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletJsonifier.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolev_strong_n_4_f_2_r_3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongCorruptPlayerController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongRoundSimulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongRoundSimulator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletCorruptPlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletPlayerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletHonestPlayerController.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletRoundSimulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletRoundSimulator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Task.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />

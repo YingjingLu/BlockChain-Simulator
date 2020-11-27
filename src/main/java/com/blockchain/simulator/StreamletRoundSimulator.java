@@ -11,8 +11,7 @@ public class StreamletRoundSimulator extends RoundSimulator {
     public final StreamletJsonifier jsonifier;
     private final StreamletConfig config;
 
-    StreamletCorruptPlayerController corruptPlayerController;
-    StreamletHonestPlayerController honestPlayerController;
+    StreamletPlayerController playerController;
 
     public StreamletRoundSimulator (final String configRootFolderPath)
             throws IOException, IllegalArgumentException, ParseException {
@@ -27,19 +26,13 @@ public class StreamletRoundSimulator extends RoundSimulator {
         final int startCorrupt = totalPlayer - corruptPlayer;
         for (int i = 0; i < totalPlayer; i++) {
             if (i >= startCorrupt) {
-                corruptPlayerMap.put(i, new StreamletPlayer(i, corruptPlayerController));
+                corruptPlayerMap.put(i, new StreamletPlayer(i, playerController));
             } else {
-                honestPlayerMap.put(i, new StreamletPlayer(i, honestPlayerController));
+                honestPlayerMap.put(i, new StreamletPlayer(i, playerController));
             }
         }
 
-        corruptPlayerController = new StreamletCorruptPlayerController(
-                networkSimulator,
-                authenticator,
-                honestPlayerMap,
-                corruptPlayerMap
-        );
-        honestPlayerController = new StreamletHonestPlayerController(
+        playerController = new StreamletPlayerController(
                 networkSimulator,
                 authenticator,
                 honestPlayerMap,
@@ -71,9 +64,8 @@ public class StreamletRoundSimulator extends RoundSimulator {
             final StreamletBlock proposedBlock;
             if (roundMessageTrace != null && roundMessageTrace.proposal != null) {
                 proposedBlock = roundMessageTrace.proposal;
-                System.out.println("get block proposal " + proposedBlock.getRound() + " " + proposedBlock.getPrev().getRound());
             } else {
-                proposedBlock = corruptPlayerController.proposeBlock(leaderId, curRound, dummyMessage);
+                proposedBlock = playerController.proposeBlock(leaderId, curRound, dummyMessage);
             }
             assert proposedBlock != null : "proposedBlock cannot be null";
             assert proposedBlock.getPrev() != null : "proposed block has to have not null prev block";
@@ -83,24 +75,24 @@ public class StreamletRoundSimulator extends RoundSimulator {
             if (roundMessageTrace != null && roundMessageTrace.proposalMessage.size() > 0) {
                 blockProposalMessageCommunicationList = roundMessageTrace.proposalMessage;
             } else {
-                blockProposalMessageCommunicationList = corruptPlayerController.generateProposalMessageCommunicationList(
+                blockProposalMessageCommunicationList = playerController.generateProposalMessageCommunicationList(
                         leaderId,
                         curRound,
                         proposedBlock
                 );
             }
             // send the block to the network
-            corruptPlayerController.sendMessageListViaNetwork(curRound, blockProposalMessageCommunicationList);
+            playerController.sendMessageListViaNetwork(curRound, blockProposalMessageCommunicationList);
             // transact messages for the network for this round
-            networkSimulator.beginRound(curRound);
-            corruptPlayerController.processBlockProposal(curRound);
+            networkSimulator.sendMessagesToPlayers(curRound);
+            playerController.processBlockProposal(curRound);
             // for those players received the proposed block,
             // process the message and generate the votes to other players (trace)
             final List<Task> voteMessageList;
             if (roundMessageTrace != null && roundMessageTrace.voteMessage.size() > 0) {
                 voteMessageList = roundMessageTrace.voteMessage;
             } else {
-                voteMessageList = corruptPlayerController.generateVoteMessageList(curRound, leaderId, proposedBlock);
+                voteMessageList = playerController.generateVoteMessageList(curRound, leaderId, proposedBlock);
             }
             jsonifier.writeMessageTrace(
                     leaderId,
@@ -109,13 +101,13 @@ public class StreamletRoundSimulator extends RoundSimulator {
                     blockProposalMessageCommunicationList,
                     voteMessageList);
             // send vote to each other via network
-            corruptPlayerController.sendMessageListViaNetwork(curRound, voteMessageList);
+            playerController.sendMessageListViaNetwork(curRound, voteMessageList);
             // transact votes in the network of this round
-            networkSimulator.beginRound(curRound);
+            networkSimulator.sendMessagesToPlayers(curRound);
             // process vote
-            corruptPlayerController.processVotesForEachPlayer(curRound);
-            corruptPlayerController.finalizeChainForEachPlayer(curRound);
-            corruptPlayerController.endRoundForPlayers(curRound);
+            playerController.processVotesForEachPlayer(curRound);
+            playerController.finalizeChainForEachPlayer(curRound);
+            playerController.endRoundForPlayers(curRound);
 
             jsonifier.writeStateTracePath(curRound);
             System.out.println("---------------------------");

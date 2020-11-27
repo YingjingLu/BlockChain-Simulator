@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.lang.Math;
 import java.util.stream.Stream;
 
-public class StreamletCorruptPlayerController extends PlayerController {
+public class StreamletPlayerController extends PlayerController {
     public List<Integer> honestPlayerIdList;
     public List<Integer> corruptPlayerIdList;
 
@@ -19,7 +19,7 @@ public class StreamletCorruptPlayerController extends PlayerController {
     public List<Integer> honestG1;
     public List<Integer> honestG2;
 
-    public StreamletCorruptPlayerController(
+    public StreamletPlayerController(
             final NetworkSimulator networkSimulator,
             final CryptographyAuthenticator authenticator,
             final Map<Integer, Player> honestPlayerMap,

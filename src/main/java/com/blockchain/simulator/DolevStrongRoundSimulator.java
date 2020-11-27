@@ -1,30 +1,29 @@
 package com.blockchain.simulator;
 import java.util.List;
 import java.util.LinkedList;
+import java.io.IOException;
+import java.lang.IllegalArgumentException;
+import org.json.simple.parser.ParseException;
 public class DolevStrongRoundSimulator extends RoundSimulator {
 
     // total number of rounds to simulate
     // -1 if runs until terminating condition
     public final int totalRounds;
+    public final DolevStrongJsonifier jsonifier;
     private final DolevStrongConfig config;
 
-    DolevStrongCorruptPlayerController corruptPlayerController;
-    DolevStrongHonestPlayerController honestPlayerController;
+    DolevStrongPlayerController playerController;
 
-    public DolevStrongRoundSimulator( DolevStrongConfig configuration) {
+    public DolevStrongRoundSimulator( final String traceRootPath)
+            throws IOException, IllegalArgumentException, ParseException {
         super();
-        this.totalRounds = configuration.round;
-        this.config = configuration;
-        final int totalPlayer = configuration.numTotalPlayer;
-        final int corruptPlayer = configuration.numCorruptPlayer;
+        jsonifier = new DolevStrongJsonifier(this, traceRootPath);
+        this.config = jsonifier.getConfig();
+        this.totalRounds = this.config.round;
+        final int totalPlayer = this.config.numTotalPlayer;
+        final int corruptPlayer = this.config.numCorruptPlayer;
 
-        corruptPlayerController = new DolevStrongCorruptPlayerController(
-                networkSimulator,
-                authenticator,
-                honestPlayerMap,
-                corruptPlayerMap
-        );
-        honestPlayerController = new DolevStrongHonestPlayerController(
+        playerController = new DolevStrongPlayerController(
                 networkSimulator,
                 authenticator,
                 honestPlayerMap,
@@ -34,53 +33,42 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
         final int startCorrupt = totalPlayer - corruptPlayer;
         for (int i = 0; i < totalPlayer; i++) {
             if (i >= startCorrupt) {
-                corruptPlayerMap.put(i, new DolevStrongPlayer(i, corruptPlayerController));
+                corruptPlayerMap.put(i, new DolevStrongPlayer(i, playerController));
             } else {
-                honestPlayerMap.put(i, new DolevStrongPlayer(i, honestPlayerController));
+                honestPlayerMap.put(i, new DolevStrongPlayer(i, playerController));
             }
         }
     }
 
-    public void run() {
+    public void run() throws IOException, IllegalArgumentException, ParseException {
         int initialRound = 0;
         final int sender = config.senderId;
         final Bit initialBit = config.inputBit;
         List<Bit> initialArray = new LinkedList<Bit>();
         initialArray.add(initialBit);
         final DolevStrongMessage initialMessage = new DolevStrongMessage(0, initialArray, -1, sender);
-        corruptPlayerController.beginRound(0);
-        honestPlayerController.beginRound(0);
+        playerController.beginRound(0);
         // give input to the player
         // start round 0
         // sender sends message to other players
         giveMessageToPlayer(sender, initialMessage, initialRound);
-        if (isPlayerHonest(sender)) {
-            honestPlayerController.sendInitialBitToOtherPlayersViaNetwork(sender);
-        } else {
-            corruptPlayerController.sendInitialBitToOtherPlayersViaNetwork(sender);
-        }
-        networkSimulator.beginRound(initialRound);
-        honestPlayerController.endRoundForPlayers(initialRound);
-        corruptPlayerController.endRoundForPlayers(initialRound);
+        playerController.sendInitialBitToOtherPlayersViaNetwork(sender);
+        networkSimulator.sendMessagesToPlayers(initialRound);
+        playerController.endRoundForPlayers(initialRound);
 
         for (int round = 1; round < totalRounds; round ++) {
-            networkSimulator.beginRound(round);
-            honestPlayerController.beginRound(round);
-            corruptPlayerController.beginRound(round);
-            honestPlayerController.sendMessagesToOtherPlayersViaNetwork(round);
-            corruptPlayerController.sendMessagesToOtherPlayersViaNetwork(round);
-            honestPlayerController.endRoundForPlayers(round);
-            corruptPlayerController.endRoundForPlayers(round);
+            networkSimulator.sendMessagesToPlayers(round);
+            playerController.beginRound(round);
+            playerController.sendMessagesToOtherPlayersViaNetwork(round);
+            playerController.endRoundForPlayers(round);
         }
 
         // the end of last round
         // every player reach an output
-        networkSimulator.beginRound(totalRounds);
-        honestPlayerController.endRoundForPlayers(totalRounds);
-        corruptPlayerController.endRoundForPlayers(totalRounds);
-        honestPlayerController.createOutputForEveryPlayer(totalRounds);
-        corruptPlayerController.createOutputForEveryPlayer(totalRounds);
-        honestPlayerController.printOutput();
+        networkSimulator.sendMessagesToPlayers(totalRounds);
+        playerController.endRoundForPlayers(totalRounds);
+        playerController.createOutputForEveryPlayer(totalRounds);
+        playerController.printOutput();
     }
 
     private void giveMessageToPlayer(final int playerId, final DolevStrongMessage message, final int curRound) {
