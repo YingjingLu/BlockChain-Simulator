@@ -5,6 +5,8 @@
         "num_corrupt_player": 2,
         "num_total_player": 4,
         "sender": 3,
-        "initial_bit": 1
+        "initial_bit": 1,
+        "max_delay": -1,
+        "use_trace": false
     }
 }

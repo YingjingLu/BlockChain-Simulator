@@ -81,6 +81,7 @@ public class StreamletRoundSimulator extends RoundSimulator {
                         proposedBlock
                 );
             }
+            networkSimulator.boundMessageDelayForSynchronousNetwork(config.maxDelay, blockProposalMessageCommunicationList);
             // send the block to the network
             playerController.sendMessageListViaNetwork(curRound, blockProposalMessageCommunicationList);
             // transact messages for the network for this round
@@ -94,6 +95,7 @@ public class StreamletRoundSimulator extends RoundSimulator {
             } else {
                 voteMessageList = playerController.generateVoteMessageList(curRound, leaderId, proposedBlock);
             }
+            networkSimulator.boundMessageDelayForSynchronousNetwork(config.maxDelay, voteMessageList);
             jsonifier.writeMessageTrace(
                     leaderId,
                     curRound,

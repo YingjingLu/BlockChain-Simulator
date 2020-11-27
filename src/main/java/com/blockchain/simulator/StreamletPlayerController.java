@@ -249,18 +249,7 @@ public class StreamletPlayerController extends PlayerController {
         taskList.add(newTask);
     }
 
-    /**
-     * Iterate through all tasks add then to the network message queue.
-     * Nothing fancy here
-     *
-     * @param curRound
-     * @param messageTaskList
-     */
-    public void sendMessageListViaNetwork(final int curRound, final List<Task> messageTaskList) {
-        for (final Task task : messageTaskList) {
-            networkSimulator.addTaskToNetworkQueue(curRound, task);
-        }
-    }
+
 
     /**
      * Core step during the attack. Our strategy is follow:

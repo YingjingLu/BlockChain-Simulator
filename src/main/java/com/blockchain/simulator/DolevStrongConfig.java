@@ -5,7 +5,8 @@ public class DolevStrongConfig {
     public final int round;
     public final int numCorruptPlayer;
     public final int numTotalPlayer;
-
+    public final int maxDelay;
+    final boolean useTrace;
     public int senderId;
     public Bit inputBit;
 
@@ -14,11 +15,14 @@ public class DolevStrongConfig {
             final int numCorruptPlayer,
             final int numTotalPlayer,
             final int sender,
-            final int initialBit) {
+            final int initialBit,
+            final int maxDelay,
+            final boolean useTrace) {
         this.round = round;
         this.numCorruptPlayer = numCorruptPlayer;
         this.numTotalPlayer = numTotalPlayer;
-
+        this.maxDelay = maxDelay;
+        this.useTrace = useTrace;
         concludeSenderId(sender);
         concludeInitialBit(initialBit);
     }

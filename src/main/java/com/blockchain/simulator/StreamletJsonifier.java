@@ -85,7 +85,7 @@ public class StreamletJsonifier extends Jsonifer {
 
 
     public StreamletConfig jsonObjectToConfig(JSONObject jsonObject) throws IllegalArgumentException {
-        final int round, numTotalPlayer, numCorruptPlayer;
+        final int round, numTotalPlayer, numCorruptPlayer, maxDelay;
         final boolean useTrace;
         if (jsonObject.containsKey("round")) {
             round = Integer.parseInt(jsonObject.get("round").toString());
@@ -107,11 +107,17 @@ public class StreamletJsonifier extends Jsonifer {
         } else {
             throw new IllegalArgumentException("Config file should contain use_trace");
         }
+        if (jsonObject.containsKey("max_delay")) {
+            maxDelay = Integer.parseInt(jsonObject.get("max_delay").toString());
+        } else {
+            throw new IllegalArgumentException("Config file should contain max_delay");
+        }
         return new StreamletConfig(
                 round,
                 numTotalPlayer,
                 numCorruptPlayer,
-                useTrace
+                useTrace,
+                maxDelay
         );
     }
 

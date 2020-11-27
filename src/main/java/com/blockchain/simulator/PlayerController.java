@@ -1,4 +1,5 @@
 package com.blockchain.simulator;
+import java.util.List;
 import java.util.Map;
 
 public abstract class PlayerController {
@@ -20,5 +21,18 @@ public abstract class PlayerController {
         this.corruptPlayerMap = corruptPlayerMap;
         this.authenticator = authenticator;
         curRound = 0;
+    }
+
+    /**
+     * Iterate through all tasks add then to the network message queue.
+     * Nothing fancy here
+     *
+     * @param curRound
+     * @param messageTaskList
+     */
+    public void sendMessageListViaNetwork(final int curRound, final List<Task> messageTaskList) {
+        for (final Task task : messageTaskList) {
+            networkSimulator.addTaskToNetworkQueue(curRound, task);
+        }
     }
 }

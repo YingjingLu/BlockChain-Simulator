@@ -1,6 +1,9 @@
 package com.blockchain.simulator;
 
 import java.util.Map;
+import java.util.List;
+import java.util.LinkedList;
+
 public class DolevStrongPlayerController extends PlayerController{
     // record the negated bit
     // if the initial sender is corrupt should we use this parameter
@@ -41,16 +44,17 @@ public class DolevStrongPlayerController extends PlayerController{
      * true bit and other half the negated bit
      * @param senderId
      */
-    public void sendInitialBitToOtherPlayersViaNetwork(final int senderId) {
+    public List<Task> sendInitialBitToOtherPlayersViaNetwork(final int senderId) {
         if (corruptPlayerMap.containsKey(senderId)) {
-            corruptPlayerSendInputToOtherPlayers(senderId);
+            return corruptPlayerSendInputToOtherPlayers(senderId);
         }
         else {
-            honestPlayerSendInputToOtherPlayers(senderId);
+            return honestPlayerSendInputToOtherPlayers(senderId);
         }
     }
 
-    public void corruptPlayerSendInputToOtherPlayers(final int senderId) {
+    public List<Task> corruptPlayerSendInputToOtherPlayers(final int senderId) {
+        final List<Task> taskList = new LinkedList<>();
         DolevStrongPlayer sender = (DolevStrongPlayer) corruptPlayerMap.get(senderId);
         assert sender.curRoundMessages.size() == 1 : "Sender should receive an initial bit of 1";
         DolevStrongMessage receivedMessage = sender.curRoundMessages.get(0);
@@ -62,7 +66,7 @@ public class DolevStrongPlayerController extends PlayerController{
                     0, negatedBit, sender.getId(), destPlayer.getId()
             );
             authenticator.dolevStrongFAuth(newMessage);
-            networkSimulator.sendMessage(destPlayer, newMessage, 0);
+            taskList.add(new Task(destPlayer, newMessage, 0));
         }
         final int honestPlayerCount = honestPlayerMap.size();
         final int half = honestPlayerCount / 2;
@@ -81,12 +85,13 @@ public class DolevStrongPlayerController extends PlayerController{
             }
             cur ++;
             authenticator.dolevStrongFAuth(newMessage);
-            networkSimulator.sendMessage(destPlayer, newMessage, 0);
+            taskList.add(new Task(destPlayer, newMessage, 0));
         }
+        return taskList;
     }
 
-    public void honestPlayerSendInputToOtherPlayers(final int senderId) {
-        assert honestPlayerMap.containsKey(senderId): "Honest player map should contain the sender Id";
+    public List<Task> honestPlayerSendInputToOtherPlayers(final int senderId) {
+        final List<Task> taskList = new LinkedList<>();
         DolevStrongPlayer sender = (DolevStrongPlayer) honestPlayerMap.get(senderId);
         assert sender.curRoundMessages.size() == 1 : "Sender should receive an initial bit of 1";
         DolevStrongMessage receivedMessage = sender.curRoundMessages.get(0);
@@ -97,7 +102,7 @@ public class DolevStrongPlayerController extends PlayerController{
             newMessage.setFromPlayerId(sender.getId());
             newMessage.setToPlayerId(destPlayer.getId());
             authenticator.dolevStrongFAuth(newMessage);
-            networkSimulator.sendMessage(destPlayer, newMessage, 0);
+            taskList.add(new Task(destPlayer, newMessage, 0));
         }
 
         for (Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
@@ -106,8 +111,9 @@ public class DolevStrongPlayerController extends PlayerController{
                     0, messageBit, sender.getId(), destPlayer.getId()
             );
             authenticator.dolevStrongFAuth(newMessage);
-            networkSimulator.sendMessage(destPlayer, newMessage, 0);
+            taskList.add(new Task(destPlayer, newMessage, 0));
         }
+        return taskList;
     }
 
     /**
@@ -115,12 +121,14 @@ public class DolevStrongPlayerController extends PlayerController{
      * For corrupt player the best way is to only send the messages with negated bit to other players
      * @param round
      */
-    public void sendMessagesToOtherPlayersViaNetwork (final int round) {
-        corruptPlayerGenerateMessagesToOtherPlayers(round);
-        honestPlayerGenerateMessageToOtherPlayers(round);
+    public List<Task> sendMessagesToOtherPlayersViaNetwork (final int round) {
+        final List<Task> taskList = new LinkedList<>();
+        corruptPlayerGenerateMessagesToOtherPlayers(round, taskList);
+        honestPlayerGenerateMessageToOtherPlayers(round, taskList);
+        return taskList;
     }
 
-    public void corruptPlayerGenerateMessagesToOtherPlayers(final int round) {
+    public void corruptPlayerGenerateMessagesToOtherPlayers(final int round, final List<Task> taskList) {
         for (Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
             final DolevStrongPlayer corruptPlayer = (DolevStrongPlayer) entry.getValue();
             for (DolevStrongMessage srcMessage : corruptPlayer.prevRoundMessages) {
@@ -135,7 +143,7 @@ public class DolevStrongPlayerController extends PlayerController{
                         destMessage.setFromPlayerId(corruptPlayer.getId());
                         destMessage.setToPlayerId(destPlayer.getId());
                         authenticator.dolevStrongFAuth(destMessage);
-                        networkSimulator.sendMessage(destPlayer, destMessage, 1);
+                        taskList.add(new Task(destPlayer, destMessage, 1));
                     }
 
                     for (Map.Entry<Integer, Player> destEntry : honestPlayerMap.entrySet()) {
@@ -145,14 +153,14 @@ public class DolevStrongPlayerController extends PlayerController{
                         destMessage.setFromPlayerId(corruptPlayer.getId());
                         destMessage.setToPlayerId(destPlayer.getId());
                         authenticator.dolevStrongFAuth(destMessage);
-                        networkSimulator.sendMessage(destPlayer, destMessage, 1);
+                        taskList.add(new Task(destPlayer, destMessage, 1));
                     }
                 }
             }
         }
     }
 
-    public void honestPlayerGenerateMessageToOtherPlayers(final int round) {
+    public void honestPlayerGenerateMessageToOtherPlayers(final int round, final List<Task> taskList) {
         for (Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {
             final DolevStrongPlayer honestPlayer = (DolevStrongPlayer) entry.getValue();
             for (DolevStrongMessage srcMessage : honestPlayer.prevRoundMessages) {
@@ -166,7 +174,7 @@ public class DolevStrongPlayerController extends PlayerController{
                     destMessage.setFromPlayerId(honestPlayer.getId());
                     destMessage.setToPlayerId(destPlayer.getId());
                     authenticator.dolevStrongFAuth(destMessage);
-                    networkSimulator.sendMessage(destPlayer, destMessage, 1);
+                    taskList.add(new Task(destPlayer, destMessage, 1));
                 }
 
                 for (Map.Entry<Integer, Player> destEntry : honestPlayerMap.entrySet()) {
@@ -176,7 +184,7 @@ public class DolevStrongPlayerController extends PlayerController{
                     destMessage.setFromPlayerId(honestPlayer.getId());
                     destMessage.setToPlayerId(destPlayer.getId());
                     authenticator.dolevStrongFAuth(destMessage);
-                    networkSimulator.sendMessage(destPlayer, destMessage, 1);
+                    taskList.add(new Task(destPlayer, destMessage, 1));
                 }
             }
         }

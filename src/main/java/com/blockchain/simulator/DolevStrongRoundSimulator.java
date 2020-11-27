@@ -41,6 +41,8 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
     }
 
     public void run() throws IOException, IllegalArgumentException, ParseException {
+        jsonifier.writeStateTracePath(-1);
+
         int initialRound = 0;
         final int sender = config.senderId;
         final Bit initialBit = config.inputBit;
@@ -51,16 +53,42 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
         // give input to the player
         // start round 0
         // sender sends message to other players
-        giveMessageToPlayer(sender, initialMessage, initialRound);
-        playerController.sendInitialBitToOtherPlayersViaNetwork(sender);
+        DolevStrongMessageTrace initialMessageTrace = null;
+        if (config.useTrace) {
+            initialMessageTrace = jsonifier.getRoundMessageTrace(0);
+        }
+        final List<Task> initialTaskList;
+        if (initialMessageTrace != null && initialMessageTrace.taskList.size() != 0) {
+            initialTaskList = initialMessageTrace.taskList;
+        } else {
+            giveMessageToPlayer(sender, initialMessage, initialRound);
+            initialTaskList = playerController.sendInitialBitToOtherPlayersViaNetwork(sender);
+        }
+        playerController.sendMessageListViaNetwork(0, initialTaskList);
         networkSimulator.sendMessagesToPlayers(initialRound);
         playerController.endRoundForPlayers(initialRound);
+        jsonifier.writeMessageTrace(0, initialTaskList);
+        jsonifier.writeStateTracePath(0);
 
         for (int round = 1; round < totalRounds; round ++) {
             networkSimulator.sendMessagesToPlayers(round);
             playerController.beginRound(round);
-            playerController.sendMessagesToOtherPlayersViaNetwork(round);
+            final List<Task> taskList;
+            final DolevStrongMessageTrace messageTrace;
+            if (config.useTrace) {
+                messageTrace = jsonifier.getRoundMessageTrace(round);
+            } else {
+                messageTrace = null;
+            }
+            if (messageTrace != null && messageTrace.taskList.size() > 0) {
+                taskList = messageTrace.taskList;
+            } else {
+                taskList = playerController.sendMessagesToOtherPlayersViaNetwork(round);
+            }
+            playerController.sendMessageListViaNetwork(round, taskList);
             playerController.endRoundForPlayers(round);
+            jsonifier.writeMessageTrace(round, taskList);
+            jsonifier.writeStateTracePath(round);
         }
 
         // the end of last round
@@ -68,6 +96,7 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
         networkSimulator.sendMessagesToPlayers(totalRounds);
         playerController.endRoundForPlayers(totalRounds);
         playerController.createOutputForEveryPlayer(totalRounds);
+        jsonifier.writeStateTracePath(totalRounds);
         playerController.printOutput();
     }
 

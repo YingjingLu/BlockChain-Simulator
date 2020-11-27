@@ -35,6 +35,12 @@ public class Jsonifer {
         return (JSONObject) parser.parse(fileReader);
     }
 
+    public JSONArray fileToJSONArray(final String path) throws IOException, ParseException {
+        JSONParser parser = new JSONParser();
+        FileReader fileReader = new FileReader(path);
+        return (JSONArray) parser.parse(fileReader);
+    }
+
     public void jsonObjectToFile(final JSONObject jsonObject, final String path) throws IOException {
         FileWriter writer = new FileWriter(path);
         writer.write(jsonObject.toJSONString());

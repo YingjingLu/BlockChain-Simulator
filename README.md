@@ -11,19 +11,29 @@
 
 ## Initial configs
 {
-    "protocol": "dolev_strong" or "streamlet",
+    "protocol": "dolev_strong" or "streamlet" or "new_protocol",
     "dolev_strong_config": {
         "round": "3",
         "num_corrupt_player": "3",
         "num_total_player": "10",
         "sender": "0",
-        "initial_bit": "-1" for random, "1" or "0" for defined
+        "use_trace": true,
+        "initial_bit": "-1" for random, "1" or "0" for defined,
+        "max_delay": 9 // max number of round -1 for no limit
     },
     "streamlet_config": {
         "round": "10",
         "num_corrupt_player": "3",
         "num_total_player": "10",
-        "use_trace": true
+        "use_trace": true,
+        "max_delay": 9 // max number of round -1 for no limit
+    },
+    "new_protocol_config": {
+        "round": "10",
+        "num_corrupt_player": "3",
+        "num_total_player": "10",
+        "use_trace": true,
+        "max_delay": 2
     }
 }
 
@@ -45,6 +55,7 @@
 
 ### DolevStrongPlayerState
 {
+    "player_id": 1,
     "extracted_set": ["0", "1"]
 }
 
