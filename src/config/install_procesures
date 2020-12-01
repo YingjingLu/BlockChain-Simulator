@@ -1,0 +1,41 @@
+sudo apt update
+sudo apt install default-jre
+sudo apt install maven
+mvn -version
+
+curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+https://github.com/YingjingLu/blockchain-simulator.git
+https://github.com/YingjingLu/BlockChain-UI.git
+https://github.com/YingjingLu/Blockchain-Backend.git
+
+mvn clean package assembly:single
+
+sudo npm install -g forever 
+sudo npm install -g serve
+
+sudo apt install nginx
+
+cd /etc/nginx/sites-available
+
+server {
+    listen 80;
+    server_name _;
+}
+location / {
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_set_header Host $http_host;
+    proxy_pass http://172.31.44.197:8080; 
+}
+
+
+sudo systemctl restart nginx
+
+forever start server.js
+forever list
+forever stop 0
+forever restart 0
+
+54.144.41.15
+ubuntu@ec2-54-144-41-15.compute-1.amazonaws.com

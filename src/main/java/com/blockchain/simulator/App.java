@@ -13,8 +13,7 @@ import org.json.simple.parser.ParseException;
 public class App
 {
     public static void main( String[] args )
-            throws IOException, ParseException, IllegalArgumentException
-    {
+            throws IOException, ParseException, IllegalArgumentException {
         System.out.println("Hello\n");
         JSONParser parser = new JSONParser();
         FileReader fileReader = new FileReader(Jsonifer.getConfigPathForApp(args[0]));
@@ -29,7 +28,11 @@ public class App
         } else if (protocol.equals("streamlet")) {
             StreamletRoundSimulator simulator = new StreamletRoundSimulator(args[0]);
             simulator.run();
-        } else {
+        } else if (protocol.equals("sample_protocol")) {
+            // TODO: change the identifier keyword for a legit protocol name
+            SampleProtocolRoundSimulator simulator = new SampleProtocolRoundSimulator(args[0]);
+            simulator.run();
+        }else {
             throw new IllegalArgumentException("Protocol in Config is not implemented");
         }
     }
