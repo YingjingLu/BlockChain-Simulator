@@ -375,7 +375,6 @@ public class StreamletPlayerController extends PlayerController {
             final StreamletPlayer destPlayer = (StreamletPlayer) entry.getValue();
             destPlayer.tryFinalizeChain();
         }
-
     }
 
     public void endRoundForPlayers(final int round) {

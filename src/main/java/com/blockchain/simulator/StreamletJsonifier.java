@@ -65,8 +65,8 @@ public class StreamletJsonifier extends Jsonifer {
             proposalTaskList = new LinkedList<>();
         }
 
-        if (jsonObject.containsKey("vote_message")) {
-            JSONArray arr = (JSONArray) jsonObject.get("vote_message");
+        if (jsonObject.containsKey("vote_task")) {
+            JSONArray arr = (JSONArray) jsonObject.get("vote_task");
             voteTaskList = new LinkedList<>();
             for (Object obj : arr) {
                 voteTaskList.add(jsonObjectToTask((JSONObject) obj));

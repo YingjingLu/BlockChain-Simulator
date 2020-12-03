@@ -56,6 +56,7 @@ public class SampleProtocolRoundSimulator extends RoundSimulator {
             List<Task> inputTaskList = playerController.receiveInputForRound(inputList, round);
             // flush the input to players
             playerController.sendMessageListViaNetwork(round, inputTaskList);
+            networkSimulator.boundMessageDelayForSynchronousNetwork(config.maxDelay, inputTaskList);
             networkSimulator.sendMessagesToPlayers(round);
 
             // Inter player communication for inner round
@@ -68,6 +69,7 @@ public class SampleProtocolRoundSimulator extends RoundSimulator {
 
             // flush the message to players that are supposed to be delivered for the current round
             playerController.sendMessageListViaNetwork(round, messageTaskList);
+            networkSimulator.boundMessageDelayForSynchronousNetwork(config.maxDelay, messageTaskList);
             networkSimulator.sendMessagesToPlayers(round);
 
             playerController.endRoundForPlayers(round);
