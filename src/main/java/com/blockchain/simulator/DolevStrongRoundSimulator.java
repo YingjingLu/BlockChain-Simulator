@@ -71,6 +71,7 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
         jsonifier.writeStateTracePath(0);
 
         for (int round = 1; round < totalRounds; round ++) {
+            networkSimulator.beginRound(round);
             networkSimulator.sendMessagesToPlayers(round);
             playerController.beginRound(round);
             final List<Task> taskList;

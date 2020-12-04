@@ -14,6 +14,7 @@ public class StreamletPlayer extends Player {
     public List<Message> curRoundMessageList;
     public Map<Integer, StreamletMessage> blockIdToBlockMessageMap;
     public Map<Integer, Integer> blockIdToVoteCountMap;
+    public List<StreamletBlock> blockPendingVotingForCurRound;
 
     public int longestNotarizedChainLevel;
 
@@ -27,9 +28,10 @@ public class StreamletPlayer extends Player {
         curRoundMessageList = new LinkedList<>();
         blockIdToBlockMessageMap = new HashMap<>();
         blockIdToVoteCountMap = new HashMap<>();
-
+        blockPendingVotingForCurRound = new LinkedList<>();
         // starting from genesis block
         longestNotarizedChainLevel = 0;
+
     }
     public void receiveMessage(final Message message, final int round) {
         curRoundMessageList.add((StreamletMessage) message);
@@ -40,13 +42,6 @@ public class StreamletPlayer extends Player {
         assert ! chainTailMap.containsKey(block.getRound()) : "Adding a new block already exists in the chain";
 
         chainTailMap.put(block.getRound(), block);
-    }
-
-    public void removeTailFromMap(final StreamletBlock block) {
-        assert block != null : "block should not be null";
-        assert chainTailMap.containsKey(block.getRound()) : "Removing a block does not exists in the chain";
-
-        chainTailMap.remove(block.getRound());
     }
 
     public void processBlockProposal(final int curRound) {
@@ -105,6 +100,7 @@ public class StreamletPlayer extends Player {
             }
             chainTailMap.put(block.getRound(), block);
             blockIdToVoteCountMap.put(block.getRound(), 0);
+            blockPendingVotingForCurRound.add(block);
         }
     }
 
@@ -128,7 +124,10 @@ public class StreamletPlayer extends Player {
         if (!blockMap.get(predecessorBlockRound).getNotorized()) {
             return false;
         }
-        return blockMap.get(predecessorBlockRound).getLevel() == longestNotarizedChainLevel;
+        // should extend the longest level and the block extending from should be notarized
+        boolean res = blockMap.get(predecessorBlockRound).getLevel() == longestNotarizedChainLevel;
+        res = res && blockMap.get(predecessorBlockRound).getNotorized();
+        return res;
     }
 
     public void processVotes(final int notorizedThreshold) {
@@ -149,7 +148,6 @@ public class StreamletPlayer extends Player {
                             pendingNotorizedBlockList.add(blockRound);
                             // remove the block id from both maps
                             blockIdToVoteCountMap.remove(blockRound);
-
                         }
                     }
                 }
@@ -160,6 +158,7 @@ public class StreamletPlayer extends Player {
             blockMap.get(blockRound).setNotorized();
             longestNotarizedChainLevel = Math.max(longestNotarizedChainLevel, blockMap.get(blockRound).getLevel());
         }
+        curRoundMessageList.clear();
     }
 
     public void tryFinalizeChain() {
@@ -198,13 +197,13 @@ public class StreamletPlayer extends Player {
                     cur.setFinalized();
                     cur = cur.getPrev();
                 }
-//                blockList.get(1).setFinalized();
-//                blockList.get(2).setFinalized();
             }
         }
     }
 
     public void endRound() {
-        assert curRoundMessageList.isEmpty() :"Player at the end of the round should have no remainning message";
+        // clear out the blocks this player has voted for in current round
+        blockPendingVotingForCurRound.clear();
+        curRoundMessageList.clear();
     }
 }

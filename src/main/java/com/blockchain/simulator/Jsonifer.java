@@ -11,6 +11,9 @@ import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+/**
+ * File IO
+ */
 public class Jsonifer {
     public final String traceRootPath;
 

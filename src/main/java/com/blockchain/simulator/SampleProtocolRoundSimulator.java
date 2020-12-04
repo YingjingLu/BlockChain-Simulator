@@ -48,6 +48,7 @@ public class SampleProtocolRoundSimulator extends RoundSimulator {
     public void run() throws IOException, IllegalArgumentException, ParseException {
         for (int round = 0; round < this.config.round; round ++) {
             playerController.beginRound(round);
+            networkSimulator.beginRound((round));
             // flush the pending nessage get delayed from previous rounds to this round
             networkSimulator.sendMessagesToPlayers(round);
 
@@ -56,6 +57,7 @@ public class SampleProtocolRoundSimulator extends RoundSimulator {
             List<Task> inputTaskList = playerController.receiveInputForRound(inputList, round);
             // flush the input to players
             playerController.sendMessageListViaNetwork(round, inputTaskList);
+            // If the network has the upper bound delay, then we should bound it
             networkSimulator.boundMessageDelayForSynchronousNetwork(config.maxDelay, inputTaskList);
             networkSimulator.sendMessagesToPlayers(round);
 
@@ -69,6 +71,7 @@ public class SampleProtocolRoundSimulator extends RoundSimulator {
 
             // flush the message to players that are supposed to be delivered for the current round
             playerController.sendMessageListViaNetwork(round, messageTaskList);
+            // If the network has the upper bound delay, then we should bound it
             networkSimulator.boundMessageDelayForSynchronousNetwork(config.maxDelay, messageTaskList);
             networkSimulator.sendMessagesToPlayers(round);
 

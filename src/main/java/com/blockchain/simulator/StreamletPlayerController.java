@@ -263,25 +263,25 @@ public class StreamletPlayerController extends PlayerController {
      * @param curRound
      * @return
      */
-    public List<Task> generateVoteMessageList(final int curRound, final int leaderId, final StreamletBlock block) {
+    public List<Task> generateVoteMessageList(final int curRound, final int leaderId) {
         List<Task> res = new LinkedList<>();
         final int attackDelay = corruptPlayerMap.size() + honestPlayerMap.size() + 1;
         // if leader is corrupt send to all other nodes without delay
         for (int fromId : corruptPlayerIdList) {
-            generateVoteMessages(res, fromId, corruptPlayerIdList, block, 0);
-            generateVoteMessages(res, fromId, honestPlayerIdList, block, 0);
+            generateVoteMessages(res, fromId, corruptPlayerIdList, 0);
+            generateVoteMessages(res, fromId, honestPlayerIdList, 0);
         }
         for (int fromId : honestG1) {
-            generateVoteMessages(res, fromId, corruptPlayerIdList, block, 0);
-            generateVoteMessages(res, fromId, honestG1, block, 0);
+            generateVoteMessages(res, fromId, corruptPlayerIdList, 0);
+            generateVoteMessages(res, fromId, honestG1, 0);
 //            generateVoteMessages(res, fromId, honestG2, block, attackDelay);
-            generateVoteMessages(res, fromId, honestG2, block, 0);
+            generateVoteMessages(res, fromId, honestG2, 0);
         }
         for (int fromId : honestG2) {
-            generateVoteMessages(res, fromId, corruptPlayerIdList, block, 0);
-            generateVoteMessages(res, fromId, honestG2, block, 0);
+            generateVoteMessages(res, fromId, corruptPlayerIdList, 0);
+            generateVoteMessages(res, fromId, honestG2, 0);
 //            generateVoteMessages(res, fromId, honestG1, block, attackDelay);
-            generateVoteMessages(res, fromId, honestG1, block, 0);
+            generateVoteMessages(res, fromId, honestG1, 0);
         }
         return res;
     }
@@ -299,43 +299,53 @@ public class StreamletPlayerController extends PlayerController {
             final List<Task> voteMessageList,
             final int fromPlayerId,
             final List<Integer> toPlayerIdList,
-            final StreamletBlock block,
             final int delay) {
         final StreamletPlayer player;
-        final boolean decision;
+        final boolean playerHonest;
+
         if (corruptPlayerMap.containsKey(fromPlayerId)) {
             player = (StreamletPlayer) corruptPlayerMap.get(fromPlayerId);
-            decision = true;
+            playerHonest = false;
         } else {
             player = (StreamletPlayer) honestPlayerMap.get(fromPlayerId);
-            decision = player.determineBlockVote(block);
+            playerHonest = true;
         }
-        for (int toPlayerId : toPlayerIdList) {
-            StreamletMessage newMessage = new StreamletMessage(
-                    true,
-                    block.getRound(),
-                    block.getMessage(),
-                    fromPlayerId,
-                    toPlayerId,
-                    block.getProposerId()
-            );
-            if (decision) {
-                newMessage.setApprove();
+        for (StreamletBlock block : player.blockPendingVotingForCurRound) {
+            final boolean decision;
+            // honest player determine vote according to protocol
+            // corrupt player always vote agreed according to current attack
+            if (playerHonest) {
+                decision = player.determineBlockVote(block);
             } else {
-                newMessage.setReject();
+                decision = true;
             }
-            Player toPlayer;
-            if (corruptPlayerMap.containsKey(toPlayerId)) {
-                toPlayer = corruptPlayerMap.get(toPlayerId);
-            } else {
-                toPlayer = honestPlayerMap.get(toPlayerId);
+            for (int toPlayerId : toPlayerIdList) {
+                StreamletMessage newMessage = new StreamletMessage(
+                        true,
+                        block.getRound(),
+                        block.getMessage(),
+                        fromPlayerId,
+                        toPlayerId,
+                        block.getProposerId()
+                );
+                if (decision) {
+                    newMessage.setApprove();
+                } else {
+                    newMessage.setReject();
+                }
+                Player toPlayer;
+                if (corruptPlayerMap.containsKey(toPlayerId)) {
+                    toPlayer = corruptPlayerMap.get(toPlayerId);
+                } else {
+                    toPlayer = honestPlayerMap.get(toPlayerId);
+                }
+                final Task newTask = new Task(
+                        toPlayer,
+                        newMessage,
+                        delay
+                );
+                voteMessageList.add(newTask);
             }
-            final Task newTask = new Task(
-                    toPlayer,
-                    newMessage,
-                    delay
-            );
-            voteMessageList.add(newTask);
         }
     }
 

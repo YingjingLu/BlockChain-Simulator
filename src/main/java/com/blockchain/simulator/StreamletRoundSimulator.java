@@ -52,6 +52,8 @@ public class StreamletRoundSimulator extends RoundSimulator {
             } else {
                 roundMessageTrace = null;
             }
+            // start network simulator prepared for current round
+            networkSimulator.beginRound(curRound);
 
             // start current round new block proposal
             final int leaderId;
@@ -93,7 +95,7 @@ public class StreamletRoundSimulator extends RoundSimulator {
             if (roundMessageTrace != null && roundMessageTrace.voteMessage.size() > 0) {
                 voteMessageList = roundMessageTrace.voteMessage;
             } else {
-                voteMessageList = playerController.generateVoteMessageList(curRound, leaderId, proposedBlock);
+                voteMessageList = playerController.generateVoteMessageList(curRound, leaderId);
             }
             networkSimulator.boundMessageDelayForSynchronousNetwork(config.maxDelay, voteMessageList);
             jsonifier.writeMessageTrace(

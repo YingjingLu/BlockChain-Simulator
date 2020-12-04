@@ -20,6 +20,10 @@ public class NetworkSimulator {
         messageQueue = new HashMap<>();
     }
 
+    public void beginRound(final int round) {
+        curRound = round;
+    }
+
     /**
      * Update the current round, set the local variable
      * If there are messages scheduled for current round, then pop all of them and send them to the player
@@ -48,20 +52,11 @@ public class NetworkSimulator {
         }
     }
 
-    /**
-     * Send a message with the number of round of delay
-     *
-     * @param message the message pre-configured with destination player
-     * @param delay the number of rounds that delays the message
-     */
-    public void sendMessage(Player player, final Message message, final int delay) {
-        Task task = new Task(player, message, delay);
-        addTaskToNetworkQueue(curRound, task);
-        System.out.println("Round " + message.getRound() + "From Player " + message.getFromPlayerId() + " To Player " + message.getToPlayerId() + "Bit" + message.getMessage().get(0).toString() );
-    }
-
     public void addTaskToNetworkQueue(final int curRound, final Task task) {
         if (task.getDelay() == INFINITE_ROUND) {
+            return;
+        } else if (task.getDelay() < 0) {
+            System.out.println("Error: delay should be non-negative, given " + task.getDelay());
             return;
         }
         final int targetRound = curRound + task.getDelay();
