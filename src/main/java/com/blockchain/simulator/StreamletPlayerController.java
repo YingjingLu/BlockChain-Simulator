@@ -1,7 +1,5 @@
 package com.blockchain.simulator;
 
-import com.sun.jdi.event.StepEvent;
-
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -23,8 +21,9 @@ public class StreamletPlayerController extends PlayerController {
             final NetworkSimulator networkSimulator,
             final CryptographyAuthenticator authenticator,
             final Map<Integer, Player> honestPlayerMap,
-            final Map<Integer, Player> corruptPlayerMap) {
-        super(networkSimulator, authenticator, honestPlayerMap, corruptPlayerMap);
+            final Map<Integer, Player> corruptPlayerMap,
+            final Map<Integer, Player> playerMap) {
+        super(networkSimulator, authenticator, honestPlayerMap, corruptPlayerMap, playerMap);
         corruptPlayerIdList = new LinkedList<>();
         for (Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
             corruptPlayerIdList.add(entry.getKey());
@@ -50,11 +49,63 @@ public class StreamletPlayerController extends PlayerController {
         }
     }
 
-    public StreamletBlock proposeBlock(final int leaderId, final int curRound, final List<Bit> message) {
+    public void sendInputMessagesToPlayers(List<StreamletMessage> inputMessageList) {
+        for (StreamletMessage message : inputMessageList) {
+            StreamletPlayer targetPlayer = (StreamletPlayer) playerMap.get(message.getToPlayerId());
+            targetPlayer.receiveInput(message);
+        }
+    }
+
+    /**
+     * Iterate through each player's received input for this round, generate their broadcast to each player
+     * each player then broadcast this info to other players
+     *
+     * TODO: Currently there is no adversary to interfere in the middle, but we can implement according to attach strategy
+     *
+     * @return
+     */
+    public List<Task> generateInputBroadcastTaskList() {
+        List<Task> res = new LinkedList<>();
+        for (Map.Entry<Integer, Player> entry : playerMap.entrySet()) {
+            StreamletPlayer initialPlayer = (StreamletPlayer) entry.getValue();
+            for (StreamletMessage inputMessage : initialPlayer.curRoundInputMessageList) {
+                // initial message should first send to every one
+                for (Map.Entry<Integer, Player> innerEntry : playerMap.entrySet()) {
+                    Player firstHandPlayer = innerEntry.getValue();
+                    StreamletMessage newMessage = (StreamletMessage) inputMessage.deepCopy();
+                    newMessage.setFromPlayerId(initialPlayer.getId());
+                    newMessage.setToPlayerId(firstHandPlayer.getId());
+                    res.add(new Task(firstHandPlayer, newMessage, 0)); // no delay
+                }
+                // Since we have no delay, every player just directly echo this message back to others
+                // if we will have delay version we need to re-implement this
+                for (Map.Entry<Integer, Player> srcEntry : playerMap.entrySet()) {
+                    Player broadcastSrcPlayer = srcEntry.getValue();
+                    for (Map.Entry<Integer, Player> targetEntry : playerMap.entrySet()) {
+                        Player broadcastTargetPlayer = targetEntry.getValue();
+                        StreamletMessage newMessage = (StreamletMessage) inputMessage.deepCopy();
+                        newMessage.setFromPlayerId(broadcastSrcPlayer.getId());
+                        newMessage.setToPlayerId(broadcastTargetPlayer.getId());
+                        res.add(new Task(broadcastTargetPlayer, newMessage, 0)); // still zero delay by our assumption
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    public void processInputs() {
+        for (Map.Entry<Integer, Player> entry : playerMap.entrySet()) {
+            StreamletPlayer player = (StreamletPlayer) entry.getValue();
+            player.proceeeInputs();
+        }
+    }
+
+    public StreamletBlock proposeBlock(final int leaderId, final int curRound) {
         if (honestPlayerMap.containsKey(leaderId)) {
-            return honestPlayerProposeBlock(leaderId, curRound, message);
+            return honestPlayerProposeBlock(leaderId, curRound);
         } else {
-            return corruptPlayerProposeBlock(leaderId, curRound, message);
+            return corruptPlayerProposeBlock(leaderId, curRound);
         }
     }
 
@@ -64,14 +115,20 @@ public class StreamletPlayerController extends PlayerController {
      *
      * @param leaderId
      * @param curRound
-     * @param message
      * @return
      */
-    public StreamletBlock honestPlayerProposeBlock(final int leaderId, final int curRound, final List<Bit> message) {
+    public StreamletBlock honestPlayerProposeBlock(final int leaderId, final int curRound) {
         StreamletPlayer leader = (StreamletPlayer) honestPlayerMap.get(leaderId);
         int maxCurDepth = -1;
         StreamletBlock tailBlock = null;
         assert leader.chainTailMap.size() > 0 : "elected leader should have at least genesis block";
+        final List<Integer> message = new LinkedList<>();
+        // honest player always incorporate all the info it receives into the message
+        for (StreamletMessage msg : leader.curRoundInputMessageList) {
+            message.addAll(msg.getMessage());
+        }
+        leader.curRoundInputMessageList.clear();
+
         /**
          * Iterate through every tail
          * trace through the chain to find the most recent notarized block, record its depth
@@ -95,28 +152,35 @@ public class StreamletPlayerController extends PlayerController {
 
     /**
      * Corrupt player has the following strategy:
-     * Assume that it has at least 1/3 of them, and corrupt players are elected as leaders in consecutive rounds:
-     * divide the honest players into two groups, try to make the two groups of honest players of different view
-     * for certain rounds.
+     *      * Assume that it has at least 1/3 of them, and corrupt players are elected as leaders in consecutive rounds:
+     *      * divide the honest players into two groups, try to make the two groups of honest players of different view
+     *      * for certain rounds.
+     *      *
+     *      * Strategy:
+     *      * if the last round was proposed by corrupt player and that block gets notarized
+     *      *
+     *      * if there are two notorized chains of same length
+     *      *     propose from one arbitrarily, prioritize the one that has tail notorized block proposed by corrupt player
+     *      * else:
+     *      *     propose a block that extends the second longest chain
      *
-     * Strategy:
-     * if the last round was proposed by corrupt player and that block gets notarized
-     *
-     * if there are two notorized chains of same length
-     *     propose from one arbitrarily, prioritize the one that has tail notorized block proposed by corrupt player
-     * else:
-     *     propose a block that extends the second longest chain
      * @param leaderId
      * @param curRound
-     * @param message
      * @return
      */
-    public StreamletBlock corruptPlayerProposeBlock(final int leaderId, final int curRound, final List<Bit> message) {
+    public StreamletBlock corruptPlayerProposeBlock(final int leaderId, final int curRound) {
         StreamletPlayer leader = (StreamletPlayer) corruptPlayerMap.get(leaderId);
         // maintain a block list of size 2 (cur second block, cur first block)
         LinkedList<StreamletBlock> size2Heap = new LinkedList<>();
         assert leader.chainTailMap.size() > 0 : "elected leader should have at least genesis block";
 
+        // currently corrupt players also incorporate all the incoming messages in its block
+        final List<Integer> message = new LinkedList<>();
+        // honest player always incorporate all the info it receives into the message
+        for (StreamletMessage msg : leader.curRoundInputMessageList) {
+            message.addAll(msg.getMessage());
+        }
+        leader.curRoundInputMessageList.clear();
         // if the last round is proposed by corrupt player, gets notorized, then extend it
         final int lastBlockRound = curRound - 1;
         if (blockRoundProposedByCorruptPlayerSet.contains(lastBlockRound)) {
@@ -224,7 +288,7 @@ public class StreamletPlayerController extends PlayerController {
         final StreamletMessage newMessage = new StreamletMessage(
                 false,
                 block.getRound(),
-                new LinkedList<Bit>(block.getMessage()),
+                new LinkedList<>(block.getMessage()),
                 srcPlayer.getId(),
                 destPlayer.getId(),
                 block.getProposerId()
@@ -290,9 +354,9 @@ public class StreamletPlayerController extends PlayerController {
      * Obtain the vote for fromPlayerId, send this vote to all other players in the toPlaerIdList with given delay
      * Add them into voteMessageList
      *
+     * @param voteMessageList
      * @param fromPlayerId
      * @param toPlayerIdList
-     * @param block
      * @param delay
      */
     public void generateVoteMessages(
@@ -362,6 +426,7 @@ public class StreamletPlayerController extends PlayerController {
 
     public void processVotesForEachPlayer(final int round) {
         final int totalNumPlayer = honestPlayerMap.size() + corruptPlayerMap.size();
+        //the threshold guarantees at least 2/3 of the player
         final int notorizedThreshold = (int)Math.ceil((double)totalNumPlayer * 2.0 / 3.0);
         // look at each of the blocks that are accumulating votes
         // if contains at least 2/3 votes, notorize it and put it in the chain
@@ -398,16 +463,4 @@ public class StreamletPlayerController extends PlayerController {
         }
     }
 
-    public boolean containsBlockProposedByCorruptPlayer(final StreamletBlock tail) {
-        StreamletBlock cur = tail;
-        StreamletBlock prev = tail.getPrev();
-        while(prev != null) {
-            if (corruptPlayerMap.containsKey(cur.getProposerId())) {
-                return true;
-            }
-            cur = prev;
-            prev = prev.getPrev();
-        }
-        return false;
-    }
 }

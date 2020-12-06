@@ -1,8 +1,9 @@
 package com.blockchain.simulator;
 import java.util.List;
-import java.util.LinkedList;
 import java.io.IOException;
 import java.lang.IllegalArgumentException;
+import java.util.Map;
+
 import org.json.simple.parser.ParseException;
 public class DolevStrongRoundSimulator extends RoundSimulator {
 
@@ -23,11 +24,19 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
         final int totalPlayer = this.config.numTotalPlayer;
         final int corruptPlayer = this.config.numCorruptPlayer;
 
+        for (Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
+            playerMap.put(entry.getKey(), entry.getValue());
+        }
+        for (Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {
+            playerMap.put(entry.getKey(), entry.getValue());
+        }
+
         playerController = new DolevStrongPlayerController(
                 networkSimulator,
                 authenticator,
                 honestPlayerMap,
-                corruptPlayerMap
+                corruptPlayerMap,
+                playerMap
         );
 
         final int startCorrupt = totalPlayer - corruptPlayer;
@@ -42,13 +51,7 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
 
     public void run() throws IOException, IllegalArgumentException, ParseException {
         jsonifier.writeStateTracePath(-1);
-
         int initialRound = 0;
-        final int sender = config.senderId;
-        final Bit initialBit = config.inputBit;
-        List<Bit> initialArray = new LinkedList<Bit>();
-        initialArray.add(initialBit);
-        final DolevStrongMessage initialMessage = new DolevStrongMessage(0, initialArray, -1, sender);
         playerController.beginRound(0);
         // give input to the player
         // start round 0
@@ -61,8 +64,8 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
         if (initialMessageTrace != null && initialMessageTrace.taskList.size() != 0) {
             initialTaskList = initialMessageTrace.taskList;
         } else {
-            giveMessageToPlayer(sender, initialMessage, initialRound);
-            initialTaskList = playerController.sendInitialBitToOtherPlayersViaNetwork(sender);
+            playerController.sendInputMessagesToPlayers(config.inputMessageList.get(0));
+            initialTaskList = playerController.generatePlayerInputMessageList();
         }
         playerController.sendMessageListViaNetwork(0, initialTaskList);
         networkSimulator.sendMessagesToPlayers(initialRound);
@@ -84,7 +87,7 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
             if (messageTrace != null && messageTrace.taskList.size() > 0) {
                 taskList = messageTrace.taskList;
             } else {
-                taskList = playerController.sendMessagesToOtherPlayersViaNetwork(round);
+                taskList = playerController.generateMessageTasksAmongPlayers(round);
             }
             playerController.sendMessageListViaNetwork(round, taskList);
             playerController.endRoundForPlayers(round);
@@ -101,14 +104,7 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
         playerController.printOutput();
     }
 
-    private void giveMessageToPlayer(final int playerId, final DolevStrongMessage message, final int curRound) {
-        DolevStrongPlayer player;
-        if (honestPlayerMap.containsKey(playerId)) {
-            player = (DolevStrongPlayer) honestPlayerMap.get(playerId);
-        }
-        else {
-            player = (DolevStrongPlayer) corruptPlayerMap.get(playerId);
-        }
-        player.receiveMessage(message, curRound);
+    private void playerControllerSendInputsToPlayers(final List<DolevStrongMessage> messageList) {
+
     }
 }

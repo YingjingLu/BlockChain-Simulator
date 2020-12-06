@@ -1,6 +1,8 @@
 package com.blockchain.simulator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,11 +13,13 @@ public class StreamletPlayer extends Player {
     public Map<Integer, StreamletBlock> chainTailMap;
     public Map<Integer, StreamletBlock> blockMap;
     // block round id, block message
-    public List<Message> curRoundMessageList;
+    public List<StreamletMessage> curRoundInputMessageList;
+    public List<StreamletMessage> curRoundMessageList;
     public Map<Integer, StreamletMessage> blockIdToBlockMessageMap;
     public Map<Integer, Integer> blockIdToVoteCountMap;
     public List<StreamletBlock> blockPendingVotingForCurRound;
-
+    public Set<Integer> pendingTransactionSet;
+    public Set<Integer> confirmedTransactionSet;
     public int longestNotarizedChainLevel;
 
     public StreamletPlayer(final int id, PlayerController playerController) {
@@ -25,14 +29,48 @@ public class StreamletPlayer extends Player {
         blockMap = new HashMap<>();
         addTailToMap(chainHead);
         blockMap.put(chainHead.getRound(), chainHead);
+        curRoundInputMessageList = new LinkedList<>();
         curRoundMessageList = new LinkedList<>();
         blockIdToBlockMessageMap = new HashMap<>();
         blockIdToVoteCountMap = new HashMap<>();
         blockPendingVotingForCurRound = new LinkedList<>();
+        pendingTransactionSet = new HashSet<>();
+        confirmedTransactionSet = new HashSet<>();
         // starting from genesis block
         longestNotarizedChainLevel = 0;
 
     }
+    public void receiveInput(final Message message) {
+        StreamletMessage streamletMessage = (StreamletMessage) message;
+        curRoundInputMessageList.add(streamletMessage);
+        processInputMessage(streamletMessage);
+    }
+
+    public void processInputMessage(StreamletMessage message) {
+        for (int tx : message.getMessage()) {
+            if (!confirmedTransactionSet.contains(tx)) {
+                pendingTransactionSet.add(tx);
+            }
+        }
+    }
+
+    /**
+     * Filter from the received message list to get broadcasted input messages
+     * process them and remove those messages from currentMessageList
+     */
+    public void proceeeInputs() {
+        List<StreamletMessage> filteredMessageList = new LinkedList<>();
+        for (StreamletMessage message : curRoundMessageList) {
+            if (message.getRound() == Globals.streamletInputMessageRound) {
+                processInputMessage(message);
+            } else {
+                filteredMessageList.add(message);
+            }
+        }
+        curRoundMessageList.clear();
+        curRoundMessageList = filteredMessageList;
+    }
+
     public void receiveMessage(final Message message, final int round) {
         curRoundMessageList.add((StreamletMessage) message);
     }
@@ -46,18 +84,17 @@ public class StreamletPlayer extends Player {
 
     public void processBlockProposal(final int curRound) {
         List<StreamletBlock> pendingAddedBlockList = new LinkedList<>();
-        List<Message> filteredVoteMessageList = new LinkedList<>();
+        List<StreamletMessage> filteredVoteMessageList = new LinkedList<>();
         // iterate over all messages, filter those block proposals, construct them into blocks,
         // move those vote messages into the
-        for (Message msg : curRoundMessageList) {
-            StreamletMessage streamletMessage = (StreamletMessage) msg;
+        for (StreamletMessage streamletMessage : curRoundMessageList) {
             if (!streamletMessage.getIsVote()) {
                 assert !blockMap.containsKey(streamletMessage.getRound()) : "There should not be duplicated message for the same block";
                 // construct block from message
                 StreamletBlock block = new StreamletBlock(
                         streamletMessage.getRound(),
                         streamletMessage.getProposerId(),
-                        new LinkedList<Bit>(streamletMessage.getMessage())
+                        new LinkedList<>(streamletMessage.getMessage())
                 );
                 pendingAddedBlockList.add(block);
                 blockIdToBlockMessageMap.put(streamletMessage.getRound(), streamletMessage);
@@ -196,6 +233,10 @@ public class StreamletPlayer extends Player {
                     assert cur.getNotorized() : "the finalized chain should only contains notarized blocks";
                     cur.setFinalized();
                     cur = cur.getPrev();
+                    for (int tx : cur.getMessage()) {
+                        pendingTransactionSet.remove(tx);
+                        confirmedTransactionSet.add(tx);
+                    }
                 }
             }
         }
@@ -205,5 +246,6 @@ public class StreamletPlayer extends Player {
         // clear out the blocks this player has voted for in current round
         blockPendingVotingForCurRound.clear();
         curRoundMessageList.clear();
+        curRoundInputMessageList.clear();
     }
 }

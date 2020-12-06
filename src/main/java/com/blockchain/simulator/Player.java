@@ -7,9 +7,9 @@ public abstract class Player {
         this.id = id;
         this.playerController = playerController;
     }
-
+    public abstract void receiveInput(final Message message);
     public abstract void receiveMessage(final Message message, int round);
-
+    public abstract void endRound();
     public int getId() {
         return this.id;
     }

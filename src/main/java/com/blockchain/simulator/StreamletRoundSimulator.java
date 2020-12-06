@@ -31,20 +31,35 @@ public class StreamletRoundSimulator extends RoundSimulator {
                 honestPlayerMap.put(i, new StreamletPlayer(i, playerController));
             }
         }
+        for (Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
+            playerMap.put(entry.getKey(), entry.getValue());
+        }
+        for (Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {
+            playerMap.put(entry.getKey(), entry.getValue());
+        }
 
         playerController = new StreamletPlayerController(
                 networkSimulator,
                 authenticator,
                 honestPlayerMap,
-                corruptPlayerMap
+                corruptPlayerMap,
+                playerMap
         );
     }
 
     public void run() throws IOException, IllegalArgumentException, ParseException {
         jsonifier.writeStateTracePath(-1);
         for (int curRound = 0; curRound < totalRounds; curRound ++) {
-            List<Bit> dummyMessage = new LinkedList<>();
-            dummyMessage.add(Bit.ONE);
+            // start network simulator prepared for current round
+            networkSimulator.beginRound(curRound);
+            // messages delayed from previous rounds should delivered by now
+            // And we should trigger the players to process them
+            networkSimulator.sendMessagesToPlayers(curRound);
+            playerController.processInputs();
+            playerController.processBlockProposal(curRound);
+            playerController.processVotesForEachPlayer(curRound);
+            playerController.finalizeChainForEachPlayer(curRound);
+
 
             final StreamletMessageTrace roundMessageTrace;
             if (config.useTrace) {
@@ -52,9 +67,6 @@ public class StreamletRoundSimulator extends RoundSimulator {
             } else {
                 roundMessageTrace = null;
             }
-            // start network simulator prepared for current round
-            networkSimulator.beginRound(curRound);
-
             // start current round new block proposal
             final int leaderId;
             if (roundMessageTrace != null) {
@@ -62,12 +74,24 @@ public class StreamletRoundSimulator extends RoundSimulator {
             } else {
                 leaderId = electLeader(curRound);
             }
+            // send current round input to designated players and for them to process
+            playerController.sendInputMessagesToPlayers(this.config.inputMessageList.get(curRound));
+            final List<Task> broadcastInputTaskList;
+            if (roundMessageTrace != null && roundMessageTrace.transactionBroadcast != null) {
+                broadcastInputTaskList = roundMessageTrace.transactionBroadcast;
+            } else {
+                broadcastInputTaskList = playerController.generateInputBroadcastTaskList();
+            }
+            networkSimulator.boundMessageDelayForSynchronousNetwork(config.maxDelay, broadcastInputTaskList);
+            playerController.sendMessageListViaNetwork(curRound, broadcastInputTaskList);
+            networkSimulator.sendMessagesToPlayers(curRound);
+            playerController.processInputs();
             // propose a leader with a block of a given round (trace)
             final StreamletBlock proposedBlock;
             if (roundMessageTrace != null && roundMessageTrace.proposal != null) {
                 proposedBlock = roundMessageTrace.proposal;
             } else {
-                proposedBlock = playerController.proposeBlock(leaderId, curRound, dummyMessage);
+                proposedBlock = playerController.proposeBlock(leaderId, curRound);
             }
             assert proposedBlock != null : "proposedBlock cannot be null";
             assert proposedBlock.getPrev() != null : "proposed block has to have not null prev block";
@@ -103,7 +127,8 @@ public class StreamletRoundSimulator extends RoundSimulator {
                     curRound,
                     proposedBlock,
                     blockProposalMessageCommunicationList,
-                    voteMessageList);
+                    voteMessageList,
+                    broadcastInputTaskList);
             // send vote to each other via network
             playerController.sendMessageListViaNetwork(curRound, voteMessageList);
             // transact votes in the network of this round

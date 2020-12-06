@@ -16,10 +16,22 @@
         "round": "3",
         "num_corrupt_player": "3",
         "num_total_player": "10",
-        "sender": "0",
         "use_trace": true,
-        "initial_bit": "-1" for random, "1" or "0" for defined,
-        "max_delay": 9 // max number of round -1 for no limit
+        "max_delay": 1 // max number of round -1 for no limit,
+        // if this field is not given, then it is gonna have random sender with a random bit
+        "inputs": [ 
+            // 2D array of input for each round
+            // each round is a separate array
+            [ // this is the 0th array so for round zero
+                {
+                    "round": "0",
+                    "message": ["0"], // "-1" for random, "1" or "0" for defined,
+                    "signatures": [],
+                    "from_player_id": "-1",
+                    "to_player_id": "0" // for Dolev strong this is the designated sender
+                }
+            ]
+        ]
     },
     "streamlet_config": {
         "round": "10",
@@ -27,13 +39,33 @@
         "num_total_player": "10",
         "use_trace": true,
         "max_delay": 9 // max number of round -1 for no limit
+        "inputs": [ // if not given then player by default has a dummy input message, do not need to specify here
+            [
+                {
+                    "is_vote": false,
+                    "approved": "0" or "1" or "2",
+                    "proposer_id": "0",
+                    "signatures": [],
+                    "round": "0",
+                    "message": ["0", "1"],
+                    "from_player_id": "-1",
+                    "to_player_id": "6" // player which receives input
+                }
+            ]
+        ]
     },
     "new_protocol_config": {
+        // required arguments 
         "round": "10",
         "num_corrupt_player": "3",
         "num_total_player": "10",
         "use_trace": true,
-        "max_delay": 2
+        "max_delay": 2,
+        "inputs": [
+            [
+                new_message_message_object    
+            ]    
+        ]
     }
 }
 
@@ -71,6 +103,10 @@
     "vote_task": [
         task 1 json,
         task 2 json,
+        ...
+    ],
+    "broadcast_input": [
+        task 1 json,
         ...
     ]
 }
@@ -150,3 +186,28 @@
         ...
     ]
 }
+
+# Feature TODOs:
+- [ ] Implement inputs in the config: setup format, jsonifier, round simulator, player controller, player method
+- [ ] Redesign a streamlet attack
+- [ ] UI for upload and download for execution
+- [ ] Running Case samples 3 for Dolev Strong 3 for streamlet
+- [ ] UI for different node color
+- [ ] Environmental variable for java execution
+
+# Report TODOs:
+- [ ] Streamlet attack case
+- [ ] Sample cases illustrations
+- [ ] Class interface structures
+- [ ] Major class Java docs
+- [ ] Input configuration and trace formats 
+- [ ] How to write honest new protocol
+- [ ] How to change attack strategy for Dolev Strong and Streamlet
+- [ ] How to configure network Model and Delay Parameters
+- [ ] How to run Simulator (Command line + UI)
+- [ ] How to visualize Streamlet through UI
+- [ ] How to install and set up (Simulator + UI)
+- [ ] Javadoc for Streamlet and Dolev Strong
+- [ ] Root directory: Overview of Folder structure and report
+
+# Remember the message trace represent original message and all implicit echoing

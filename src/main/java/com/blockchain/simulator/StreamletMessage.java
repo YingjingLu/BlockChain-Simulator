@@ -5,35 +5,45 @@ import java.util.List;
 
 public class StreamletMessage extends Message {
     // true for vote message, false for block proposal message
+    public static final String splitter = "&";
     final boolean isVote;
     Bit approved;
     final int proposerId;
+    public List<Integer> message;
     public StreamletMessage(
             final boolean isVote,
             final int inRound,
-            final List<Bit> inMessage,
+            final List<Integer> inMessage,
             final int inFromPlayerId,
             final int inToPlayerId,
             final int proposerId) {
-        super(inRound, inMessage, inFromPlayerId, inToPlayerId);
+        super(inRound, inFromPlayerId, inToPlayerId);
         this.isVote = isVote;
         approved = Bit.FLOOR;
         this.proposerId = proposerId;
+        this.message = inMessage;
     }
-    public static StreamletMessage CreateMessageFromBit(
-            final boolean isVote,
-            final int inRound,
-            final Bit inMessage,
-            final int inFromPlayerId,
-            final int inToPlayerId,
-            final int proposerId) {
-        final List<Bit> message = new LinkedList<Bit>();
-        message.add(inMessage);
-        return new StreamletMessage(isVote, inRound, message, inFromPlayerId, inToPlayerId, proposerId);
+
+    public String messageToString() {
+        StringBuilder builder = new StringBuilder();
+        for (int i : message) {
+            builder.append(i);
+            builder.append(splitter);
+        }
+        return builder.toString();
+    }
+
+    public static List<Integer> stringToMessage(String str) {
+        String[] splitArray = str.split(splitter, 0);
+        List<Integer> res = new LinkedList<>();
+        for (String s : splitArray) {
+            res.add(Integer.parseInt(s));
+        }
+        return res;
     }
 
     public Message deepCopy() {
-        List<Bit> newMessageList = new LinkedList<Bit>();
+        List<Integer> newMessageList = new LinkedList<>();
         StreamletMessage newMessage = new StreamletMessage(
                 isVote,
                 round,
@@ -48,7 +58,7 @@ public class StreamletMessage extends Message {
             newMessage.getSignatures().add(sign);
         }
         // copy message
-        for (final Bit b : this.getMessage()) {
+        for (int b : this.getMessage()) {
             newMessage.getMessage().add(b);
         }
         return newMessage;
@@ -66,4 +76,5 @@ public class StreamletMessage extends Message {
     public int getProposerId() {
         return proposerId;
     }
+    public List<Integer> getMessage() { return message; }
 }

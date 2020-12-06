@@ -6,13 +6,14 @@ import java.util.List;
 public class StreamletBlock {
     public final int round;
     public final int proposerId;
-    public final List<Bit> message;
+    public final List<Integer> message;
     public StreamletBlock prev;
     public boolean notorized;
     public boolean finalized;
     public int level;
+    public static final int genesisTransaction = -1;
 
-    public StreamletBlock(final int round, final int proposerId, final List<Bit> msg) {
+    public StreamletBlock(final int round, final int proposerId, final List<Integer> msg) {
         this.round = round;
         this.proposerId = proposerId;
         this.message = msg;
@@ -25,7 +26,7 @@ public class StreamletBlock {
     public StreamletBlock(
             final int round,
             final int proposerId,
-            final List<Bit> msg,
+            final List<Integer> msg,
             final StreamletBlock prev,
             final int level) {
         this.round = round;
@@ -38,8 +39,8 @@ public class StreamletBlock {
     }
 
     public static StreamletBlock getGenesisBlock() {
-        final List<Bit> genesisMessage = new LinkedList<>();
-        genesisMessage.add(Bit.FLOOR);
+        final List<Integer> genesisMessage = new LinkedList<>();
+        genesisMessage.add(genesisTransaction);
         StreamletBlock genesisBLock = new StreamletBlock(-1, -1, genesisMessage, null, 0);
         genesisBLock.setNotorized();
         return genesisBLock;
@@ -61,7 +62,7 @@ public class StreamletBlock {
     }
 
     public StreamletBlock deepCopy() {
-        final List<Bit> newMessage = new LinkedList<>(getMessage());
+        final List<Integer> newMessage = new LinkedList<>(getMessage());
         final StreamletBlock newBlock = new StreamletBlock(
                 getRound(),
                 getProposerId(),
@@ -90,7 +91,7 @@ public class StreamletBlock {
     public int getRound() {
         return round;
     }
-    public List<Bit> getMessage() {
+    public List<Integer> getMessage() {
         return message;
     }
     public int getProposerId () { return proposerId; }

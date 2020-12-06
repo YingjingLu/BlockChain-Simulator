@@ -61,7 +61,7 @@ public class SampleProtocolPlayerController extends PlayerController {
      * @param round
      * @return
      */
-    public List<Task> generateMessagesAmongPlayers(final int round) {
+    public List<Task> generateMessageTasksAmongPlayers(final int round) {
         // TODO: implement the strategy to create the message to to send to other players for each player
         return null;
     }

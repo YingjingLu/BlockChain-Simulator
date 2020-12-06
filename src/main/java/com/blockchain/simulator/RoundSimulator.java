@@ -9,18 +9,15 @@ public abstract class RoundSimulator {
 
     public final Map<Integer, Player> honestPlayerMap;
     public final Map<Integer, Player> corruptPlayerMap;
+    public final Map<Integer, Player> playerMap;
     public final NetworkSimulator networkSimulator;
-
     public final CryptographyAuthenticator authenticator;
 
     public RoundSimulator() {
         honestPlayerMap = new HashMap<>();
         corruptPlayerMap = new HashMap<>();
+        playerMap = new HashMap<>();
         networkSimulator = new NetworkSimulator();
         authenticator = new CryptographyAuthenticator();
-    }
-
-    public boolean isPlayerHonest(final int playerId) {
-        return honestPlayerMap.containsKey(playerId);
     }
 }

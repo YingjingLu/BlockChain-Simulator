@@ -83,7 +83,7 @@ public class CryptographyAuthenticator {
         return new StreamletMessage(
                 Integer.parseInt(rawArr[0]) == 1,
                 Integer.parseInt(rawArr[1]),
-                Message.stringToBitMessage(rawArr[2]),
+                StreamletMessage.stringToMessage(rawArr[2]),
                 Integer.parseInt(rawArr[3]),
                 Integer.parseInt((rawArr[4])),
                 Integer.parseInt(rawArr[5])

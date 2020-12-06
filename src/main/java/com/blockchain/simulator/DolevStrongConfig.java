@@ -1,5 +1,7 @@
 package com.blockchain.simulator;
 import java.util.Random;
+import java.util.List;
+import java.util.LinkedList;
 
 public class DolevStrongConfig {
     public final int round;
@@ -7,53 +9,55 @@ public class DolevStrongConfig {
     public final int numTotalPlayer;
     public final int maxDelay;
     final boolean useTrace;
-    public int senderId;
-    public Bit inputBit;
+    final List<List<DolevStrongMessage>> inputMessageList;
 
     public DolevStrongConfig(
             final int round,
             final int numCorruptPlayer,
             final int numTotalPlayer,
-            final int sender,
-            final int initialBit,
             final int maxDelay,
-            final boolean useTrace) {
+            final boolean useTrace,
+            final DolevStrongMessage initialBitMessage) {
         this.round = round;
         this.numCorruptPlayer = numCorruptPlayer;
         this.numTotalPlayer = numTotalPlayer;
         this.maxDelay = maxDelay;
         this.useTrace = useTrace;
-        concludeSenderId(sender);
-        concludeInitialBit(initialBit);
-    }
 
-
-    public void concludeSenderId(final int id) {
-        if (id == -1) {
-            this.senderId = new Random().nextInt(numTotalPlayer);
+        // if the initial bit message is not given, randomize sender and input bit
+        final DolevStrongMessage newInitialBitMessage;
+        if (initialBitMessage == null) {
+            List<Bit> message = new LinkedList<>();
+            message.add(randomizeInitialBit());
+            newInitialBitMessage = new DolevStrongMessage(
+                    0,
+                    message,
+                    -1,
+                    randomizeSenderId()
+            );
         }
         else {
-            assert id > 0 && id < numTotalPlayer : "sender id must be either -1 for random or within range 0...total player";
-            this.senderId = id;
-        }
-    }
-
-    public void concludeInitialBit(final int initialBit) {
-        if (initialBit == -1) {
-            final int random = new Random().nextInt(2);
-            if (random == 0) {
-                inputBit = Bit.ZERO;
-            } else {
-                inputBit = Bit.ONE;
-            }
-        } else {
-            assert initialBit == 0 || initialBit == 1 : "Either bit is -1 for random or must be either 0 or 1";
-            if (initialBit == 0) {
-                inputBit = Bit.ZERO;
-            } else {
-                inputBit = Bit.ONE;
+            // if sender id is set to -1, then randomize a legit sender id
+            newInitialBitMessage = initialBitMessage;
+            if (newInitialBitMessage.getToPlayerId() == -1) {
+                newInitialBitMessage.setToPlayerId(randomizeSenderId());
             }
         }
+        inputMessageList = new LinkedList<>();
+        final List<DolevStrongMessage> initialMessageList = new LinkedList<>();
+        initialMessageList.add(newInitialBitMessage);
+        inputMessageList.add(initialMessageList);
     }
 
+    public int randomizeSenderId() {
+        return new Random().nextInt(numTotalPlayer);
+    }
+
+    public Bit randomizeInitialBit() {
+        final int random = new Random().nextInt(2);
+        if (random == 0) {
+            return Bit.ZERO;
+        }
+        return Bit.ONE;
+    }
 }

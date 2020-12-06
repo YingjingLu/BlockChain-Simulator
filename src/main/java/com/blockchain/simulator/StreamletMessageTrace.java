@@ -7,17 +7,20 @@ public class StreamletMessageTrace {
     public final StreamletBlock proposal;
     public final List<Task> proposalMessage;
     public final List<Task> voteMessage;
+    public final List<Task> transactionBroadcast;
 
     public StreamletMessageTrace (
             final int leader,
             final StreamletBlock proposal,
             final List<Task> proposalMessage,
-            final List<Task> voteMessage
+            final List<Task> voteMessage,
+            final List<Task> transactionBroadcast
     ) {
         this.leader = leader;
         this.proposal = proposal;
         this.proposalMessage = proposalMessage;
         this.voteMessage = voteMessage;
+        this.transactionBroadcast = transactionBroadcast;
     }
 
     public boolean containsBlockProposal() {

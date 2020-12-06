@@ -66,7 +66,7 @@ public class SampleProtocolRoundSimulator extends RoundSimulator {
             if (this.config.useTrace) {
                 messageTaskList = jsonifier.getMessageTrace(round);
             } else {
-                messageTaskList = playerController.generateMessagesAmongPlayers(round);
+                messageTaskList = playerController.generateMessageTasksAmongPlayers(round);
             }
 
             // flush the message to players that are supposed to be delivered for the current round

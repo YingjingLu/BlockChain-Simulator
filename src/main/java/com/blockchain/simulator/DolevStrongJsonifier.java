@@ -31,29 +31,43 @@ public class DolevStrongJsonifier extends Jsonifer {
         if (!dolevStrongSJON.containsKey("num_total_player")) {
             throw new IllegalArgumentException("Dolev Strong protocol's num_total_player should be specified");
         }
-        if (!dolevStrongSJON.containsKey("sender")) {
-            throw new IllegalArgumentException("Dolev Strong protocol's sender should be specified");
-        }
-        if (!dolevStrongSJON.containsKey("initial_bit")) {
-            throw new IllegalArgumentException("Dolev Strong protocol's initial_bit should be specified");
-        }
         if (!dolevStrongSJON.containsKey("max_delay")) {
             throw new IllegalArgumentException("Dolev Strong protocol's max_delay should be specified");
         }
         if (!dolevStrongSJON.containsKey("use_trace")) {
             throw new IllegalArgumentException("Dolev Strong protocol's use_trace should be specified");
         }
+        final DolevStrongMessage initialBitMessage;
+        if (!dolevStrongSJON.containsKey("inputs")) {
+            initialBitMessage = null;
+        } else {
+            JSONArray level1Array = (JSONArray) dolevStrongSJON.get("inputs");
+            if (level1Array.size() == 0) {
+                initialBitMessage = null;
+            } else {
+                if (level1Array.size() > 1) {
+                    throw new IllegalArgumentException("Dolev Strong protocol should only have one input, check input format");
+                }
+                JSONArray level2Array = (JSONArray) level1Array.get(0);
+                if (level2Array.size() > 1) {
+                    throw new IllegalArgumentException("Dolev Strong protocol should only have one input, check input format");
+                } else {
+                    if (level2Array.size() == 0) {
+                        initialBitMessage = null;
+                    } else {
+                        initialBitMessage = jsonObjectToMessage((JSONObject) level2Array.get(0));
+                    }
+                }
+            }
+        }
 
-        DolevStrongConfig config = new DolevStrongConfig(
+        return new DolevStrongConfig(
                 Integer.parseInt(dolevStrongSJON.get("round").toString()),
                 Integer.parseInt(dolevStrongSJON.get("num_corrupt_player").toString()),
                 Integer.parseInt(dolevStrongSJON.get("num_total_player").toString()),
-                Integer.parseInt(dolevStrongSJON.get("sender").toString()),
-                Integer.parseInt(dolevStrongSJON.get("initial_bit").toString()),
                 Integer.parseInt(dolevStrongSJON.get("max_delay").toString()),
-                parseBool(dolevStrongSJON, "use_trace")
-        );
-        return config;
+                parseBool(dolevStrongSJON, "use_trace"),
+                initialBitMessage);
     }
 
     public void writeMessageTrace(final int round, final List<Task> taskList) throws IOException {
@@ -62,9 +76,7 @@ public class DolevStrongJsonifier extends Jsonifer {
         for (Task t : taskList) {
             taskArray.add(taskToJSONObject(t));
         }
-
         final String path = getMessageTracePath(round);
-
         jsonArrayToFile(taskArray, path);
     }
 
