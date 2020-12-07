@@ -4,10 +4,13 @@
     <list default="true" id="eb84c35f-f74c-4943-8031-644289372395" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_2/player_state_trace/0.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_2/player_state_trace/1.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_2/player_state_trace/2.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_2/player_state_trace/init.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Installation.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Installation.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongJsonifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongJsonifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongPlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongPlayerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongRoundSimulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongRoundSimulator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Jsonifer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Jsonifer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletJsonifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletJsonifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletMessage.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

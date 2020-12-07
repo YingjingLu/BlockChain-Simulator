@@ -28,13 +28,11 @@ public class DolevStrongPlayerController extends PlayerController{
         // honest player action
         for (Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {
             final DolevStrongPlayer honestPlayer = (DolevStrongPlayer) entry.getValue();
-            System.out.println("Cur Round size: " + honestPlayer.curRoundMessages.size());
             for (DolevStrongMessage srcMessage : honestPlayer.curRoundMessages) {
                 assert srcMessage.getMessage().size() == 1 : "Message received should only contain one bit";
                 assert srcMessage.getMessage().get(0) != Bit.FLOOR : "Message should not contain floor bit";
                 honestPlayer.extractedSet.add(srcMessage.getMessage().get(0));
             }
-            System.out.println("Round: " + round + "Player: " + honestPlayer.getId() + "ExtractedSet size: " + honestPlayer.extractedSet.size());
         }
         for (Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {
             final DolevStrongPlayer player = (DolevStrongPlayer) entry.getValue();
@@ -199,8 +197,6 @@ public class DolevStrongPlayerController extends PlayerController{
             }
         }
     }
-
-
     /**
      * Corrupt players do not have to reach any conclusion at the end of the round
      *
@@ -238,5 +234,4 @@ public class DolevStrongPlayerController extends PlayerController{
             System.out.println("Player : " + entry.getKey() + " output: " + bit.toString());
         }
     }
-
 }

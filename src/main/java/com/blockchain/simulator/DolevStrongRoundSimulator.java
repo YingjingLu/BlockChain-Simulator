@@ -102,9 +102,7 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
         playerController.createOutputForEveryPlayer(totalRounds);
         jsonifier.writeStateTracePath(totalRounds);
         playerController.printOutput();
+        jsonifier.writeOutput();
     }
 
-    private void playerControllerSendInputsToPlayers(final List<DolevStrongMessage> messageList) {
-
-    }
 }

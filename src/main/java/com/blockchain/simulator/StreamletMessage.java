@@ -2,10 +2,12 @@ package com.blockchain.simulator;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Iterator;
 
 public class StreamletMessage extends Message {
     // true for vote message, false for block proposal message
     public static final String splitter = "&";
+    public static final String EMPTY_MESSAGE = "EMPTY_MESSAGE";
     final boolean isVote;
     Bit approved;
     final int proposerId;
@@ -25,17 +27,26 @@ public class StreamletMessage extends Message {
     }
 
     public String messageToString() {
+        if (message.size() == 0) {
+            return EMPTY_MESSAGE;
+        }
         StringBuilder builder = new StringBuilder();
-        for (int i : message) {
-            builder.append(i);
-            builder.append(splitter);
+        Iterator<Integer> messageIterator = message.listIterator();
+        while (messageIterator.hasNext()) {
+            builder.append(messageIterator.next());
+            if (messageIterator.hasNext()) {
+                builder.append(splitter);
+            }
         }
         return builder.toString();
     }
 
     public static List<Integer> stringToMessage(String str) {
-        String[] splitArray = str.split(splitter, 0);
         List<Integer> res = new LinkedList<>();
+        if (str.equals(EMPTY_MESSAGE)) {
+            return res;
+        }
+        String[] splitArray = str.split(splitter, 0);
         for (String s : splitArray) {
             res.add(Integer.parseInt(s));
         }

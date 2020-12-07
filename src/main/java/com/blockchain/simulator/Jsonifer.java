@@ -52,7 +52,6 @@ public class Jsonifer {
     }
 
     public void jsonArrayToFile(final JSONArray jsonArray, final String path) throws IOException {
-        System.out.println(path);
         FileWriter writer = new FileWriter(path);
         writer.write(jsonArray.toJSONString());
         writer.flush();
@@ -67,6 +66,10 @@ public class Jsonifer {
 
     public String getConfigPath() {
         return traceRootPath + "/" + "config.json";
+    }
+
+    public String getOutputPath() {
+        return traceRootPath + "/" + "output.json";
     }
 
     public static String getConfigPathForApp(final String traceRootPath) {

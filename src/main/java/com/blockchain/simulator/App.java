@@ -14,7 +14,6 @@ public class App
 {
     public static void main( String[] args )
             throws IOException, ParseException, IllegalArgumentException {
-        System.out.println("Hello\n");
         JSONParser parser = new JSONParser();
         FileReader fileReader = new FileReader(Jsonifer.getConfigPathForApp(args[0]));
         JSONObject jsonObj = (JSONObject) parser.parse(fileReader);

@@ -239,4 +239,14 @@ public class DolevStrongJsonifier extends Jsonifer {
         playerObject.put("extracted_set", extractSet);
         return playerObject;
     }
+
+    public void writeOutput() throws IOException {
+        final String outputPath = getOutputPath();
+        JSONObject outputObject = new JSONObject();
+        for (Map.Entry<Integer, Player> entry : roundSimulator.honestPlayerMap.entrySet()) {
+            final Bit bit = ((DolevStrongPlayer)entry.getValue()).getOutputBit();
+            outputObject.put(entry.getKey(), bit.toString());
+        }
+        jsonObjectToFile(outputObject, outputPath);
+    }
 }

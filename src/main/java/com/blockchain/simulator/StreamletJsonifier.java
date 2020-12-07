@@ -471,7 +471,7 @@ public class StreamletJsonifier extends Jsonifer {
                 if (curBlock.getRound() == -1) {
                     System.out.print("G");
                 } else {
-                    System.out.print(curBlock.getRound() + "(" + curBlock.getLevel() + ")");
+                    System.out.print(curBlock.getRound());
                 }
 
                 if (curBlock.getNotorized()) {
