@@ -218,9 +218,9 @@
 - [ ] How to write honest new protocol
 - [ ] How to change attack strategy for Dolev Strong and Streamlet
 - [ ] How to configure network Model and Delay Parameters
-- [ ] How to run Simulator (Command line + UI)
+- [x] How to run Simulator (Command line + UI)
 - [ ] How to visualize Streamlet through UI
-- [ ] How to install and set up (Simulator + UI)
+- [x] How to install and set up (Simulator + UI)
 - [ ] Javadoc for Streamlet and Dolev Strong
 - [ ] Root directory: Overview of Folder structure and report
 
