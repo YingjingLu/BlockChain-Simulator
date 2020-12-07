@@ -232,11 +232,11 @@ public class StreamletPlayer extends Player {
                 while(cur != null && !cur.getFinalized()) {
                     assert cur.getNotorized() : "the finalized chain should only contains notarized blocks";
                     cur.setFinalized();
-                    cur = cur.getPrev();
                     for (int tx : cur.getMessage()) {
                         pendingTransactionSet.remove(tx);
                         confirmedTransactionSet.add(tx);
                     }
+                    cur = cur.getPrev();
                 }
             }
         }

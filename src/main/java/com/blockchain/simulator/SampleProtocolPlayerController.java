@@ -15,8 +15,9 @@ public class SampleProtocolPlayerController extends PlayerController {
             final NetworkSimulator networkSimulator,
             final CryptographyAuthenticator authenticator,
             final Map<Integer, Player> honestPlayerMap,
-            final Map<Integer, Player> corruptPlayerMap) {
-        super(networkSimulator, authenticator, honestPlayerMap, corruptPlayerMap);
+            final Map<Integer, Player> corruptPlayerMap,
+            final Map<Integer, Player> playerMap) {
+        super(networkSimulator, authenticator, honestPlayerMap, corruptPlayerMap, playerMap);
     }
 
     /**
@@ -74,12 +75,12 @@ public class SampleProtocolPlayerController extends PlayerController {
     public void endRoundForPlayers(final int round) {
         for (Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
             final SampleProtocolPlayer player = (SampleProtocolPlayer) entry.getValue();
-            player.endRound(round);
+            player.endRound();
         }
 
         for (Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {
             final SampleProtocolPlayer player = (SampleProtocolPlayer) entry.getValue();
-            player.endRound(round);
+            player.endRound();
         }
     }
 

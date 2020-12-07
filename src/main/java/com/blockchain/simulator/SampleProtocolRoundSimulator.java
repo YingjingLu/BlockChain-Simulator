@@ -3,6 +3,7 @@ import java.util.List;
 import org.json.simple.parser.ParseException;
 import java.lang.IllegalArgumentException;
 import java.io.IOException;
+import java.util.Map;
 
 public class SampleProtocolRoundSimulator extends RoundSimulator {
 
@@ -19,13 +20,6 @@ public class SampleProtocolRoundSimulator extends RoundSimulator {
         final int totalPlayer = this.config.numTotalPlayer;
         final int corruptPlayer = this.config.numCorruptPlayer;
 
-        playerController = new SampleProtocolPlayerController(
-                networkSimulator,
-                authenticator,
-                honestPlayerMap,
-                corruptPlayerMap
-        );
-
         final int startCorrupt = totalPlayer - corruptPlayer;
         for (int i = 0; i < totalPlayer; i++) {
             if (i >= startCorrupt) {
@@ -34,6 +28,19 @@ public class SampleProtocolRoundSimulator extends RoundSimulator {
                 honestPlayerMap.put(i, new DolevStrongPlayer(i, playerController));
             }
         }
+        for (Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {
+            playerMap.put(entry.getKey(), entry.getValue());
+        }
+        for (Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
+            playerMap.put(entry.getKey(), entry.getValue());
+        }
+        playerController = new SampleProtocolPlayerController(
+                networkSimulator,
+                authenticator,
+                honestPlayerMap,
+                corruptPlayerMap,
+                playerMap
+        );
     }
 
     /**

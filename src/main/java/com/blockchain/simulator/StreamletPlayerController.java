@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Collections;
 import java.lang.Math;
-import java.util.stream.Stream;
+import java.util.Iterator;
 
 public class StreamletPlayerController extends PlayerController {
     public List<Integer> honestPlayerIdList;
@@ -124,10 +124,10 @@ public class StreamletPlayerController extends PlayerController {
         assert leader.chainTailMap.size() > 0 : "elected leader should have at least genesis block";
         final List<Integer> message = new LinkedList<>();
         // honest player always incorporate all the info it receives into the message
-        for (StreamletMessage msg : leader.curRoundInputMessageList) {
-            message.addAll(msg.getMessage());
+        Iterator<Integer> txIterator = leader.pendingTransactionSet.iterator();
+        while (txIterator.hasNext()) {
+            message.add(txIterator.next());
         }
-        leader.curRoundInputMessageList.clear();
 
         /**
          * Iterate through every tail
@@ -177,10 +177,10 @@ public class StreamletPlayerController extends PlayerController {
         // currently corrupt players also incorporate all the incoming messages in its block
         final List<Integer> message = new LinkedList<>();
         // honest player always incorporate all the info it receives into the message
-        for (StreamletMessage msg : leader.curRoundInputMessageList) {
-            message.addAll(msg.getMessage());
+        Iterator<Integer> txIterator = leader.pendingTransactionSet.iterator();
+        while (txIterator.hasNext()) {
+            message.add(txIterator.next());
         }
-        leader.curRoundInputMessageList.clear();
         // if the last round is proposed by corrupt player, gets notorized, then extend it
         final int lastBlockRound = curRound - 1;
         if (blockRoundProposedByCorruptPlayerSet.contains(lastBlockRound)) {

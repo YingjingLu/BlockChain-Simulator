@@ -9,6 +9,9 @@ public class SampleProtocolPlayer extends Player {
     public void receiveMessage(final Message message, int round) {
     }
 
+    public void receiveInput(final Message message) {
+    }
+
     /**
      * Initialize the round specific state for a player
      *
@@ -21,7 +24,7 @@ public class SampleProtocolPlayer extends Player {
      * Clear out the sround specific state for that player
      * @param round
      */
-    public void endRound(final int round) {
+    public void endRound() {
 
     }
 

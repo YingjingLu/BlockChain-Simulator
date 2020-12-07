@@ -1,0 +1,14 @@
+{
+    "proposal": {
+        "finalized": false,
+        "proposer_id": 2,
+        "round": 5,
+        "level": 3,
+        "prev": 4,
+        "message": [
+            "1"
+        ],
+        "notarized": false
+    },
+    "leader": 2
+}
