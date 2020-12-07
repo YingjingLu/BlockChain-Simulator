@@ -1,7 +1,7 @@
 {
     "protocol": "dolev_strong",
     "dolev_strong_config": {
-        "round": 3,
+        "round": 2,
         "num_corrupt_player": 2,
         "num_total_player": 4,
         "max_delay": -1,

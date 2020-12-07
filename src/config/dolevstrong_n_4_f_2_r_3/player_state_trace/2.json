@@ -1,1 +1,1 @@
-{"corrupt":[{"player_id":2,"extracted_set":[]},{"player_id":3,"extracted_set":[]}],"honest":[{"player_id":0,"extracted_set":["0"]},{"player_id":1,"extracted_set":["1"]}]}
+{"corrupt":[{"player_id":2,"extracted_set":[]},{"player_id":3,"extracted_set":[]}],"honest":[{"player_id":0,"extracted_set":["1"]},{"player_id":1,"extracted_set":["0"]}]}

@@ -76,7 +76,7 @@ public class DolevStrongPlayerController extends PlayerController{
                     0, negatedBit, sender.getId(), destPlayer.getId()
             );
             authenticator.dolevStrongFAuth(newMessage);
-            taskList.add(new Task(destPlayer, newMessage, 0));
+            taskList.add(new Task(destPlayer, newMessage, 1));
         }
         final int honestPlayerCount = honestPlayerMap.size();
         final int half = honestPlayerCount / 2;
@@ -95,7 +95,7 @@ public class DolevStrongPlayerController extends PlayerController{
             }
             cur ++;
             authenticator.dolevStrongFAuth(newMessage);
-            taskList.add(new Task(destPlayer, newMessage, 0));
+            taskList.add(new Task(destPlayer, newMessage, 1));
         }
         return taskList;
     }
@@ -112,7 +112,7 @@ public class DolevStrongPlayerController extends PlayerController{
             newMessage.setFromPlayerId(sender.getId());
             newMessage.setToPlayerId(destPlayer.getId());
             authenticator.dolevStrongFAuth(newMessage);
-            taskList.add(new Task(destPlayer, newMessage, 0));
+            taskList.add(new Task(destPlayer, newMessage, 1));
         }
 
         for (Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
@@ -121,7 +121,7 @@ public class DolevStrongPlayerController extends PlayerController{
                     0, messageBit, sender.getId(), destPlayer.getId()
             );
             authenticator.dolevStrongFAuth(newMessage);
-            taskList.add(new Task(destPlayer, newMessage, 0));
+            taskList.add(new Task(destPlayer, newMessage, 1));
         }
         return taskList;
     }

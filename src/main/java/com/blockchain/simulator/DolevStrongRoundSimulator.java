@@ -24,6 +24,14 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
         final int totalPlayer = this.config.numTotalPlayer;
         final int corruptPlayer = this.config.numCorruptPlayer;
 
+        final int startCorrupt = totalPlayer - corruptPlayer;
+        for (int i = 0; i < totalPlayer; i++) {
+            if (i >= startCorrupt) {
+                corruptPlayerMap.put(i, new DolevStrongPlayer(i, playerController));
+            } else {
+                honestPlayerMap.put(i, new DolevStrongPlayer(i, playerController));
+            }
+        }
         for (Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
             playerMap.put(entry.getKey(), entry.getValue());
         }
@@ -38,15 +46,6 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
                 corruptPlayerMap,
                 playerMap
         );
-
-        final int startCorrupt = totalPlayer - corruptPlayer;
-        for (int i = 0; i < totalPlayer; i++) {
-            if (i >= startCorrupt) {
-                corruptPlayerMap.put(i, new DolevStrongPlayer(i, playerController));
-            } else {
-                honestPlayerMap.put(i, new DolevStrongPlayer(i, playerController));
-            }
-        }
     }
 
     public void run() throws IOException, IllegalArgumentException, ParseException {
@@ -98,6 +97,7 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
         // the end of last round
         // every player reach an output
         networkSimulator.sendMessagesToPlayers(totalRounds);
+        playerController.beginRound(totalRounds);
         playerController.endRoundForPlayers(totalRounds);
         playerController.createOutputForEveryPlayer(totalRounds);
         jsonifier.writeStateTracePath(totalRounds);
