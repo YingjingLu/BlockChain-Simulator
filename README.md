@@ -188,15 +188,15 @@
 }
 
 # Feature TODOs:
-- [ ] Implement inputs in the config: setup format, jsonifier, round simulator, player controller, player method
-- [ ] Redesign a streamlet attack
-- [ ] UI for upload and download for execution
-- [ ] Running Case samples 3 for Dolev Strong 3 for streamlet
-- [ ] UI for different node color
-- [ ] Environmental variable for java execution
+- [x] Implement inputs in the config: setup format, jsonifier, round simulator, player controller, player method
+- [x] Redesign a streamlet attack
+- [x] UI for upload and download for execution
+- [x] Running Case samples 3 for Dolev Strong 3 for streamlet
+- [x] UI for different node color
+- [x] Environmental variable for java execution
 
 # Report TODOs:
-- [ ] Streamlet attack case
+- [x] Streamlet attack case
 - [ ] Sample cases illustrations
 - [ ] Class interface structures
 - [ ] Major class Java docs
