@@ -1,6 +1,7 @@
-Consensus Protocol Simulator
+# Consensus Protocol Simulator
 
 Author: Yingjing Lu
+
 Andrew ID: yingjinl
 
 # Feature TODOs:
@@ -18,7 +19,7 @@ Andrew ID: yingjinl
 - [ ] Major class Java docs
 - [x] Input configuration and trace formats 
 - [ ] How to write honest new protocol
-- [ ] How to change attack strategy for Dolev Strong and Streamlet
+- [x] How to change attack strategy for Dolev Strong and Streamlet
 - [ ] How to configure network Model and Delay Parameters
 - [x] How to run Simulator (Command line + UI)
 - [ ] How to visualize Streamlet through UI

@@ -8,7 +8,7 @@ This is the simplest approach to implement a fine-grained attack while not direc
 
 As we have mentioned in `config_and_trace` doc, the model comfig can specify whether to use messages specified in `message_trace` to run the protocol or to generate messages when running the simulator. So you can write out what messages to be transmitted at each round manually and let the simulator to execute that, you can implement an attack without changing the code because the simulator will use the messages you wrote to run the protocol.
 
-1. `In your `config.json` you can choose to turn on `use_trace` to be true.
+1. In your `config.json` you can choose to turn on `use_trace` to be true.
 
 2. For convenience, you can specify a basic `config.json` and let the simulator to generate all the message traces, and modify them later. in both `vote_task`, `proposal_task` and `proposal` you can change any of the parameter or delete one message object(for dropping that message), or any other parameters you want. As long as your change will align with the protocol's definition.
 
@@ -62,5 +62,41 @@ public List<Task> corruptPlayerSendInputToOtherPlayers(final int senderId) {
             taskList.add(new Task(destPlayer, newMessage, 1));
         }
         return taskList;
+    }
+```
+
+Here below we implemented how corrupt players send the messages they receive to other players. In our strategy corrupt players only forward the messages received from other corrupt players to honest players. Code snippet:
+
+```java
+public void corruptPlayerGenerateMessagesToOtherPlayers(final int round, final List<Task> taskList) {
+    for (Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
+        final DolevStrongPlayer corruptPlayer = (DolevStrongPlayer) entry.getValue();
+        for (DolevStrongMessage srcMessage : corruptPlayer.prevRoundMessages) {
+            assert srcMessage.getMessage().size() == 1 : "Message received should only contain one bit";
+            if (srcMessage.getMessage().get(0) == negatedBit) {
+                // send message to pther players except to itself
+                // send to other corrupt players
+                for (Map.Entry<Integer, Player> destEntry : corruptPlayerMap.entrySet()) {
+                    final DolevStrongPlayer destPlayer = (DolevStrongPlayer) destEntry.getValue();
+                    final DolevStrongMessage destMessage = (DolevStrongMessage) srcMessage.deepCopy();
+                    destMessage.setRound(round);
+                    destMessage.setFromPlayerId(corruptPlayer.getId());
+                    destMessage.setToPlayerId(destPlayer.getId());
+                    authenticator.dolevStrongFAuth(destMessage);
+                    taskList.add(new Task(destPlayer, destMessage, 1));
+                }
+
+                for (Map.Entry<Integer, Player> destEntry : honestPlayerMap.entrySet()) {
+                    final DolevStrongPlayer destPlayer = (DolevStrongPlayer) destEntry.getValue();
+                    final DolevStrongMessage destMessage = (DolevStrongMessage) srcMessage.deepCopy();
+                    destMessage.setRound(round);
+                    destMessage.setFromPlayerId(corruptPlayer.getId());
+                    destMessage.setToPlayerId(destPlayer.getId());
+                    authenticator.dolevStrongFAuth(destMessage);
+                    taskList.add(new Task(destPlayer, destMessage, 1));
+                }
+            }
+        }
+    }
     }
 ```

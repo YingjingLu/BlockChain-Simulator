@@ -42,7 +42,14 @@ public class CryptographyAuthenticator {
         );
         message.addSignature(sign);
         signatureMap.put(sign, message);
+    }
 
+    /**
+     * TODO: Implement the authentication function to generate a unique signature and append that into message's signature
+     *
+     * @param message
+     */
+    public void sampleProtocolFAuth(final SampleProtocolMessage message) {
     }
 
     public String getStreamletFAuth(
