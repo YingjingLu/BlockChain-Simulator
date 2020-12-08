@@ -32,7 +32,7 @@ The `/player_state_trace` folder contains each player's state at the end of ever
 * `use_trace`:  true if we use messages defined in the message_trace folder for communication among players each round, if false, protocol do not use any message traces but use protocol's definition to generate and communicate messages.
 * `max_delay`: max number of round -1 for no limit to delay. If this is set to a non-negative number all the message delays, despite being manually configured in message trace, will be capped by this max_delay.
 * `inputs`: The 2D array of `message` objects for each protocol. First dimension is the round and second dimension is the message. So `inputs[0]` stands for all the messages for players in round 0, and so on. For streamlet, there will be only one message, so only `inputs[0][0]` will be cunted. If `inputs` is missing, the sender and the bit will be randomly generated. 
- 
+
 ```
 {
     "protocol": "dolev_strong" or "streamlet" or "new_protocol",
@@ -97,7 +97,7 @@ The `/player_state_trace` folder contains each player's state at the end of ever
 ```
 
 ## Message Trace json structure
-Below defines the message trace json structure for one round (for example `/message_trace/0.json`), This can differ depending on protocol's need. 
+Below defines the message trace json structure for one round (for example `/message_trace/0.json`), This can differ depending on protocol's need. These message traces can be either specified before simulation run or not. If you want to let simulator automatically generate message, leave no file there and the simulator will fill out messages as it runs, or you can choose to use the messages you write and pass that in to the simulator with `config` `use_trace=true`. You can also specify part of the keys for example in streamlet you can specify `proposal_task` and leave `vote_task` blank, the simulator will use the proposal task you defined and automatically generate the vote task messages.
 
 ### DolevStrongMessageTrace
 Each of tasks in this array includes a message one player sends to another

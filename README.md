@@ -16,7 +16,7 @@ Andrew ID: yingjinl
 - [ ] Sample cases illustrations
 - [ ] Class interface structures
 - [ ] Major class Java docs
-- [ ] Input configuration and trace formats 
+- [x] Input configuration and trace formats 
 - [ ] How to write honest new protocol
 - [ ] How to change attack strategy for Dolev Strong and Streamlet
 - [ ] How to configure network Model and Delay Parameters
