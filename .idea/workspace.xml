@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_TEST_SOURCES" value="false" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="eb84c35f-f74c-4943-8031-644289372395" name="Default Changelist" comment="" />
+    <list default="true" id="eb84c35f-f74c-4943-8031-644289372395" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -46,11 +52,5 @@
       <updated>1605936307530</updated>
     </task>
     <servers />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="760" y="274" key="SettingsEditor" timestamp="1606766856172">
-      <screen x="0" y="0" width="2560" height="1400" />
-    </state>
-    <state x="760" y="274" key="SettingsEditor/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1606766856172" />
   </component>
 </project>
