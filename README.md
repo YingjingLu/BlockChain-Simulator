@@ -20,7 +20,7 @@ Andrew ID: yingjinl
 - [x] Input configuration and trace formats 
 - [x] How to write honest new protocol
 - [x] How to change attack strategy for Dolev Strong and Streamlet
-- [ ] How to configure network Model and Delay Parameters
+- [x] How to configure network Model and Delay Parameters
 - [x] How to run Simulator (Command line + UI)
 - [ ] How to visualize Streamlet through UI
 - [x] How to install and set up (Simulator + UI)

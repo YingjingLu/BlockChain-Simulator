@@ -4,14 +4,26 @@ import java.util.HashMap;
 import java.lang.StringBuilder;
 import java.lang.Integer;
 
+/**
+ * Mimicing the crypto authentication methods. Mianly consist of FAuth to generate signature for a player on a message
+ * or verify if a signature is valid
+ */
 public class CryptographyAuthenticator {
     public static final String SPLITTER = ",";
+    // the map that stores all the valid signatures generated so far for verification
     private final Map<String, Message> signatureMap;
 
+    /**
+     * constructor
+     */
     public CryptographyAuthenticator() {
         signatureMap = new HashMap<>();
     }
 
+    /**
+     * Authenticate Dolev Strong messages
+     * @param message
+     */
     public void dolevStrongFAuth(final DolevStrongMessage message) {
         assert message != null : "message for fAuth should not be null";
         // verify that message should not have been verified before
@@ -29,6 +41,10 @@ public class CryptographyAuthenticator {
         signatureMap.put(sign, message);
     }
 
+    /**
+     * Authenticate streamlet messages
+     * @param message
+     */
     public void streamletFAuth(final StreamletMessage message) {
         assert message != null : "message for fAuth should not be null";
         // verify that message should not have been verified before
@@ -46,12 +62,22 @@ public class CryptographyAuthenticator {
 
     /**
      * TODO: Implement the authentication function to generate a unique signature and append that into message's signature
-     *
+     *authenticate Sample Protocol messages
      * @param message
      */
     public void sampleProtocolFAuth(final SampleProtocolMessage message) {
     }
 
+    /**
+     * Generate and return a streamlet message
+     * @param isVote
+     * @param round
+     * @param messageString
+     * @param fromPlayerId
+     * @param toPlayerId
+     * @param proposerId
+     * @return
+     */
     public String getStreamletFAuth(
             final boolean isVote,
             final int round,
@@ -85,6 +111,11 @@ public class CryptographyAuthenticator {
         return new DolevStrongMessage(Integer.parseInt(rawArr[0]), null, Integer.parseInt(rawArr[2]), Integer.parseInt(rawArr[3]));
     }
 
+    /**
+     * Parse streamlet signature to reconstruct the message
+     * @param sign
+     * @return
+     */
     public static StreamletMessage signatureToStreamletMessage(final String sign) {
         String[] rawArr = sign.split(SPLITTER, 0);
         return new StreamletMessage(
@@ -97,6 +128,12 @@ public class CryptographyAuthenticator {
         );
     }
 
+    /**
+     * Verify if a signature is valid
+     * @param message
+     * @param signature
+     * @return
+     */
     public boolean fVerify(final Message message, final String signature) {
         if (!signatureMap.containsKey(signature)) {
             return false;

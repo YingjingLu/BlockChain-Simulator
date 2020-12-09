@@ -7,11 +7,18 @@ import java.lang.IllegalArgumentException;
 import org.json.simple.parser.ParseException;
 
 /**
- * The main app for parsing config and initiating call
- *
+ * The main app for parsing config and initiating call depending on the
  */
 public class App
 {
+    /**
+     * Parse config file, call specific protocol constructor to initialize the proper procedures
+     *
+     * @param args
+     * @throws IOException
+     * @throws ParseException
+     * @throws IllegalArgumentException
+     */
     public static void main( String[] args )
             throws IOException, ParseException, IllegalArgumentException {
         JSONParser parser = new JSONParser();

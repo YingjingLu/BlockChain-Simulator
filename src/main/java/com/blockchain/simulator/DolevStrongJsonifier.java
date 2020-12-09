@@ -10,6 +10,9 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Collections;
 
+/**
+ * Class with methods to convert messages and player states from json to class object and from class objects to json
+ */
 public class DolevStrongJsonifier extends Jsonifer {
     private final DolevStrongRoundSimulator roundSimulator;
 

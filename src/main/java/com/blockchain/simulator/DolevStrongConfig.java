@@ -3,6 +3,9 @@ import java.util.Random;
 import java.util.List;
 import java.util.LinkedList;
 
+/**
+ * Data holder class for Dolev Strong specific configurations
+ */
 public class DolevStrongConfig {
     public final int round;
     public final int numCorruptPlayer;
@@ -11,6 +14,15 @@ public class DolevStrongConfig {
     final boolean useTrace;
     final List<List<DolevStrongMessage>> inputMessageList;
 
+    /**
+     * Constructor
+     * @param round
+     * @param numCorruptPlayer
+     * @param numTotalPlayer
+     * @param maxDelay
+     * @param useTrace
+     * @param initialBitMessage
+     */
     public DolevStrongConfig(
             final int round,
             final int numCorruptPlayer,
@@ -49,10 +61,18 @@ public class DolevStrongConfig {
         inputMessageList.add(initialMessageList);
     }
 
+    /**
+     * Randomly generate a sender id among all player ids
+     * @return
+     */
     public int randomizeSenderId() {
         return new Random().nextInt(numTotalPlayer);
     }
 
+    /**
+     * Randomly generate an initial bit from 0, 1
+     * @return
+     */
     public Bit randomizeInitialBit() {
         final int random = new Random().nextInt(2);
         if (random == 0) {
