@@ -15,10 +15,10 @@ Andrew ID: yingjinl
 # Report TODOs:
 - [x] Streamlet attack case
 - [ ] Sample cases illustrations
-- [ ] Class interface structures
+- [x] Class interface structures
 - [ ] Major class Java docs
 - [x] Input configuration and trace formats 
-- [ ] How to write honest new protocol
+- [x] How to write honest new protocol
 - [x] How to change attack strategy for Dolev Strong and Streamlet
 - [ ] How to configure network Model and Delay Parameters
 - [x] How to run Simulator (Command line + UI)
