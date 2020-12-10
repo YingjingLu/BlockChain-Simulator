@@ -5,11 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eb84c35f-f74c-4943-8031-644289372395" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_2.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/install_procesures" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_8_f_2_r_5.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

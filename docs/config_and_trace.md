@@ -5,6 +5,7 @@ In our simulator design, the simulator inputs and outputs for one protocol confi
 Te folder structure is shown as below:
 
 ## Config/trace folder structure:
+**If you are uploading a case zip to UI, remember to name of the zip and the name od the root folder is the same, Otherwise the server will crash**
 ```
 .
 +-- _config.json
