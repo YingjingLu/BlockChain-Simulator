@@ -226,7 +226,9 @@ public class StreamletPlayer extends Player {
             }
             // if the three blocks have consecutive rounds
             if (blockList.get(0).getRound() - blockList.get(1).getRound() == 1
-                && blockList.get(1).getRound() - blockList.get(2).getRound() == 1) {
+                && blockList.get(1).getRound() - blockList.get(2).getRound() == 1
+                && !blockList.get(0).isGenesisBlock()
+                && !blockList.get(2).isGenesisBlock()) {
                 // finalize the first two
                 cur = blockList.get(1);
                 while(cur != null && !cur.getFinalized()) {
