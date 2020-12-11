@@ -5,7 +5,65 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eb84c35f-f74c-4943-8031-644289372395" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_2/config.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_2/message_trace/0.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_2/message_trace/1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_2/output.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_2/player_state_trace/0.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_2/player_state_trace/1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_2/player_state_trace/2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_2/player_state_trace/init.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_3/config.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_3/message_trace/0.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_3/message_trace/1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_3/message_trace/2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_3/player_state_trace/0.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_3/player_state_trace/1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_3/player_state_trace/2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_3/player_state_trace/3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_4_f_2_r_3/player_state_trace/init.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_5_f_3_r_4/config.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_5_f_3_r_4/message_trace/0.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_5_f_3_r_4/message_trace/1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_5_f_3_r_4/message_trace/2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_5_f_3_r_4/message_trace/3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_5_f_3_r_4/player_state_trace/0.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_5_f_3_r_4/player_state_trace/1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_5_f_3_r_4/player_state_trace/2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_5_f_3_r_4/player_state_trace/3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_5_f_3_r_4/player_state_trace/4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_5_f_3_r_4/player_state_trace/init.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/backup/0.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/backup/1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/backup/2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/backup/3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/backup/4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/backup/5.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/config.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/0.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/message_trace/5.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/0.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/5.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_6/player_state_trace/init.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_4/config.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_4/message_trace/0.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_4/message_trace/1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_4/message_trace/2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_4/message_trace/3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_4/player_state_trace/0.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_4/player_state_trace/1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_4/player_state_trace/2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_4/player_state_trace/3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_4/player_state_trace/init.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_6_f_4_r_4.zip" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
