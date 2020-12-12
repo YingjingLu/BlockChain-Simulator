@@ -37,6 +37,27 @@ public class TestIO {
         return filePath.toString();
     }
 
+    public static String getPlayerStateTraceFileName(final String caseFolder, final int round) {
+        final String roundText;
+        if (round == -1) {
+            roundText = "init";
+        } else {
+            roundText = Integer.toString(round);
+        }
+        Path filePath = Paths.get(caseFolder, "player_state", roundText + ".json");
+        return filePath.toString();
+    }
+
+    public static String getDolevStrongOutputFileName(final String caseFolder) {
+        Path filePath = Paths.get(caseFolder, "output.json");
+        return filePath.toString();
+    }
+
+    public static String getStreamletProposalFileName(final String caseFolder, final int round) {
+        Path filePath = Paths.get(caseFolder, "proposal_trace", round + ".json");
+        return filePath.toString();
+    }
+
     public static void deleteFolder(final String folderPath) throws IOException {
         FileUtils.deleteDirectory(new File(folderPath));
     }

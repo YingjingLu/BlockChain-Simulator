@@ -5,17 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eb84c35f-f74c-4943-8031-644289372395" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/DolevStrongCaseN3F1R1Test.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/TestIO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/lib.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/lib.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/configure_network_module_and_delay.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/configure_network_module_and_delay.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/makefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Jsonifer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Jsonifer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/AppTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/AppTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/test.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/DolevStrongCaseN3F1R1Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/DolevStrongCaseN3F1R1Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/TestIO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/TestIO.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

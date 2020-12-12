@@ -9,6 +9,7 @@ Te folder structure is shown as below:
 ```
 .
 +-- _config.json
++-- _output.json (DolevStrong output ONLY, No need in configuration)
 +-- _message_trace
 |   +-- 0.json
 |   +-- 1.json
@@ -16,6 +17,8 @@ Te folder structure is shown as below:
 |   +-- init.json
 |   +-- 0.json
 |   +-- 1.json
++-- _proposal_trace (Streamlet ONLY)
+|   +-- 0.json
 ```
 
 The `config.json` in the root directory of this case folder contains the configurations such as player number, and inputs to players for every round. This is required to start running the simulator.
