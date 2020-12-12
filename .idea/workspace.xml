@@ -6,20 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="eb84c35f-f74c-4943-8031-644289372395" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/config_and_trace.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/config_and_trace.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/CryptographyAuthenticator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/CryptographyAuthenticator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongPlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongPlayerController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongRoundSimulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongRoundSimulator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Jsonifer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Jsonifer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletBlock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletBlockProposalTrace.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletBlockSortByRound.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletBlockSortByEpoch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletJsonifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletJsonifier.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletMessageTrace.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletMessageTrace.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletPlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletPlayerController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletRoundSimulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletRoundSimulator.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
