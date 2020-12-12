@@ -36,13 +36,17 @@ public class Jsonifer {
     public JSONObject fileToJSONObject(final String path) throws IOException, ParseException {
         JSONParser parser = new JSONParser();
         FileReader fileReader = new FileReader(path);
-        return (JSONObject) parser.parse(fileReader);
+        JSONObject res = (JSONObject) parser.parse(fileReader);
+        fileReader.close();
+        return res;
     }
 
     public JSONArray fileToJSONArray(final String path) throws IOException, ParseException {
         JSONParser parser = new JSONParser();
         FileReader fileReader = new FileReader(path);
-        return (JSONArray) parser.parse(fileReader);
+        JSONArray res = (JSONArray) parser.parse(fileReader);
+        fileReader.close();
+        return res;
     }
 
     public void jsonObjectToFile(final JSONObject jsonObject, final String path) throws IOException {

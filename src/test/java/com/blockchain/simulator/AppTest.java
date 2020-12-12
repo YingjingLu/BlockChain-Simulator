@@ -15,8 +15,6 @@ public class AppTest
     @Test
     public void shouldAnswerWithTrue()
     {
-        String executionPath = System.getProperty("user.dir");
-        System.out.println(executionPath);
         assertTrue( true );
     }
 }

@@ -6,6 +6,7 @@
       <root url="jar://$PROJECT_DIR$/src/lib/guava-30.0-jre.jar!/" />
       <root url="jar://$PROJECT_DIR$/src/lib/junit-4.11.jar!/" />
       <root url="jar://$PROJECT_DIR$/src/lib/json-simple-1.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/lib/commons-io-2.8.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
