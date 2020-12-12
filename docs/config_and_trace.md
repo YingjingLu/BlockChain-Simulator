@@ -28,10 +28,10 @@ The `/player_state_trace` folder contains each player's state at the end of ever
 * The `config.json` defines parameters this protocol takes in. Below is the json structure for `config.json`
 * top level key `protocol` specifies the protocol this config is for for the simulator to do initialization. It can be `"dolev_strong"` or `"streamlet"` or `"new_protocol"` that you further define. If you specify `"dolev_strong"` then further `"dolev_strong_config"` must be present, if you specify `"streamlet"`, `"streamlet_config"` must be present and so on.
 * `"dolev_strong_config"`, `"streamlet_config"` and other protocol dependent configurations must contains keys: `round, num_corrupt_player, num_total_player, use_trace, max_delay`, `inputs` is optional if the protocol does not receive any inputs at any round.
-* `round`: for Dolev strong, this round is not including the zeroth round. So if `dolev_strong_config` with round of 3 that means there will be round `0,1,2,3` where round `0` is the round sender receives input and sends to other players. The round `3` is the round every player generates output. However, for `streamlet_config` round of 3 will include round `0,1,2` in the record.
+* `round`: for Dolev strong, this round is not including the zeroth round. So if `dolev_strong_config` with round of 3 that means there will be round `0,1,2,3` where round `0` is the round sender receives input and sends to other players. The round `3` is the round every player generates output. However, for `streamlet_config` round of 3 will include round `0,1,2` when executed.
 * Player IDs generated will indexed from 0 and corrupt players will always be at later index. For example if you have 5 players and 3 of them are corrupt that will be player `0, 1` being honest and player with id `2, 3, 4` will be corrupt.
 * `use_trace`:  true if we use messages defined in the message_trace folder for communication among players each round, if false, protocol do not use any message traces but use protocol's definition to generate and communicate messages.
-* `max_delay`: max number of round -1 for no limit to delay. If this is set to a non-negative number all the message delays, despite being manually configured in message trace, will be capped by this max_delay.
+* `max_delay`: max number of round -1 for partially synchronous, no bound for max delay. If this is set to a non-negative number all the message delays, despite being manually configured in message trace, will be capped by this max_delay. Note that since the round based protocols delivers the messages at the beginning of next round during good network conditions, `max_delay` should be set to a number of at least 1 for DolevStrong and at least 2 for Streamlet to avoid undefined behaviors.
 * `inputs`: The 2D array of `message` objects for each protocol. First dimension is the round and second dimension is the message. So `inputs[0]` stands for all the messages for players in round 0, and so on. For streamlet, there will be only one message, so only `inputs[0][0]` will be cunted. If `inputs` is missing, the sender and the bit will be randomly generated. 
 
 ```
@@ -113,11 +113,10 @@ Each of tasks in this array includes a message one player sends to another
 ### StreamletMessageTrace
 * `proposal_task` is the array of tasks, each of which includes a proposal message that epoch leader sends to the other players. Each message also represents its inplicit echoing.
 * `vote_task` is an array of tasks, each of which includes a vote message that one player sends to another, each message also represents the inplicit echoing of this message among players.
-* `broadcast_input` is the list of tasks each includes the inplicit echoing of the message when a player receives an input to broadcast it to other players
+* `input_echo` is the list of tasks each includes the inplicit echoing of the message when a player receives an input to broadcast it to other players
+* `message_echo` is the list of tasks each includes an echo for a player who echos the message it receives that has not seen before and want to send it to other players
 ```
 {
-    "leader": "0",
-    "proposal": block proposal block object json
     "proposal_task": [
         task 1 json,
         task 2 json,
@@ -128,10 +127,28 @@ Each of tasks in this array includes a message one player sends to another
         task 2 json,
         ...
     ],
-    "broadcast_input": [
+    "input_echo": [
         task 1 json,
         ...
+    ],
+    "message_echo": [
+        task 1 json,
+        ....
     ]
+}
+```
+
+### StreamletProposalTrace
+The trace of a block proposal. It is the same as the StreamletBlock
+```
+{
+    "round": "5",
+    "proposer_id": "3",
+    "message": ["0", "1"],
+    "prev": "4",
+    "notarized": false,
+    "finalized": "false",
+    "level": "34"
 }
 ```
 

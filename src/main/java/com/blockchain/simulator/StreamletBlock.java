@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class StreamletBlock {
-    public final int round;
+    public final int epoch;
     public final int proposerId;
     public final List<Integer> message;
     public StreamletBlock prev;
@@ -13,8 +13,8 @@ public class StreamletBlock {
     public int level;
     public static final int genesisTransaction = -1;
 
-    public StreamletBlock(final int round, final int proposerId, final List<Integer> msg) {
-        this.round = round;
+    public StreamletBlock(final int epoch, final int proposerId, final List<Integer> msg) {
+        this.epoch = epoch;
         this.proposerId = proposerId;
         this.message = msg;
         prev = null;
@@ -24,12 +24,12 @@ public class StreamletBlock {
     }
 
     public StreamletBlock(
-            final int round,
+            final int epoch,
             final int proposerId,
             final List<Integer> msg,
             final StreamletBlock prev,
             final int level) {
-        this.round = round;
+        this.epoch = epoch;
         this.proposerId = proposerId;
         this.message = msg;
         this.prev = prev;
@@ -58,13 +58,13 @@ public class StreamletBlock {
     }
 
     public boolean isGenesisBlock() {
-        return getPrev() == null && getRound() == -1 && getLevel() == 0 && getProposerId() == -1;
+        return getPrev() == null && getEpoch() == -1 && getLevel() == 0 && getProposerId() == -1;
     }
 
     public StreamletBlock deepCopy() {
         final List<Integer> newMessage = new LinkedList<>(getMessage());
         final StreamletBlock newBlock = new StreamletBlock(
-                getRound(),
+                getEpoch(),
                 getProposerId(),
                 newMessage,
                 getPrev(),
@@ -80,7 +80,7 @@ public class StreamletBlock {
     }
 
     public boolean equalsExceptPrev(final StreamletBlock other) {
-        return (getRound() == other.getRound()
+        return (getEpoch() == other.getEpoch()
                 && getProposerId() == other.getProposerId()
                 && getMessage() == other.getMessage()
                 && getNotorized() == other.getNotorized()
@@ -88,8 +88,8 @@ public class StreamletBlock {
                 );
     }
 
-    public int getRound() {
-        return round;
+    public int getEpoch() {
+        return epoch;
     }
     public List<Integer> getMessage() {
         return message;

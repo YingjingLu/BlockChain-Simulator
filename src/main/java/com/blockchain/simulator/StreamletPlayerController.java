@@ -61,10 +61,10 @@ public class StreamletPlayerController extends PlayerController {
      * each player then broadcast this info to other players
      *
      * TODO: Currently there is no adversary to interfere in the middle, but we can implement according to attach strategy
-     *
+     * @custom.adversary_dependent: We can implement adversary to block echoing transmission
      * @return
      */
-    public List<Task> generateInputBroadcastTaskList() {
+    public List<Task> generateInputEchoTaskList() {
         List<Task> res = new LinkedList<>();
         for (Map.Entry<Integer, Player> entry : playerMap.entrySet()) {
             StreamletPlayer initialPlayer = (StreamletPlayer) entry.getValue();
@@ -75,7 +75,7 @@ public class StreamletPlayerController extends PlayerController {
                     StreamletMessage newMessage = (StreamletMessage) inputMessage.deepCopy();
                     newMessage.setFromPlayerId(initialPlayer.getId());
                     newMessage.setToPlayerId(firstHandPlayer.getId());
-                    res.add(new Task(firstHandPlayer, newMessage, 0)); // no delay
+                    res.add(new Task(firstHandPlayer, newMessage, 1));
                 }
                 // Since we have no delay, every player just directly echo this message back to others
                 // if we will have delay version we need to re-implement this
@@ -86,12 +86,33 @@ public class StreamletPlayerController extends PlayerController {
                         StreamletMessage newMessage = (StreamletMessage) inputMessage.deepCopy();
                         newMessage.setFromPlayerId(broadcastSrcPlayer.getId());
                         newMessage.setToPlayerId(broadcastTargetPlayer.getId());
-                        res.add(new Task(broadcastTargetPlayer, newMessage, 0)); // still zero delay by our assumption
+                        res.add(new Task(broadcastTargetPlayer, newMessage, 1));
                     }
                 }
             }
         }
         return res;
+    }
+
+    /**
+     * Iterate through every player's received message list in this round, broadcast them to other players
+     * Currently default to let them receive it in the next round, but may subject to adversary attack
+     * @custom.adversary_dependent: we can add adversary attack on this to block echoing
+     * @return
+     */
+    public List<Task> generateMessageEchoTaskList() {
+        List<Task> result = new LinkedList<>();
+        for (Map.Entry<Integer, Player> entry : playerMap.entrySet()) {
+            StreamletPlayer player = (StreamletPlayer) entry.getValue();
+            for (StreamletMessage streamletMessage : player.curRoundMessageList) {
+                for (Map.Entry<Integer, Player> innerEntry : playerMap.entrySet()) {
+                    Message messageCopy = streamletMessage.deepCopy();
+                    Task messageTask = new Task(innerEntry.getValue(), messageCopy, 1);
+                    result.add(messageTask);
+                }
+            }
+        }
+        return result;
     }
 
     public void processInputs() {
@@ -101,11 +122,11 @@ public class StreamletPlayerController extends PlayerController {
         }
     }
 
-    public StreamletBlock proposeBlock(final int leaderId, final int curRound) {
+    public StreamletBlock proposeBlock(final int leaderId, final int curEpoch) {
         if (honestPlayerMap.containsKey(leaderId)) {
-            return honestPlayerProposeBlock(leaderId, curRound);
+            return honestPlayerProposeBlock(leaderId, curEpoch);
         } else {
-            return corruptPlayerProposeBlock(leaderId, curRound);
+            return corruptPlayerProposeBlock(leaderId, curEpoch);
         }
     }
 
@@ -114,10 +135,10 @@ public class StreamletPlayerController extends PlayerController {
      * look into the view of the honest player, choose to extend from the longest notarized chain
      *
      * @param leaderId
-     * @param curRound
+     * @param curEpoch
      * @return
      */
-    public StreamletBlock honestPlayerProposeBlock(final int leaderId, final int curRound) {
+    public StreamletBlock honestPlayerProposeBlock(final int leaderId, final int curEpoch) {
         StreamletPlayer leader = (StreamletPlayer) honestPlayerMap.get(leaderId);
         int maxCurDepth = -1;
         StreamletBlock tailBlock = null;
@@ -147,7 +168,7 @@ public class StreamletPlayerController extends PlayerController {
         assert tailBlock != null : "We should at least elect genesis block to extend";
         assert tailBlock.getNotorized() : "Elected block should be notorized";
         // create a new block that extends tail
-        return new StreamletBlock(curRound, leader.getId(), message, tailBlock, tailBlock.getLevel() + 1);
+        return new StreamletBlock(curEpoch, leader.getId(), message, tailBlock, tailBlock.getLevel() + 1);
     }
 
     /**
@@ -165,10 +186,10 @@ public class StreamletPlayerController extends PlayerController {
      *      *     propose a block that extends the second longest chain
      *
      * @param leaderId
-     * @param curRound
+     * @param curEpoch
      * @return
      */
-    public StreamletBlock corruptPlayerProposeBlock(final int leaderId, final int curRound) {
+    public StreamletBlock corruptPlayerProposeBlock(final int leaderId, final int curEpoch) {
         StreamletPlayer leader = (StreamletPlayer) corruptPlayerMap.get(leaderId);
         // maintain a block list of size 2 (cur second block, cur first block)
         LinkedList<StreamletBlock> size2Heap = new LinkedList<>();
@@ -182,13 +203,13 @@ public class StreamletPlayerController extends PlayerController {
             message.add(txIterator.next());
         }
         // if the last round is proposed by corrupt player, gets notorized, then extend it
-        final int lastBlockRound = curRound - 1;
+        final int lastBlockRound = curEpoch - 1;
         if (blockRoundProposedByCorruptPlayerSet.contains(lastBlockRound)) {
             if (leader.blockMap.get(lastBlockRound).getNotorized()) {
-                blockRoundProposedByCorruptPlayerSet.add(curRound);
+                blockRoundProposedByCorruptPlayerSet.add(curEpoch);
                 // create a new block that extends tail
                 return new StreamletBlock(
-                        curRound,
+                        curEpoch,
                         leader.getId(),
                         message,
                         leader.blockMap.get(lastBlockRound),
@@ -229,15 +250,15 @@ public class StreamletPlayerController extends PlayerController {
         StreamletBlock secondDeepBlock = size2Heap.getFirst();;
         // if the two longest chain has the same length, try to priortize the one ends with corrupt player's proposal
         if (size2Heap.size() == 2 && size2Heap.getFirst().getLevel() == size2Heap.getLast().getLevel()) {
-            if (blockRoundProposedByCorruptPlayerSet.contains(size2Heap.getLast().getRound())) {
+            if (blockRoundProposedByCorruptPlayerSet.contains(size2Heap.getLast().getEpoch())) {
                 secondDeepBlock = size2Heap.getLast();
             }
         }
         // add this proposal to the corrupt propose set record
-        blockRoundProposedByCorruptPlayerSet.add(curRound);
+        blockRoundProposedByCorruptPlayerSet.add(curEpoch);
         // create a new block that extends tail
         return new StreamletBlock(
-                curRound,
+                curEpoch,
                 leader.getId(),
                 message,
                 secondDeepBlock,
@@ -249,13 +270,11 @@ public class StreamletPlayerController extends PlayerController {
      * from getting a block proposal
      *
      * @param leaderId
-     * @param curRound
      * @param block
      * @return
      */
     public List<Task> generateProposalMessageCommunicationList(
             final int leaderId,
-            final int curRound,
             final StreamletBlock block) {
         assert honestPlayerMap.containsKey(leaderId) : "calling generating proposal should provide with an honest leader";
         List<Task> taskList = new LinkedList<>();
@@ -287,7 +306,7 @@ public class StreamletPlayerController extends PlayerController {
 
         final StreamletMessage newMessage = new StreamletMessage(
                 false,
-                block.getRound(),
+                block.getEpoch(),
                 new LinkedList<>(block.getMessage()),
                 srcPlayer.getId(),
                 destPlayer.getId(),
@@ -298,7 +317,7 @@ public class StreamletPlayerController extends PlayerController {
         assert prevBlock != null : "Should not be genesis block to pass message";
         final String prevSign = authenticator.getStreamletFAuth(
                 false,
-                prevBlock.getRound(),
+                prevBlock.getEpoch(),
                 "0",
                 srcPlayer.getId(),
                 destPlayer.getId(),
@@ -308,7 +327,7 @@ public class StreamletPlayerController extends PlayerController {
         final Task newTask = new Task(
                 destPlayer,
                 newMessage,
-                0
+                1
         );
         taskList.add(newTask);
     }
@@ -327,25 +346,25 @@ public class StreamletPlayerController extends PlayerController {
      * @param curRound
      * @return
      */
-    public List<Task> generateVoteMessageList(final int curRound, final int leaderId) {
+    public List<Task> generateVoteMessageList(final int curRound) {
         List<Task> res = new LinkedList<>();
         final int attackDelay = corruptPlayerMap.size() + honestPlayerMap.size() + 1;
         // if leader is corrupt send to all other nodes without delay
         for (int fromId : corruptPlayerIdList) {
-            generateVoteMessages(res, fromId, corruptPlayerIdList, 0);
-            generateVoteMessages(res, fromId, honestPlayerIdList, 0);
+            generateVoteMessages(res, fromId, corruptPlayerIdList, 1);
+            generateVoteMessages(res, fromId, honestPlayerIdList, 1);
         }
         for (int fromId : honestG1) {
-            generateVoteMessages(res, fromId, corruptPlayerIdList, 0);
-            generateVoteMessages(res, fromId, honestG1, 0);
+            generateVoteMessages(res, fromId, corruptPlayerIdList, 1);
+            generateVoteMessages(res, fromId, honestG1, 1);
 //            generateVoteMessages(res, fromId, honestG2, block, attackDelay);
-            generateVoteMessages(res, fromId, honestG2, 0);
+            generateVoteMessages(res, fromId, honestG2, 1);
         }
         for (int fromId : honestG2) {
-            generateVoteMessages(res, fromId, corruptPlayerIdList, 0);
-            generateVoteMessages(res, fromId, honestG2, 0);
+            generateVoteMessages(res, fromId, corruptPlayerIdList, 1);
+            generateVoteMessages(res, fromId, honestG2, 1);
 //            generateVoteMessages(res, fromId, honestG1, block, attackDelay);
-            generateVoteMessages(res, fromId, honestG1, 0);
+            generateVoteMessages(res, fromId, honestG1, 1);
         }
         return res;
     }
@@ -386,7 +405,7 @@ public class StreamletPlayerController extends PlayerController {
             for (int toPlayerId : toPlayerIdList) {
                 StreamletMessage newMessage = new StreamletMessage(
                         true,
-                        block.getRound(),
+                        block.getEpoch(),
                         block.getMessage(),
                         fromPlayerId,
                         toPlayerId,

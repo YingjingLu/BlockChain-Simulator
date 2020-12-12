@@ -15,6 +15,8 @@ public class StreamletJsonifier extends Jsonifer {
     public StreamletJsonifier(final StreamletRoundSimulator roundSimulator, final String traceRootPath) {
         super(traceRootPath);
         this.roundSimulator = roundSimulator;
+        final String proposalFolder = traceRootPath + "/" + "proposal_trace/";
+        createFolderIfNotExists(proposalFolder);
     }
 
     public StreamletConfig getConfig() throws IOException, ParseException, IllegalArgumentException {
@@ -27,13 +29,37 @@ public class StreamletJsonifier extends Jsonifer {
         return jsonObjectToConfig(streamletConfigObject);
     }
 
+    public String getProposalTracePath(final int round) {
+        return traceRootPath + "/proposal_trace/" + round + ".json";
+    }
+
+    public boolean proposalExistsForRound(final int round) {
+        return fileExists(getProposalTracePath(round));
+    }
+
+    public StreamletBlock getRoundProposal(final int round) throws IOException, ParseException {
+        final StreamletBlock proposal;
+        final String path = getProposalTracePath(round);
+        if (!proposalExistsForRound(round)) {
+            return null;
+        }
+        JSONObject jsonObject = fileToJSONObject(path);
+        proposal = jsonObjectToBlock(jsonObject);
+        return proposal;
+    }
+
+    public void writeRoundProposal(final int round, final StreamletBlock blockProposal) throws IOException {
+        final String path = getProposalTracePath(round);
+        jsonObjectToFile(blockToJSONObject(blockProposal), path);
+    }
+
     public StreamletMessageTrace getRoundMessageTrace(final int round)
             throws IOException, ParseException, IllegalArgumentException {
-        final List<Task> proposalTaskList = new LinkedList<>();
-        final List<Task> voteTaskList = new LinkedList<>();
-        final List<Task> broadcastInputTaskList = new LinkedList<>();;
-        final int leader;
-        final StreamletBlock proposal;
+        final List<Task> proposalTaskList;
+        final List<Task> voteTaskList;
+        final List<Task> broadcastInputTaskList;
+        final List<Task> messageEchoList;
+
 
         final String path = getMessageTracePath(round);
         if (!hasMessageTrace(round)) {
@@ -42,35 +68,29 @@ public class StreamletJsonifier extends Jsonifer {
 
         JSONObject jsonObject = fileToJSONObject(path);
 
-        if (jsonObject.containsKey("leader")) {
-            leader = Integer.parseInt(jsonObject.get("leader").toString());
-        } else {
-            throw new IllegalArgumentException("Message Trace file should contain leader");
-        }
-
-        if (jsonObject.containsKey("proposal")) {
-            proposal = jsonObjectToBlock((JSONObject) jsonObject.get("proposal"));
-            System.out.println("Did create block" + proposal.getRound());
-        } else {
-            proposal = null;
-        }
-
         if (jsonObject.containsKey("proposal_task")) {
+            proposalTaskList = new LinkedList<>();
             JSONArray arr = (JSONArray) jsonObject.get("proposal_task");
             for (Object obj : arr) {
                 proposalTaskList.add(jsonObjectToTask((JSONObject) obj));
             }
+        } else {
+            proposalTaskList = null;
         }
 
         if (jsonObject.containsKey("vote_task")) {
+            voteTaskList = new LinkedList<>();
             JSONArray arr = (JSONArray) jsonObject.get("vote_task");
             for (Object obj : arr) {
                 voteTaskList.add(jsonObjectToTask((JSONObject) obj));
             }
+        } else {
+            voteTaskList = null;
         }
 
-        if (jsonObject.containsKey("broadcast_input")) {
-            JSONArray arr = (JSONArray) jsonObject.get("broadcast_input");
+        if (jsonObject.containsKey("input_echo")) {
+            broadcastInputTaskList = new LinkedList<>();
+            JSONArray arr = (JSONArray) jsonObject.get("input_echo");
             for (Object obj : arr) {
                 broadcastInputTaskList.add(jsonObjectToTask((JSONObject) obj));
             }
@@ -79,14 +99,25 @@ public class StreamletJsonifier extends Jsonifer {
             for (Task task: broadcastInputTaskList) {
                 task.getMessage().setRound(Globals.streamletInputMessageRound);
             }
+        } else {
+            broadcastInputTaskList = null;
+        }
+
+        if (jsonObject.containsKey("message_echo")) {
+            messageEchoList = new LinkedList<>();
+            JSONArray arr = (JSONArray) jsonObject.get("message_echo");
+            for (Object obj : arr) {
+                messageEchoList.add(jsonObjectToTask((JSONObject) obj));
+            }
+        } else {
+            messageEchoList = null;
         }
 
         return new StreamletMessageTrace(
-                leader,
-                proposal,
                 proposalTaskList,
                 voteTaskList,
-                broadcastInputTaskList
+                broadcastInputTaskList,
+                messageEchoList
         );
     }
 
@@ -134,7 +165,10 @@ public class StreamletJsonifier extends Jsonifer {
             if (level1InputArray != null && level1InputArray.size() > curRound) {
                 JSONArray level2Array = (JSONArray) level1InputArray.get(curRound);
                 for (Object obj : level2Array) {
-                    roundMessageList.add(jsonObjectToMessage((JSONObject) obj));
+                    StreamletMessage message = jsonObjectToMessage((JSONObject) obj);
+                    // mark this aas input message
+                    message.setRound(Globals.streamletInputMessageRound);
+                    roundMessageList.add(message);
                 }
             }
             inputMessageList.add(roundMessageList);
@@ -150,15 +184,12 @@ public class StreamletJsonifier extends Jsonifer {
     }
 
     public void writeMessageTrace(
-            final int leaderId,
             final int round,
-            final StreamletBlock blockProposal,
             final List<Task> proposalTaskList,
             final List<Task> proposalVoteList,
-            final List<Task> broadcastInputTaskList) throws IOException {
+            final List<Task> broadcastInputTaskList,
+            final List<Task> echoMessageTaskList) throws IOException {
         final JSONObject traceObject = new JSONObject();
-        traceObject.put("leader", leaderId);
-        traceObject.put("proposal", blockToJSONObject(blockProposal));
         final JSONArray proposalTaskArray = new JSONArray();
         for(Task t : proposalTaskList) {
             proposalTaskArray.add(taskToJSONObject(t));
@@ -171,11 +202,17 @@ public class StreamletJsonifier extends Jsonifer {
         }
         traceObject.put("vote_task", voteTaskArray);
 
-        final JSONArray inputTaskArray = new JSONArray();
+        final JSONArray inputEchoTaskArray = new JSONArray();
         for (Task t : broadcastInputTaskList) {
-            inputTaskArray.add(taskToJSONObject(t));
+            inputEchoTaskArray.add(taskToJSONObject(t));
         }
-        traceObject.put("broadcast_input", inputTaskArray);
+        traceObject.put("input_echo", inputEchoTaskArray);
+
+        final JSONArray echoMessageTaskArray = new JSONArray();
+        for (Task t : broadcastInputTaskList) {
+            echoMessageTaskArray.add(taskToJSONObject(t));
+        }
+        traceObject.put("message_echo", echoMessageTaskArray);
 
         final String path = getMessageTracePath(round);
 
@@ -232,12 +269,12 @@ public class StreamletJsonifier extends Jsonifer {
 
     public JSONObject blockToJSONObject(StreamletBlock streamletBlock) {
         JSONObject blockObject = new JSONObject();
-        blockObject.put("round", streamletBlock.getRound());
+        blockObject.put("round", streamletBlock.getEpoch());
         blockObject.put("proposer_id", streamletBlock.getProposerId());
         if (streamletBlock.getPrev() == null) {
             blockObject.put("prev", -1);
         } else {
-            blockObject.put("prev", streamletBlock.getPrev().getRound());
+            blockObject.put("prev", streamletBlock.getPrev().getEpoch());
         }
 
         blockObject.put("notarized", streamletBlock.getNotorized());
@@ -278,7 +315,7 @@ public class StreamletJsonifier extends Jsonifer {
         final Bit approved;
         final int proposerId;
         final List<String> signatures;
-        final int round;
+        final int epoch;
         final List<Integer> message;
         final int fromPlayerId, toPlayerId;
         if (jsonObject.containsKey("is_vote")) {
@@ -300,7 +337,7 @@ public class StreamletJsonifier extends Jsonifer {
         }
 
         if (jsonObject.containsKey("round")) {
-            round = Integer.parseInt(jsonObject.get("round").toString());
+            epoch = Integer.parseInt(jsonObject.get("round").toString());
         } else {
             throw new IllegalArgumentException("Message Trace file should contain round");
         }
@@ -340,7 +377,7 @@ public class StreamletJsonifier extends Jsonifer {
         }
         StreamletMessage newMessage = new StreamletMessage(
           isVote,
-          round,
+          epoch,
           message,
           fromPlayerId,
           toPlayerId,
@@ -468,10 +505,10 @@ public class StreamletJsonifier extends Jsonifer {
         for (Map.Entry<Integer, StreamletBlock> entry : player.chainTailMap.entrySet()) {
             StreamletBlock curBlock = entry.getValue();
             while (curBlock != null) {
-                if (curBlock.getRound() == -1) {
+                if (curBlock.getEpoch() == -1) {
                     System.out.print("G");
                 } else {
-                    System.out.print(curBlock.getRound());
+                    System.out.print(curBlock.getEpoch());
                 }
 
                 if (curBlock.getNotorized()) {

@@ -51,16 +51,13 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
     public void run() throws IOException, IllegalArgumentException, ParseException {
         jsonifier.writeStateTracePath(-1);
         int initialRound = 0;
-        playerController.beginRound(0);
-        // give input to the player
-        // start round 0
-        // sender sends message to other players
+        playerController.beginRound(initialRound);
         DolevStrongMessageTrace initialMessageTrace = null;
         if (config.useTrace) {
-            initialMessageTrace = jsonifier.getRoundMessageTrace(0);
+            initialMessageTrace = jsonifier.getRoundMessageTrace(initialRound);
         }
         final List<Task> initialTaskList;
-        if (initialMessageTrace != null && initialMessageTrace.taskList.size() != 0) {
+        if (initialMessageTrace != null) {
             initialTaskList = initialMessageTrace.taskList;
         } else {
             playerController.sendInputMessagesToPlayers(config.inputMessageList.get(0));
@@ -72,7 +69,7 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
         jsonifier.writeMessageTrace(0, initialTaskList);
         jsonifier.writeStateTracePath(0);
 
-        for (int round = 1; round < totalRounds; round ++) {
+        for (int round = 1; round < totalRounds + 1; round ++) {
             networkSimulator.beginRound(round);
             networkSimulator.sendMessagesToPlayers(round);
             playerController.beginRound(round);
@@ -83,7 +80,7 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
             } else {
                 messageTrace = null;
             }
-            if (messageTrace != null && messageTrace.taskList.size() > 0) {
+            if (messageTrace != null) {
                 taskList = messageTrace.taskList;
             } else {
                 taskList = playerController.generateMessageTasksAmongPlayers(round);
@@ -93,14 +90,9 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
             jsonifier.writeMessageTrace(round, taskList);
             jsonifier.writeStateTracePath(round);
         }
-
         // the end of last round
         // every player reach an output
-        networkSimulator.sendMessagesToPlayers(totalRounds);
-        playerController.beginRound(totalRounds);
-        playerController.endRoundForPlayers(totalRounds);
         playerController.createOutputForEveryPlayer(totalRounds);
-        jsonifier.writeStateTracePath(totalRounds);
         playerController.printOutput();
         jsonifier.writeOutput();
     }

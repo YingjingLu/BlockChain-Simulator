@@ -49,9 +49,8 @@ public class DolevStrongPlayerController extends PlayerController{
     }
 
     /**
-     * Corrupt player's best strategy: send the egated bit to all dishonest plaers and send to half of honest players the
-     * true bit and other half the negated bit
-     * @param senderId
+     * Portal function that if the sender is corrupt then direct to corrupt player's strategy to send input
+     * If honest direct to honest strategy to send input
      */
     public List<Task> generatePlayerInputMessageList() {
         if (corruptPlayerMap.containsKey(senderId)) {
@@ -62,11 +61,19 @@ public class DolevStrongPlayerController extends PlayerController{
         }
     }
 
+    /**
+     * Corrupt player's strategy to send input currently implemented:
+     * Divide the honest players into two groups(equally or almost equally), send the true input bit to one group
+     * And the inverse bit to another, Always send inverse bit to other corrupt players
+     *
+     * @param senderId
+     * @return
+     */
     public List<Task> corruptPlayerSendInputToOtherPlayers(final int senderId) {
         final List<Task> taskList = new LinkedList<>();
         DolevStrongPlayer sender = (DolevStrongPlayer) corruptPlayerMap.get(senderId);
-        assert sender.curRoundInputMessages.size() == 1 : "Sender should receive an initial bit of 1";
-        Bit receivedBit = sender.curRoundInputMessages.get(0).getMessage().get(0);
+        // we only assume there is only one message for single bit Dolev Strong
+        Bit receivedBit = sender.curRoundMessages.get(0).getMessage().get(0);
         negatedBit = receivedBit.negateBit();
         for (Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
             final DolevStrongPlayer destPlayer = (DolevStrongPlayer) entry.getValue();
@@ -98,11 +105,16 @@ public class DolevStrongPlayerController extends PlayerController{
         return taskList;
     }
 
+    /**
+     * Honest players simply send the input bit along with its signature to other players
+     * @param senderId
+     * @return
+     */
     public List<Task> honestPlayerSendInputToOtherPlayers(final int senderId) {
         final List<Task> taskList = new LinkedList<>();
         DolevStrongPlayer sender = (DolevStrongPlayer) honestPlayerMap.get(senderId);
-        assert sender.curRoundInputMessages.size() == 1 : "Sender should receive an initial bit of 1";
-        DolevStrongMessage receivedMessage = sender.curRoundInputMessages.get(0);
+        // we only assume there is only one message for single bit Dolev Strong
+        DolevStrongMessage receivedMessage = sender.curRoundMessages.get(0);
         Bit messageBit = receivedMessage.getMessage().get(0);
         for (Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {
             final DolevStrongPlayer destPlayer = (DolevStrongPlayer) entry.getValue();
@@ -125,8 +137,8 @@ public class DolevStrongPlayerController extends PlayerController{
     }
 
     /**
-     * Add their own signature to the message and send the copy of message to other player
-     * For corrupt player the best way is to only send the messages with negated bit to other players
+     * Add their own signature to the message and send the copy of message to other player,
+     * This calls for corrupt and honest players to generate the messages they will be sending
      * @param round
      */
     public List<Task> generateMessageTasksAmongPlayers(final int round) {
@@ -136,10 +148,16 @@ public class DolevStrongPlayerController extends PlayerController{
         return taskList;
     }
 
+    /**
+     * Corrupt player's strategy to send messages to other players: only send those with the inverse bit of the input
+     * bit to other corrupt players.
+     * @param round
+     * @param taskList
+     */
     public void corruptPlayerGenerateMessagesToOtherPlayers(final int round, final List<Task> taskList) {
         for (Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
             final DolevStrongPlayer corruptPlayer = (DolevStrongPlayer) entry.getValue();
-            for (DolevStrongMessage srcMessage : corruptPlayer.prevRoundMessages) {
+            for (DolevStrongMessage srcMessage : corruptPlayer.curRoundMessages) {
                 assert srcMessage.getMessage().size() == 1 : "Message received should only contain one bit";
                 if (srcMessage.getMessage().get(0) == negatedBit) {
                     // send message to pther players except to itself
@@ -168,10 +186,15 @@ public class DolevStrongPlayerController extends PlayerController{
         }
     }
 
+    /**
+     * Honest players simply add the signature to the message and send it to other players
+     * @param round
+     * @param taskList
+     */
     public void honestPlayerGenerateMessageToOtherPlayers(final int round, final List<Task> taskList) {
         for (Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {
             final DolevStrongPlayer honestPlayer = (DolevStrongPlayer) entry.getValue();
-            for (DolevStrongMessage srcMessage : honestPlayer.prevRoundMessages) {
+            for (DolevStrongMessage srcMessage : honestPlayer.curRoundMessages) {
                 assert srcMessage.getMessage().size() == 1 : "Message received should only contain one bit";
                 // send message to pther players except to itself
                 // send to other corrupt players
@@ -197,6 +220,7 @@ public class DolevStrongPlayerController extends PlayerController{
             }
         }
     }
+
     /**
      * Corrupt players do not have to reach any conclusion at the end of the round
      *

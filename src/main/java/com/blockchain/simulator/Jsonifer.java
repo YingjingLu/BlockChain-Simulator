@@ -22,13 +22,14 @@ public class Jsonifer {
         // create directories if not exists
         final String messageFolder = traceRootPath + "/" + "message_trace/";
         final String stateFolder = traceRootPath + "/" + "player_state_trace/";
-        final File messageF = new File(messageFolder);
-        final File stateF = new File(stateFolder);
-        if (!messageF.exists()) {
-            messageF.mkdir();
-        }
-        if (!stateF.exists()) {
-            stateF.mkdir();
+        createFolderIfNotExists(messageFolder);
+        createFolderIfNotExists(stateFolder);
+    }
+
+    public void createFolderIfNotExists(final String path) {
+        final File f = new File(path);
+        if (!f.exists()) {
+            f.mkdir();
         }
     }
 
@@ -60,7 +61,11 @@ public class Jsonifer {
 
     public boolean hasMessageTrace(final int round) {
         final String messageTracePath = getMessageTracePath(round);
-        final File f = new File(messageTracePath);
+        return fileExists(messageTracePath);
+    }
+
+    public boolean fileExists(final String path) {
+        final File f = new File(path);
         return f.exists();
     }
 
