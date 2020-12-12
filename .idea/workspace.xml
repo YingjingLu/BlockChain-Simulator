@@ -6,9 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="eb84c35f-f74c-4943-8031-644289372395" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Jsonifer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Jsonifer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/DolevStrongCaseN3F1R1Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/DolevStrongCaseN3F1R1Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/TestIO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/TestIO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/change_attack_strategy_for_dolev_streamlet.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/change_attack_strategy_for_dolev_streamlet.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletPlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletPlayerController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -332,8 +332,6 @@ public class StreamletPlayerController extends PlayerController {
         taskList.add(newTask);
     }
 
-
-
     /**
      * Core step during the attack. Our strategy is follow:
      * Divide the honest players into two groups called G1 and G2:
