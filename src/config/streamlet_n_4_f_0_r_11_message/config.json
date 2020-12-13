@@ -1,0 +1,72 @@
+{
+    "protocol": "streamlet",
+    "streamlet_config": {
+        "round": "11",
+        "num_corrupt_player": "0",
+        "num_total_player": "4",
+        "use_trace": true,
+        "max_delay": -1,
+        "inputs": [
+            [
+                {
+                    "is_vote": false,
+                    "approved": "2",
+                    "proposer_id": "0",
+                    "signatures": [],
+                    "round": "0",
+                    "message": ["0", "1"],
+                    "from_player_id": "-1",
+                    "to_player_id": "2"
+                },
+                {
+                    "is_vote": false,
+                    "approved": "2",
+                    "proposer_id": "0",
+                    "signatures": [],
+                    "round": "0",
+                    "message": ["3"],
+                    "from_player_id": "-1",
+                    "to_player_id": "2"
+                }
+            ],
+            [],
+            [],
+            [
+                {
+                    "is_vote": false,
+                    "approved": "2",
+                    "proposer_id": "0",
+                    "signatures": [],
+                    "round": "0",
+                    "message": ["4"],
+                    "from_player_id": "-1",
+                    "to_player_id": "1"
+                },
+                {
+                    "is_vote": false,
+                    "approved": "2",
+                    "proposer_id": "0",
+                    "signatures": [],
+                    "round": "0",
+                    "message": ["5"],
+                    "from_player_id": "-1",
+                    "to_player_id": "3"
+                }
+            ],
+            [],
+            [],
+            [
+                {
+                    "is_vote": false,
+                    "approved": "2",
+                    "proposer_id": "0",
+                    "signatures": [],
+                    "round": "0",
+                    "message": ["7"],
+                    "from_player_id": "-1",
+                    "to_player_id": "0"
+                }
+            ]
+        ]
+    }
+}

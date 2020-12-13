@@ -12,12 +12,12 @@ import java.io.IOException;
 import java.lang.IllegalArgumentException;
 import org.json.simple.parser.ParseException;
 
-public class StreamletCaseN4F011Test {
+public class StreamletCaseN4F0R11Test {
     public static final String CASE_NAME = "streamlet_n_4_f_0_r_11";
 
     private final String caseFolder;
 
-    public StreamletCaseN4F011Test() {
+    public StreamletCaseN4F0R11Test() {
         caseFolder = TestIO.getTargetCaseFolder(CASE_NAME);
     }
 
@@ -90,7 +90,17 @@ public class StreamletCaseN4F011Test {
         assertEquals(0, trace1.transactionEcho.size());
         assertEquals(16, trace1.messageEcho.size());
 
-        // check player states
+        StreamletMessageTrace trace2 = jsonifier.getRoundMessageTrace(2);
+        assertEquals(4, trace2.proposalMessage.size());
+        assertEquals(0, trace2.voteMessage.size());
+        assertEquals(0, trace2.transactionEcho.size());
+        assertEquals(64, trace2.messageEcho.size());
+
+        StreamletMessageTrace trace3 = jsonifier.getRoundMessageTrace(3);
+        assertEquals(0, trace3.proposalMessage.size());
+        assertEquals(16, trace3.voteMessage.size());
+        assertEquals(0, trace3.transactionEcho.size());
+        assertEquals(16, trace3.messageEcho.size());
 
     }
 }

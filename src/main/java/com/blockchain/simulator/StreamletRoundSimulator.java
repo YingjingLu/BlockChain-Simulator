@@ -138,6 +138,8 @@ public class StreamletRoundSimulator extends RoundSimulator {
             voteMessageList = playerController.generateVoteMessageList(curRound);
         }
         boundAndSubmitMessageToNetwork(curRound, voteMessageList);
+
+        playerController.endRoundForPlayers(curRound);
         jsonifier.writeMessageTrace(
                 curRound,
                 blockProposalMessageCommunicationList,

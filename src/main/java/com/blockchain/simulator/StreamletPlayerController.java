@@ -73,21 +73,7 @@ public class StreamletPlayerController extends PlayerController {
                 for (Map.Entry<Integer, Player> innerEntry : playerMap.entrySet()) {
                     Player firstHandPlayer = innerEntry.getValue();
                     StreamletMessage newMessage = (StreamletMessage) inputMessage.deepCopy();
-                    newMessage.setFromPlayerId(initialPlayer.getId());
-                    newMessage.setToPlayerId(firstHandPlayer.getId());
                     res.add(new Task(firstHandPlayer, newMessage, 1));
-                }
-                // Since we have no delay, every player just directly echo this message back to others
-                // if we will have delay version we need to re-implement this
-                for (Map.Entry<Integer, Player> srcEntry : playerMap.entrySet()) {
-                    Player broadcastSrcPlayer = srcEntry.getValue();
-                    for (Map.Entry<Integer, Player> targetEntry : playerMap.entrySet()) {
-                        Player broadcastTargetPlayer = targetEntry.getValue();
-                        StreamletMessage newMessage = (StreamletMessage) inputMessage.deepCopy();
-                        newMessage.setFromPlayerId(broadcastSrcPlayer.getId());
-                        newMessage.setToPlayerId(broadcastTargetPlayer.getId());
-                        res.add(new Task(broadcastTargetPlayer, newMessage, 1));
-                    }
                 }
             }
         }

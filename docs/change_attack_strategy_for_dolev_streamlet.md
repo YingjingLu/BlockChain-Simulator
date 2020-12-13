@@ -1,7 +1,7 @@
 # How to write an attack
 Since our simulator is highly configurable, we have 2 ways to implement attachs. We will use Dolev Strong and Streamlet as examples.
 
-### Approach 1: Change the Message Traces
+## Approach 1: Change the Message Traces
 This is the simplest approach to implement a fine-grained attack while not directly modifying any code. 
 
 As we have mentioned in `config_and_trace` doc, the model comfig can specify whether to use messages specified in `message_trace` to run the protocol or to generate messages when running the simulator. So you can write out what messages to be transmitted at each round manually and let the simulator to execute that, you can implement an attack without changing the code because the simulator will use the messages you wrote to run the protocol.
@@ -12,7 +12,7 @@ As we have mentioned in `config_and_trace` doc, the model comfig can specify whe
 
 3. Run the protocol again with those message traces and you will get the results written in `player_state_traces` for the player states changes for each round as the output. 
 
-### Approach 2: Change the code where adversary is implemented
+## Approach 2: Change the code where adversary is implemented
 This approach requires to change the code where adversary is implemented. YOu can look at the `StreamletPlayerController` which is responsible to communicate with players to generate messages according to their states. You can do any modifications you want, just follow the output format to output the message tasks with delays so that our `RoundSimulator` will pass those to the `NetworkSimulator` to send to players.
 
 Using Dolev strong as a more detailed example, You can change the code in the `DolevStrongPlayerController` on how to generate messages for attacks.
@@ -92,3 +92,11 @@ public void corruptPlayerGenerateMessagesToOtherPlayers(final int round, final L
     }
     }
 ```
+
+## Builtin Native Attacks
+
+Following up from the last section, there are some attack code built-in for both Dolev Strong and Streamlet. **Those attack strategies are not meant to be powerful attacks**. But rather, it serves two purposes:
+1. when you add corrupt player into the protocol, you can notice there are some change in the message pattern. 
+2. They serve as placeholder for furute developers on where they can implement their attack on in the code.
+
+**If you are looking for the vulnerable variant of the protocol, and attack on it as required from the project assignment, we direct you to the report's <Vulnerable Variants> section**
