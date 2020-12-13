@@ -1,3 +1,8 @@
 ./src/lib/*
 target/
-./.idea/*
+/.idea/*
+test_targets/*.json
+.classpath
+.factorypath
+.project
+.settings/

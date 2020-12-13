@@ -49,112 +49,134 @@ public class StreamletRoundSimulator extends RoundSimulator {
 
     public void run() throws IOException, IllegalArgumentException, ParseException {
         jsonifier.writeStateTracePath(-1);
-        for (int curRound = 0; curRound < totalRounds; curRound ++) {
-            // start network simulator prepared for current round
-            networkSimulator.beginRound(curRound);
-            // messages delayed from previous rounds should delivered by now
-            // And we should trigger the players to process them
-            networkSimulator.sendMessagesToPlayers(curRound);
-            playerController.processInputs();
-            playerController.processBlockProposal(curRound);
-            playerController.processVotesForEachPlayer(curRound);
-            playerController.finalizeChainForEachPlayer(curRound);
+        int curRound = 0;
+        int curEpoch = 0;
+        final int roundPerEpoch;
+        if (config.maxDelay == -1) {
+            roundPerEpoch = 2;
+        } else {
+            roundPerEpoch = 2 * config.maxDelay;
+        }
+        while (curRound < totalRounds) {
+            curEpoch = stepRound(curRound, roundPerEpoch, curEpoch);
+            curRound ++;
+        }
+    }
 
+    public int stepRound(final int curRound, final int roundPerEpoch, final int curEpoch)
+            throws IOException, IllegalArgumentException, ParseException {
+        networkSimulator.beginRound(curRound);
+        int resEpoch = curEpoch;
 
-            final StreamletMessageTrace roundMessageTrace;
-            if (config.useTrace) {
-                roundMessageTrace = jsonifier.getRoundMessageTrace(curRound);
-            } else {
-                roundMessageTrace = null;
-            }
+        // get all the messages already predefined in this round if user choose to use trace
+        final StreamletMessageTrace roundMessageTrace;
+        if (config.useTrace) {
+            roundMessageTrace = jsonifier.getRoundMessageTrace(curRound);
+        } else {
+            roundMessageTrace = null;
+        }
+        // receive and process messages sent from previous round and process them
+        playerController.sendInputMessagesToPlayers(this.config.inputMessageList.get(curRound));
+        // broadcast inputs to the network
+        final List<Task> echoInputTaskList;
+        if (roundMessageTrace != null && roundMessageTrace.transactionEcho != null) {
+            echoInputTaskList = roundMessageTrace.transactionEcho;
+        } else {
+            echoInputTaskList = playerController.generateInputEchoTaskList();
+        }
+        boundAndSubmitMessageToNetwork(curRound, echoInputTaskList);
+
+        networkSimulator.sendMessagesToPlayers(curRound);
+        // broadcast messages players receives
+        final List<Task> echoMessageTaskList;
+        if (roundMessageTrace != null && roundMessageTrace.messageEcho != null) {
+            echoMessageTaskList = roundMessageTrace.messageEcho;
+        } else {
+            echoMessageTaskList = playerController.generateMessageEchoTaskList();
+        }
+        boundAndSubmitMessageToNetwork(curRound, echoMessageTaskList);
+        // process those messages
+        processMessagesReceivedForRound(curRound);
+        // Message generation for this round begins
+        final List<Task> blockProposalMessageCommunicationList;
+        final List<Task> voteMessageList;
+
+        // if this is the epoch start round, then try to propose block
+        if (curRound % roundPerEpoch == 0) {
+            final StreamletBlock proposedBlock;
             // start current round new block proposal
             final int leaderId;
-            if (roundMessageTrace != null) {
-                leaderId = roundMessageTrace.leader;
+            if (jsonifier.proposalExistsForRound(curRound)) {
+                proposedBlock = jsonifier.getRoundProposal(curRound);
+                leaderId = proposedBlock.getProposerId();
             } else {
-                leaderId = electLeader(curRound);
+                leaderId = electLeader(curEpoch);
+                proposedBlock = playerController.proposeBlock(leaderId, curEpoch);
             }
-            // send current round input to designated players and for them to process
-            playerController.sendInputMessagesToPlayers(this.config.inputMessageList.get(curRound));
-            final List<Task> broadcastInputTaskList;
-            if (roundMessageTrace != null && roundMessageTrace.transactionBroadcast != null) {
-                broadcastInputTaskList = roundMessageTrace.transactionBroadcast;
-            } else {
-                broadcastInputTaskList = playerController.generateInputBroadcastTaskList();
-            }
-            networkSimulator.boundMessageDelayForSynchronousNetwork(config.maxDelay, broadcastInputTaskList);
-            playerController.sendMessageListViaNetwork(curRound, broadcastInputTaskList);
-            networkSimulator.sendMessagesToPlayers(curRound);
-            playerController.processInputs();
-            // propose a leader with a block of a given round (trace)
-            final StreamletBlock proposedBlock;
-            if (roundMessageTrace != null && roundMessageTrace.proposal != null) {
-                proposedBlock = roundMessageTrace.proposal;
-            } else {
-                proposedBlock = playerController.proposeBlock(leaderId, curRound);
-            }
-            assert proposedBlock != null : "proposedBlock cannot be null";
-            assert proposedBlock.getPrev() != null : "proposed block has to have not null prev block";
 
-            final List<Task> blockProposalMessageCommunicationList;
             // generate the block as message to other players with delay (trace)
-            if (roundMessageTrace != null && roundMessageTrace.proposalMessage.size() > 0) {
+            if (roundMessageTrace != null && roundMessageTrace.proposalMessage != null) {
                 blockProposalMessageCommunicationList = roundMessageTrace.proposalMessage;
             } else {
                 blockProposalMessageCommunicationList = playerController.generateProposalMessageCommunicationList(
                         leaderId,
-                        curRound,
                         proposedBlock
                 );
             }
-            networkSimulator.boundMessageDelayForSynchronousNetwork(config.maxDelay, blockProposalMessageCommunicationList);
-            // send the block to the network
-            playerController.sendMessageListViaNetwork(curRound, blockProposalMessageCommunicationList);
-            // transact messages for the network for this round
-            networkSimulator.sendMessagesToPlayers(curRound);
-            playerController.processBlockProposal(curRound);
-            // for those players received the proposed block,
-            // process the message and generate the votes to other players (trace)
-            final List<Task> voteMessageList;
-            if (roundMessageTrace != null && roundMessageTrace.voteMessage.size() > 0) {
-                voteMessageList = roundMessageTrace.voteMessage;
-            } else {
-                voteMessageList = playerController.generateVoteMessageList(curRound, leaderId);
-            }
-            networkSimulator.boundMessageDelayForSynchronousNetwork(config.maxDelay, voteMessageList);
-            jsonifier.writeMessageTrace(
-                    leaderId,
-                    curRound,
-                    proposedBlock,
-                    blockProposalMessageCommunicationList,
-                    voteMessageList,
-                    broadcastInputTaskList);
-            // send vote to each other via network
-            playerController.sendMessageListViaNetwork(curRound, voteMessageList);
-            // transact votes in the network of this round
-            networkSimulator.sendMessagesToPlayers(curRound);
-            // process vote
-            playerController.processVotesForEachPlayer(curRound);
-            playerController.finalizeChainForEachPlayer(curRound);
-            playerController.endRoundForPlayers(curRound);
-
-            jsonifier.writeStateTracePath(curRound);
-            System.out.println("---------------------------");
-            System.out.println("Round " + curRound);
-            System.out.println("HonestPlayer: ");
-            for(Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {
-                jsonifier.printPlayerState((StreamletPlayer) entry.getValue());
-            }
-
-            System.out.println("CorruptPlayer: ");
-            for(Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
-                jsonifier.printPlayerState((StreamletPlayer) entry.getValue());
-            }
+            boundAndSubmitMessageToNetwork(curRound, blockProposalMessageCommunicationList);
+            // record the proposal back to the trace folder
+            jsonifier.writeRoundProposal(curRound, proposedBlock);
+            resEpoch ++;
+        } else {
+            blockProposalMessageCommunicationList = new LinkedList<>();
         }
+
+        // send vote messages for any proposal received
+        if (roundMessageTrace != null && roundMessageTrace.voteMessage != null) {
+            voteMessageList = roundMessageTrace.voteMessage;
+        } else {
+            voteMessageList = playerController.generateVoteMessageList(curRound);
+        }
+        boundAndSubmitMessageToNetwork(curRound, voteMessageList);
+
+        playerController.endRoundForPlayers(curRound);
+        jsonifier.writeMessageTrace(
+                curRound,
+                blockProposalMessageCommunicationList,
+                voteMessageList,
+                echoInputTaskList,
+                echoMessageTaskList);
+
+        jsonifier.writeStateTracePath(curRound);
+        System.out.println("---------------------------");
+        System.out.println("Round " + curRound);
+        System.out.println("HonestPlayer: ");
+        for(Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {
+            jsonifier.printPlayerState((StreamletPlayer) entry.getValue());
+        }
+
+        System.out.println("CorruptPlayer: ");
+        for(Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
+            jsonifier.printPlayerState((StreamletPlayer) entry.getValue());
+        }
+        return resEpoch;
     }
 
     public int electLeader(final int round) {
         return round % config.numTotalPlayer;
+    }
+
+    public void processMessagesReceivedForRound(final int curRound) {
+        // start network simulator prepared for current round
+        playerController.processInputs();
+        playerController.processBlockProposal(curRound);
+        playerController.processVotesForEachPlayer(curRound);
+        playerController.finalizeChainForEachPlayer(curRound);
+    }
+
+    public void boundAndSubmitMessageToNetwork(final int curRound, final List<Task> taskList) {
+        networkSimulator.boundMessageDelayForSynchronousNetwork(config.maxDelay, taskList);
+        playerController.sendMessageListViaNetwork(curRound, taskList);
     }
 
 }

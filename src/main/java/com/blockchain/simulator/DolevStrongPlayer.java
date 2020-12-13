@@ -6,21 +6,17 @@ import java.util.List;
 
 public class DolevStrongPlayer extends Player {
     public Set<Bit> extractedSet;
-    public List<DolevStrongMessage> curRoundInputMessages;
-    public List<DolevStrongMessage> prevRoundMessages;
     public List<DolevStrongMessage> curRoundMessages;
     public Bit outputBit = Bit.FLOOR;
 
     public DolevStrongPlayer(final int id, PlayerController playerController) {
         super(id, playerController);
         extractedSet = new HashSet<>();
-        curRoundInputMessages = new LinkedList<>();
-        prevRoundMessages = new LinkedList<>();
         curRoundMessages = new LinkedList<>();
     }
 
     public void receiveInput(final Message inputMessage) {
-        curRoundInputMessages.add((DolevStrongMessage) inputMessage);
+        curRoundMessages.add((DolevStrongMessage) inputMessage);
     }
 
     public void receiveMessage(final Message message, int round) {
@@ -32,11 +28,7 @@ public class DolevStrongPlayer extends Player {
     }
 
     public void endRound() {
-        List<DolevStrongMessage> tmpList = curRoundMessages;
-        curRoundMessages = prevRoundMessages;
-        prevRoundMessages = tmpList;
         curRoundMessages.clear();
-        curRoundInputMessages.clear();
     }
 
     public void setOutputBit(Bit b) {

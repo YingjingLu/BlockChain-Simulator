@@ -20,6 +20,7 @@ public class StreamletPlayer extends Player {
     public List<StreamletBlock> blockPendingVotingForCurRound;
     public Set<Integer> pendingTransactionSet;
     public Set<Integer> confirmedTransactionSet;
+    public Set<String> receivedMessageHashSet;
     public int longestNotarizedChainLevel;
 
     public StreamletPlayer(final int id, PlayerController playerController) {
@@ -28,7 +29,7 @@ public class StreamletPlayer extends Player {
         chainTailMap = new HashMap<>();
         blockMap = new HashMap<>();
         addTailToMap(chainHead);
-        blockMap.put(chainHead.getRound(), chainHead);
+        blockMap.put(chainHead.getEpoch(), chainHead);
         curRoundInputMessageList = new LinkedList<>();
         curRoundMessageList = new LinkedList<>();
         blockIdToBlockMessageMap = new HashMap<>();
@@ -36,22 +37,35 @@ public class StreamletPlayer extends Player {
         blockPendingVotingForCurRound = new LinkedList<>();
         pendingTransactionSet = new HashSet<>();
         confirmedTransactionSet = new HashSet<>();
+        receivedMessageHashSet = new HashSet<>();
         // starting from genesis block
         longestNotarizedChainLevel = 0;
 
     }
     public void receiveInput(final Message message) {
+        // only accept messages not received before
+        final String messageHash = ((StreamletMessage) message).getHashString();
+        if (messageHashSeen(messageHash)) {
+            return;
+        }
         StreamletMessage streamletMessage = (StreamletMessage) message;
         curRoundInputMessageList.add(streamletMessage);
         processInputMessage(streamletMessage);
+        receivedMessageHashSet.add(messageHash);
     }
 
     public void processInputMessage(StreamletMessage message) {
+        final String messageHash = (message).getHashString();
+        if (messageHashSeen(messageHash)) {
+            return;
+        }
+
         for (int tx : message.getMessage()) {
             if (!confirmedTransactionSet.contains(tx)) {
                 pendingTransactionSet.add(tx);
             }
         }
+        receivedMessageHashSet.add(messageHash);
     }
 
     /**
@@ -61,7 +75,7 @@ public class StreamletPlayer extends Player {
     public void proceeeInputs() {
         List<StreamletMessage> filteredMessageList = new LinkedList<>();
         for (StreamletMessage message : curRoundMessageList) {
-            if (message.getRound() == Globals.streamletInputMessageRound) {
+            if (message.isInputMessage()) {
                 processInputMessage(message);
             } else {
                 filteredMessageList.add(message);
@@ -72,14 +86,18 @@ public class StreamletPlayer extends Player {
     }
 
     public void receiveMessage(final Message message, final int round) {
+        final String messageHash = ((StreamletMessage) message).getHashString();
+        if (messageHashSeen(messageHash)) {
+            return;
+        }
         curRoundMessageList.add((StreamletMessage) message);
+        receivedMessageHashSet.add(messageHash);
     }
 
     public void addTailToMap(final StreamletBlock block) {
         assert block != null : "block should not be null";
-        assert ! chainTailMap.containsKey(block.getRound()) : "Adding a new block already exists in the chain";
-
-        chainTailMap.put(block.getRound(), block);
+        assert ! chainTailMap.containsKey(block.getEpoch()) : "Adding a new block already exists in the chain";
+        chainTailMap.put(block.getEpoch(), block);
     }
 
     public void processBlockProposal(final int curRound) {
@@ -89,15 +107,18 @@ public class StreamletPlayer extends Player {
         // move those vote messages into the
         for (StreamletMessage streamletMessage : curRoundMessageList) {
             if (!streamletMessage.getIsVote()) {
-                assert !blockMap.containsKey(streamletMessage.getRound()) : "There should not be duplicated message for the same block";
                 // construct block from message
-                StreamletBlock block = new StreamletBlock(
-                        streamletMessage.getRound(),
-                        streamletMessage.getProposerId(),
-                        new LinkedList<>(streamletMessage.getMessage())
-                );
-                pendingAddedBlockList.add(block);
-                blockIdToBlockMessageMap.put(streamletMessage.getRound(), streamletMessage);
+                if (blockIdToBlockMessageMap.containsKey(streamletMessage.getEpoch())) {
+                    System.out.println("WARNING: either from proposal or from echoing do I see repeating block proposal: " + streamletMessage.getEpoch());
+                } else {
+                    StreamletBlock block = new StreamletBlock(
+                            streamletMessage.getEpoch(),
+                            streamletMessage.getProposerId(),
+                            new LinkedList<>(streamletMessage.getMessage())
+                    );
+                    pendingAddedBlockList.add(block);
+                    blockIdToBlockMessageMap.put(streamletMessage.getEpoch(), streamletMessage);
+                }
             } else {
                 filteredVoteMessageList.add(streamletMessage);
             }
@@ -105,11 +126,10 @@ public class StreamletPlayer extends Player {
         curRoundMessageList.clear();
         curRoundMessageList = filteredVoteMessageList;
         // sort the pending added blocks by round ascending and add them from lower to higher
-        pendingAddedBlockList.sort(new StreamletBlockSortByRound());
+        pendingAddedBlockList.sort(new StreamletBlockSortByEpoch());
         for (StreamletBlock block : pendingAddedBlockList) {
-            final int round = block.getRound();
-            assert chainTailMap.containsKey(round) : "Added votes should have existing prev in head";
-            StreamletMessage blockMessage = blockIdToBlockMessageMap.get(round);
+            final int epoch = block.getEpoch();
+            StreamletMessage blockMessage = blockIdToBlockMessageMap.get(epoch);
             List<String> signatures  = blockMessage.getSignatures();
             // get the last two signatures
             assert signatures.size() >= 2 : "Message should have at least 2 signatures";
@@ -120,23 +140,20 @@ public class StreamletPlayer extends Player {
             final StreamletMessage curMessage = CryptographyAuthenticator.signatureToStreamletMessage(
                     signatures.get(size - 2)
             );
-            assert block.getRound() == curMessage.getRound() : "Current signature should be the same as the block";
-            assert blockMap.containsKey(prevMessage.getRound()) : "Prev signature should be block that this player has";
-            final StreamletBlock prev = blockMap.get(prevMessage.getRound());
+            final StreamletBlock prev = blockMap.get(prevMessage.getEpoch());
             // if the chain is not stemming from tail
             assert prev != null : "prev block cannot be null";
             // set prev
             block.setPrev(prev);
             // set level
             block.setLevel(prev.getLevel() + 1);
-
-            blockMap.put(block.getRound(), block);
+            blockMap.put(block.getEpoch(), block);
             // update head
-            if (!prev.isGenesisBlock() && chainTailMap.containsKey(prev.getRound())) {
-                chainTailMap.remove(prev.getRound());
+            if (!prev.isGenesisBlock() && chainTailMap.containsKey(prev.getEpoch())) {
+                chainTailMap.remove(prev.getEpoch());
             }
-            chainTailMap.put(block.getRound(), block);
-            blockIdToVoteCountMap.put(block.getRound(), 0);
+            chainTailMap.put(block.getEpoch(), block);
+            blockIdToVoteCountMap.put(block.getEpoch(), 0);
             blockPendingVotingForCurRound.add(block);
         }
     }
@@ -151,10 +168,10 @@ public class StreamletPlayer extends Player {
      * @return
      */
     public boolean determineBlockVote(final StreamletBlock proposedBlock) {
-        if (!blockMap.containsKey(proposedBlock.getRound())) {
+        if (!blockMap.containsKey(proposedBlock.getEpoch())) {
             return false;
         }
-        final int predecessorBlockRound = proposedBlock.getPrev().getRound();
+        final int predecessorBlockRound = proposedBlock.getPrev().getEpoch();
         if (!blockMap.containsKey(predecessorBlockRound)) {
             return false;
         }
@@ -208,7 +225,7 @@ public class StreamletPlayer extends Player {
             if (tailBlock == null) {
                  continue;
             }
-            List<StreamletBlock> blockList = new ArrayList<StreamletBlock>();
+            List<StreamletBlock> blockList = new ArrayList<>();
             // try accumulate three blocks
             StreamletBlock cur = tailBlock;
             blockList.add(cur);
@@ -225,8 +242,8 @@ public class StreamletPlayer extends Player {
                 continue;
             }
             // if the three blocks have consecutive rounds
-            if (blockList.get(0).getRound() - blockList.get(1).getRound() == 1
-                && blockList.get(1).getRound() - blockList.get(2).getRound() == 1
+            if (blockList.get(0).getEpoch() - blockList.get(1).getEpoch() == 1
+                && blockList.get(1).getEpoch() - blockList.get(2).getEpoch() == 1
                 && !blockList.get(0).isGenesisBlock()
                 && !blockList.get(2).isGenesisBlock()) {
                 // finalize the first two
@@ -249,5 +266,9 @@ public class StreamletPlayer extends Player {
         blockPendingVotingForCurRound.clear();
         curRoundMessageList.clear();
         curRoundInputMessageList.clear();
+    }
+
+    public boolean messageHashSeen(final String messageHash) {
+        return this.receivedMessageHashSet.contains(messageHash);
     }
 }

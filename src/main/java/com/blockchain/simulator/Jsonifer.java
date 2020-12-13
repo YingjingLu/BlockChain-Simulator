@@ -3,11 +3,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.LinkedList;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -22,26 +20,31 @@ public class Jsonifer {
         // create directories if not exists
         final String messageFolder = traceRootPath + "/" + "message_trace/";
         final String stateFolder = traceRootPath + "/" + "player_state_trace/";
-        final File messageF = new File(messageFolder);
-        final File stateF = new File(stateFolder);
-        if (!messageF.exists()) {
-            messageF.mkdir();
-        }
-        if (!stateF.exists()) {
-            stateF.mkdir();
+        createFolderIfNotExists(messageFolder);
+        createFolderIfNotExists(stateFolder);
+    }
+
+    public void createFolderIfNotExists(final String path) {
+        final File f = new File(path);
+        if (!f.exists()) {
+            f.mkdir();
         }
     }
 
     public JSONObject fileToJSONObject(final String path) throws IOException, ParseException {
         JSONParser parser = new JSONParser();
         FileReader fileReader = new FileReader(path);
-        return (JSONObject) parser.parse(fileReader);
+        JSONObject res = (JSONObject) parser.parse(fileReader);
+        fileReader.close();
+        return res;
     }
 
     public JSONArray fileToJSONArray(final String path) throws IOException, ParseException {
         JSONParser parser = new JSONParser();
         FileReader fileReader = new FileReader(path);
-        return (JSONArray) parser.parse(fileReader);
+        JSONArray res = (JSONArray) parser.parse(fileReader);
+        fileReader.close();
+        return res;
     }
 
     public void jsonObjectToFile(final JSONObject jsonObject, final String path) throws IOException {
@@ -60,7 +63,11 @@ public class Jsonifer {
 
     public boolean hasMessageTrace(final int round) {
         final String messageTracePath = getMessageTracePath(round);
-        final File f = new File(messageTracePath);
+        return fileExists(messageTracePath);
+    }
+
+    public boolean fileExists(final String path) {
+        final File f = new File(path);
         return f.exists();
     }
 
