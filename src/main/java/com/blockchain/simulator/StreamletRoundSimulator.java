@@ -50,7 +50,6 @@ public class StreamletRoundSimulator extends RoundSimulator {
     public void run() throws IOException, IllegalArgumentException, ParseException {
         jsonifier.writeStateTracePath(-1);
         int curRound = 0;
-        int curEpoch = 0;
         final int roundPerEpoch;
         if (config.maxDelay == -1) {
             roundPerEpoch = 2;
@@ -58,14 +57,16 @@ public class StreamletRoundSimulator extends RoundSimulator {
             roundPerEpoch = 2 * config.maxDelay;
         }
         while (curRound < totalRounds) {
-            curEpoch = stepRound(curRound, roundPerEpoch, curEpoch);
+            stepRound(curRound, roundPerEpoch);
             curRound ++;
         }
     }
 
-    public int stepRound(final int curRound, final int roundPerEpoch, final int curEpoch)
+    public void stepRound(final int curRound, final int roundPerEpoch)
             throws IOException, IllegalArgumentException, ParseException {
         networkSimulator.beginRound(curRound);
+        final int curEpoch = curRound / roundPerEpoch;
+
         // get all the messages already predefined in this round if user choose to use trace
         final StreamletMessageTrace roundMessageTrace;
         if (config.useTrace) {
@@ -73,11 +74,9 @@ public class StreamletRoundSimulator extends RoundSimulator {
         } else {
             roundMessageTrace = null;
         }
-
         // receive and process messages sent from previous round and process them
         playerController.sendInputMessagesToPlayers(this.config.inputMessageList.get(curRound));
         // broadcast inputs to the network
-        int resEpoch = curEpoch;
         final List<Task> echoInputTaskList;
         if (roundMessageTrace != null && roundMessageTrace.transactionEcho != null) {
             echoInputTaskList = roundMessageTrace.transactionEcho;
@@ -87,7 +86,6 @@ public class StreamletRoundSimulator extends RoundSimulator {
         boundAndSubmitMessageToNetwork(curRound, echoInputTaskList);
 
         networkSimulator.sendMessagesToPlayers(curRound);
-
         // broadcast messages players receives
         final List<Task> echoMessageTaskList;
         if (roundMessageTrace != null && roundMessageTrace.messageEcho != null) {
@@ -96,10 +94,8 @@ public class StreamletRoundSimulator extends RoundSimulator {
             echoMessageTaskList = playerController.generateMessageEchoTaskList();
         }
         boundAndSubmitMessageToNetwork(curRound, echoMessageTaskList);
-
         // process those messages
         processMessagesReceivedForRound(curRound);
-
         // Message generation for this round begins
         final List<Task> blockProposalMessageCommunicationList;
         final List<Task> voteMessageList;
@@ -129,7 +125,6 @@ public class StreamletRoundSimulator extends RoundSimulator {
             boundAndSubmitMessageToNetwork(curRound, blockProposalMessageCommunicationList);
             // record the proposal back to the trace folder
             jsonifier.writeRoundProposal(curRound, proposedBlock);
-            resEpoch ++;
         } else {
             blockProposalMessageCommunicationList = new LinkedList<>();
         }
@@ -141,7 +136,6 @@ public class StreamletRoundSimulator extends RoundSimulator {
             voteMessageList = playerController.generateVoteMessageList(curRound);
         }
         boundAndSubmitMessageToNetwork(curRound, voteMessageList);
-
         jsonifier.writeMessageTrace(
                 curRound,
                 blockProposalMessageCommunicationList,
@@ -161,7 +155,6 @@ public class StreamletRoundSimulator extends RoundSimulator {
         for(Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
             jsonifier.printPlayerState((StreamletPlayer) entry.getValue());
         }
-        return resEpoch;
     }
 
     public int electLeader(final int round) {

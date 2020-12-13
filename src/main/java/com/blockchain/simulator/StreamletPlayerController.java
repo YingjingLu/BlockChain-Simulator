@@ -276,7 +276,6 @@ public class StreamletPlayerController extends PlayerController {
     public List<Task> generateProposalMessageCommunicationList(
             final int leaderId,
             final StreamletBlock block) {
-        assert honestPlayerMap.containsKey(leaderId) : "calling generating proposal should provide with an honest leader";
         List<Task> taskList = new LinkedList<>();
         final StreamletPlayer srcPlayer;
         if (honestPlayerMap.containsKey(leaderId)) {

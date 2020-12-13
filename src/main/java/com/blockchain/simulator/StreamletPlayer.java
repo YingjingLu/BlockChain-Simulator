@@ -129,7 +129,6 @@ public class StreamletPlayer extends Player {
         pendingAddedBlockList.sort(new StreamletBlockSortByEpoch());
         for (StreamletBlock block : pendingAddedBlockList) {
             final int epoch = block.getEpoch();
-            assert chainTailMap.containsKey(block.getPrev().getEpoch()) : "Added votes should have existing prev in head";
             StreamletMessage blockMessage = blockIdToBlockMessageMap.get(epoch);
             List<String> signatures  = blockMessage.getSignatures();
             // get the last two signatures
@@ -148,7 +147,6 @@ public class StreamletPlayer extends Player {
             block.setPrev(prev);
             // set level
             block.setLevel(prev.getLevel() + 1);
-
             blockMap.put(block.getEpoch(), block);
             // update head
             if (!prev.isGenesisBlock() && chainTailMap.containsKey(prev.getEpoch())) {

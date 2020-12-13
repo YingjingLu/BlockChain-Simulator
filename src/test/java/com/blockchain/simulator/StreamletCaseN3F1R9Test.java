@@ -39,5 +39,6 @@ public class StreamletCaseN3F1R9Test {
         StreamletJsonifier jsonifier = simulator.jsonifier;
         NetworkSimulator networkSimulator = simulator.networkSimulator;
         simulator.run();
+
     }
 }

@@ -29,7 +29,7 @@ public class StreamletCaseN4F011Test {
 
     @After
     public void tearDown() throws IOException{
-        TestIO.deleteFolder(TestIO.getTargetCaseFolder(CASE_NAME));
+        TestIO.deleteFolder(caseFolder);
     }
 
     @Test

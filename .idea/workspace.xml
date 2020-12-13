@@ -8,82 +8,64 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eb84c35f-f74c-4943-8031-644289372395" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/blockchain-simulator.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/StreamletCaseN3F1R9Test.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/StreamletCaseN4F011Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/lib.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/lib.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/lib2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/lib2.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/target.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/target.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/target2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/target2.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/Installation.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Installation.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/Installation.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Installation.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/change_attack_strategy_for_dolev_streamlet.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/change_attack_strategy_for_dolev_streamlet.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/change_attack_strategy_for_dolev_streamlet.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/change_attack_strategy_for_dolev_streamlet.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/config_and_trace.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/config_and_trace.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/config_and_trace.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/config_and_trace.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/configure_network_module_and_delay.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/configure_network_module_and_delay.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/write_a_new_protocol.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/write_a_new_protocol.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/write_a_new_protocol.jpeg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/write_a_new_protocol.jpeg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/write_a_new_protocol.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/write_a_new_protocol.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/write_a_new_protocol.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/write_a_new_protocol.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/write_a_new_protocol.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/write_a_new_protocol.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/dolevstrong_n_3_f_1_r_1/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/dolevstrong_n_3_f_1_r_1/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/commons-cli-1.4.jar" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/commons-cli-1.4.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/commons-io-2.8.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/commons-io-2.8.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/guava-30.0-jre.jar" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/guava-30.0-jre.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/json-simple-1.1.1.jar" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/json-simple-1.1.1.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/junit-4.11.jar" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/junit-4.11.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/lombok-1.18.16.jar" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/lombok-1.18.16.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Bit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Bit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/CryptographyAuthenticator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/CryptographyAuthenticator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongJsonifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongJsonifier.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongMessageTrace.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongMessageTrace.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongPlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongPlayerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongPlayerState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongPlayerState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongRoundSimulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/DolevStrongRoundSimulator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Globals.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Globals.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Jsonifer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Jsonifer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Message.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/NetworkSimulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/NetworkSimulator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/PlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/PlayerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/RoundSimulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/RoundSimulator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/SampleProtocolConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/SampleProtocolConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/SampleProtocolJsonifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/SampleProtocolJsonifier.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/SampleProtocolMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/SampleProtocolMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/SampleProtocolPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/SampleProtocolPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/SampleProtocolPlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/SampleProtocolPlayerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/SampleProtocolRoundSimulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/SampleProtocolRoundSimulator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletBlock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletBlockSortByEpoch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletBlockSortByEpoch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletJsonifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletJsonifier.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletMessageTrace.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletMessageTrace.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/message_trace/0.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/message_trace/1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/message_trace/2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/message_trace/3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/message_trace/4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/message_trace/5.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/message_trace/6.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/message_trace/7.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/message_trace/8.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/player_state_trace/0.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/player_state_trace/1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/player_state_trace/2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/player_state_trace/3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/player_state_trace/4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/player_state_trace/5.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/player_state_trace/6.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/player_state_trace/7.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/player_state_trace/8.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/player_state_trace/init.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/proposal_trace/0.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/proposal_trace/2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/proposal_trace/4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/proposal_trace/6.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_3_f_1_r_9/proposal_trace/8.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/message_trace/0.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/message_trace/1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/message_trace/10.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/message_trace/2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/message_trace/3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/message_trace/4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/message_trace/5.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/message_trace/6.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/message_trace/7.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/message_trace/8.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/message_trace/9.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/player_state_trace/0.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/player_state_trace/1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/player_state_trace/10.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/player_state_trace/2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/player_state_trace/3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/player_state_trace/4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/player_state_trace/5.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/player_state_trace/6.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/player_state_trace/7.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/player_state_trace/8.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/player_state_trace/9.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/player_state_trace/init.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/proposal_trace/0.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/proposal_trace/10.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/proposal_trace/2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/proposal_trace/4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/proposal_trace/6.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/streamlet_n_4_f_0_r_11/proposal_trace/8.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletPlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletPlayerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletPlayerState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletPlayerState.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletRoundSimulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/StreamletRoundSimulator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/blockchain/simulator/Task.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/main.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/AppTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/AppTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/DolevStrongCaseN3F1R1Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/DolevStrongCaseN3F1R1Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/TestIO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/TestIO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/test.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_targets/makefile" beforeDir="false" afterPath="$PROJECT_DIR$/test_targets/makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/StreamletCaseN3F1R9Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/StreamletCaseN3F1R9Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/StreamletCaseN4F011Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/blockchain/simulator/StreamletCaseN4F011Test.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
