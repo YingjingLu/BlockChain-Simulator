@@ -86,7 +86,12 @@ public class StreamletPlayer extends Player {
     }
 
     public void receiveMessage(final Message message, final int round) {
+        final String messageHash = ((StreamletMessage) message).getHashString();
+        if (messageHashSeen(messageHash)) {
+            return;
+        }
         curRoundMessageList.add((StreamletMessage) message);
+        receivedMessageHashSet.add(messageHash);
     }
 
     public void addTailToMap(final StreamletBlock block) {
@@ -123,9 +128,9 @@ public class StreamletPlayer extends Player {
         // sort the pending added blocks by round ascending and add them from lower to higher
         pendingAddedBlockList.sort(new StreamletBlockSortByEpoch());
         for (StreamletBlock block : pendingAddedBlockList) {
-            final int round = block.getEpoch();
-            assert chainTailMap.containsKey(round) : "Added votes should have existing prev in head";
-            StreamletMessage blockMessage = blockIdToBlockMessageMap.get(round);
+            final int epoch = block.getEpoch();
+            assert chainTailMap.containsKey(block.getPrev().getEpoch()) : "Added votes should have existing prev in head";
+            StreamletMessage blockMessage = blockIdToBlockMessageMap.get(epoch);
             List<String> signatures  = blockMessage.getSignatures();
             // get the last two signatures
             assert signatures.size() >= 2 : "Message should have at least 2 signatures";
