@@ -1,0 +1,21 @@
+{
+    "protocol": "dolev_strong",
+    "dolev_strong_config": {
+        "round": "2",
+        "num_corrupt_player": "1",
+        "num_total_player": "3",
+        "use_trace": false,  
+        "max_delay": 1,
+        "inputs": [ 
+            [
+                {
+                    "round": "0",
+                    "message": ["1"],
+                    "signatures": [],
+                    "from_player_id": "-1",
+                    "to_player_id": "2"
+                }
+            ]
+        ]
+    }
+}

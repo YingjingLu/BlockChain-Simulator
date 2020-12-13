@@ -209,7 +209,7 @@ public class StreamletJsonifier extends Jsonifer {
         traceObject.put("input_echo", inputEchoTaskArray);
 
         final JSONArray echoMessageTaskArray = new JSONArray();
-        for (Task t : broadcastInputTaskList) {
+        for (Task t : echoMessageTaskList) {
             echoMessageTaskArray.add(taskToJSONObject(t));
         }
         traceObject.put("message_echo", echoMessageTaskArray);

@@ -50,6 +50,7 @@ public class StreamletRoundSimulator extends RoundSimulator {
     public void run() throws IOException, IllegalArgumentException, ParseException {
         jsonifier.writeStateTracePath(-1);
         int curRound = 0;
+        int curEpoch = 0;
         final int roundPerEpoch;
         if (config.maxDelay == -1) {
             roundPerEpoch = 2;
@@ -57,15 +58,15 @@ public class StreamletRoundSimulator extends RoundSimulator {
             roundPerEpoch = 2 * config.maxDelay;
         }
         while (curRound < totalRounds) {
-            stepRound(curRound, roundPerEpoch);
+            curEpoch = stepRound(curRound, roundPerEpoch, curEpoch);
             curRound ++;
         }
     }
 
-    public void stepRound(final int curRound, final int roundPerEpoch)
+    public int stepRound(final int curRound, final int roundPerEpoch, final int curEpoch)
             throws IOException, IllegalArgumentException, ParseException {
         networkSimulator.beginRound(curRound);
-        final int curEpoch = curRound / roundPerEpoch;
+        int resEpoch = curEpoch;
 
         // get all the messages already predefined in this round if user choose to use trace
         final StreamletMessageTrace roundMessageTrace;
@@ -125,6 +126,7 @@ public class StreamletRoundSimulator extends RoundSimulator {
             boundAndSubmitMessageToNetwork(curRound, blockProposalMessageCommunicationList);
             // record the proposal back to the trace folder
             jsonifier.writeRoundProposal(curRound, proposedBlock);
+            resEpoch ++;
         } else {
             blockProposalMessageCommunicationList = new LinkedList<>();
         }
@@ -155,6 +157,7 @@ public class StreamletRoundSimulator extends RoundSimulator {
         for(Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
             jsonifier.printPlayerState((StreamletPlayer) entry.getValue());
         }
+        return resEpoch;
     }
 
     public int electLeader(final int round) {

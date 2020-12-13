@@ -399,6 +399,9 @@ public class StreamletPlayerController extends PlayerController {
             } else {
                 decision = true;
             }
+            if (!decision) {
+                continue;
+            }
             for (int toPlayerId : toPlayerIdList) {
                 StreamletMessage newMessage = new StreamletMessage(
                         true,
