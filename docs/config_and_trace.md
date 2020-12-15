@@ -159,10 +159,13 @@ The trace of a block proposal. It is the same as the StreamletBlock
 Below is the state trace for the two protocols that records every player's key states for output by the end of each round.
 ### DolevStrongPlayerState
 ```
-{
-    "player_id": 1,
-    "extracted_set": ["0", "1"]
-}
+[
+    {
+        "player_id": 1,
+        "extracted_set": ["0", "1"]
+    },
+    ....
+]
 ```
 ### StreamletPlayerState
 * Players are divided into honest and corrupt two groups depending on the config of the case.

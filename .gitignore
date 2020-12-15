@@ -6,3 +6,4 @@ test_targets/*.json
 .factorypath
 .project
 .settings/
+/src/config/zip/
