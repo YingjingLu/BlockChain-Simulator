@@ -1,5 +1,16 @@
 # How to use the deployed simulator without any setup
 
+## Walk through video on how to use the simulator from deployed server
+Web Interface
+```url
+https://www.youtube.com/watch?v=rMWJqBhDqgg
+```
+
+SSH to run simulator
+```url
+https://www.youtube.com/watch?v=-vBiecf7PV4
+```
+
 ## To visit the web visualizer:
 
 In your browser (chrome is preferred):

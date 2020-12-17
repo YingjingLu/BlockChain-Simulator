@@ -12,12 +12,13 @@ import java.io.IOException;
 import java.lang.IllegalArgumentException;
 import org.json.simple.parser.ParseException;
 
-public class StreamletCaseN3F1R9Test {
-    public static final String CASE_NAME = "streamlet_n_3_f_1_r_9";
+public class StreamletCaseN4F0R4SyncTest {
+
+    public static final String CASE_NAME = "streamlet_n_4_f_0_r_4_sync";
 
     private final String caseFolder;
 
-    public StreamletCaseN3F1R9Test() {
+    public StreamletCaseN4F0R4SyncTest() {
         caseFolder = TestIO.getTargetCaseFolder(CASE_NAME);
     }
 
@@ -33,11 +34,12 @@ public class StreamletCaseN3F1R9Test {
     }
 
     @Test
-    public void runStreamletCaseN3F1R9Test() throws IOException, IllegalArgumentException, ParseException {
+    public void runStreamletCaseN4F0R4SyncTest() throws IOException, IllegalArgumentException, ParseException {
         StreamletRoundSimulator simulator = new StreamletRoundSimulator(caseFolder);
         StreamletPlayerController playerController = simulator.playerController;
         StreamletJsonifier jsonifier = simulator.jsonifier;
         NetworkSimulator networkSimulator = simulator.networkSimulator;
         simulator.run();
+
     }
 }

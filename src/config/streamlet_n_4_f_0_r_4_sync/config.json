@@ -1,0 +1,10 @@
+{
+    "protocol": "streamlet",
+    "streamlet_config": {
+        "round": "4",
+        "num_corrupt_player": "0",
+        "num_total_player": "4",
+        "use_trace": true,
+        "max_delay": 1
+    }
+}
