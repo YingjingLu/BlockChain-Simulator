@@ -5,6 +5,9 @@ import java.lang.IllegalArgumentException;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * Sample player RoundSimulator responsible for running protocol's procedure for each round
+ */
 public class SampleProtocolRoundSimulator extends RoundSimulator {
 
     public final SampleProtocolJsonifier jsonifier;
@@ -12,6 +15,13 @@ public class SampleProtocolRoundSimulator extends RoundSimulator {
 
     SampleProtocolPlayerController playerController;
 
+    /**
+     * Constructor to initialize all player mapping and required network, playerController
+     * @param traceRootPath
+     * @throws IOException
+     * @throws IllegalArgumentException
+     * @throws ParseException
+     */
     public SampleProtocolRoundSimulator( final String traceRootPath)
             throws IOException, IllegalArgumentException, ParseException {
         super();

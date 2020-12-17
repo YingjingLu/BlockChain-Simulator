@@ -1,6 +1,10 @@
 package com.blockchain.simulator;
 import java.util.List;
 import java.util.LinkedList;
+
+/**
+ * Dolev Strong Player State holder object
+ */
 public class DolevStrongPlayerState {
     public List<Bit> extractedSet;
     public final int playerId;

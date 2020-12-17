@@ -77,7 +77,10 @@ public class DolevStrongJsonifier extends Jsonifer {
     }
 
     /**
-     * Convert task list into message trace object and write into json file
+     * Write message traces for current round to json file
+     * @param round
+     * @param taskList
+     * @throws IOException
      */
     public void writeMessageTrace(final int round, final List<Task> taskList) throws IOException {
 
@@ -105,7 +108,9 @@ public class DolevStrongJsonifier extends Jsonifer {
     }
 
     /**
-     * Write player state of a given round
+     * Write player state to a given round
+     * @param round
+     * @throws IOException
      */
     public void writeStateTracePath (final int round) throws IOException {
         final String path = getStateTracePath(round);
@@ -124,7 +129,10 @@ public class DolevStrongJsonifier extends Jsonifer {
     }
 
     /**
-     * Convert json object into task object
+     * Json object to task object
+     * @param jsonObject
+     * @return
+     * @throws IllegalArgumentException
      */
     public Task jsonObjectToTask(JSONObject jsonObject) throws IllegalArgumentException {
         final int delay, targetPlayerId;
@@ -159,7 +167,9 @@ public class DolevStrongJsonifier extends Jsonifer {
     }
 
     /**
-     * json object into message object
+     * JSOn object to message object
+     * @param jsonObject
+     * @return
      */
     public DolevStrongMessage jsonObjectToMessage(JSONObject jsonObject) {
         final List<String> signatures;
@@ -217,7 +227,9 @@ public class DolevStrongJsonifier extends Jsonifer {
     }
 
     /**
-     * Message into json object
+     * message object to json object
+     * @param message
+     * @return
      */
     public JSONObject messageToJSONObject(DolevStrongMessage message) {
         JSONObject messageObject = new JSONObject();
@@ -240,8 +252,9 @@ public class DolevStrongJsonifier extends Jsonifer {
     }
 
     /**
-     * messageObjectTask into json object
-     * 
+     *Task object to json object
+     * @param task
+     * @return
      */
     public JSONObject taskToJSONObject(Task task) {
         final JSONObject messageObject = messageToJSONObject((DolevStrongMessage) task.getMessage());
@@ -254,6 +267,8 @@ public class DolevStrongJsonifier extends Jsonifer {
 
     /**
      * Player into json object
+     * @param player
+     * @return
      */
     public JSONObject playerToJSONObject(DolevStrongPlayer player) {
         JSONObject playerObject = new JSONObject();
@@ -269,8 +284,8 @@ public class DolevStrongJsonifier extends Jsonifer {
     }
 
     /**
-     * write output object
-     * 
+     * Write output object
+     * @throws IOException
      */
     public void writeOutput() throws IOException {
         final String outputPath = getOutputPath();

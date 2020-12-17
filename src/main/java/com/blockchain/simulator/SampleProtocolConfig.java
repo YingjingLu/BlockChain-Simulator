@@ -14,6 +14,14 @@ public class SampleProtocolConfig {
     public final int maxDelay;
     final boolean useTrace;
 
+    /**
+     * Constructor
+     * @param round
+     * @param numCorruptPlayer
+     * @param numTotalPlayer
+     * @param maxDelay
+     * @param useTrace
+     */
     public SampleProtocolConfig (
             final int round,
             final int numCorruptPlayer,

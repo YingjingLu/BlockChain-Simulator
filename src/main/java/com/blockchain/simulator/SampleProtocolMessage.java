@@ -16,15 +16,30 @@ public class SampleProtocolMessage extends Message {
     List<Integer> message;
     public static final String splitter = "&";
 
+    /**
+     * Constructor
+     * @param inRound
+     * @param inMessage
+     * @param inFromPlayerId
+     * @param inToPlayerId
+     */
     public SampleProtocolMessage(final int inRound, final List<Integer> inMessage, final int inFromPlayerId, final int inToPlayerId) {
         super(inRound, inFromPlayerId, inToPlayerId);
         this.message = inMessage;
     }
 
+    /**
+     *  message getter
+     * @return
+     */
     public List<Integer> getMessage() {
         return message;
     }
 
+    /**
+     * Concat message list into a single string
+     * @return
+     */
     public String messageToString() {
         StringBuilder builder = new StringBuilder();
         for (int i : message) {
@@ -34,6 +49,11 @@ public class SampleProtocolMessage extends Message {
         return builder.toString();
     }
 
+    /**
+     * get message list from concated message string
+     * @param str
+     * @return
+     */
     public static List<Integer> stringToMessage(String str) {
         String[] splitArray = str.split(splitter, 0);
         List<Integer> res = new LinkedList<>();
@@ -43,6 +63,10 @@ public class SampleProtocolMessage extends Message {
         return res;
     }
 
+    /**
+     * Deep copy on this
+     * @return
+     */
     public Message deepCopy() {
         List<Integer> newMessageList = new LinkedList<Integer>();
         SampleProtocolMessage newMessage = new SampleProtocolMessage(round, newMessageList, fromPlayerId, toPlayerId);

@@ -9,6 +9,15 @@ public class DolevStrongPlayerController extends PlayerController{
     // if the initial sender is corrupt should we use this parameter
     private Bit negatedBit = Bit.FLOOR;
     private int senderId;
+
+    /**
+     * Constructor
+     * @param networkSimulator
+     * @param authenticator
+     * @param honestPlayerMap
+     * @param corruptPlayerMap
+     * @param playerMap
+     */
     public DolevStrongPlayerController(
             final NetworkSimulator networkSimulator,
             final CryptographyAuthenticator authenticator,
@@ -20,7 +29,8 @@ public class DolevStrongPlayerController extends PlayerController{
     }
 
     /**
-     * Begin round, honest player add received bit to the extracted set, corrupt player does nothing
+     * Begin round, process received messages for honest players, add received bits to extracted set for each
+     * @param round
      */
     public void beginRound(final int round) {
         // corrupt player action
@@ -44,7 +54,8 @@ public class DolevStrongPlayerController extends PlayerController{
     }
 
     /**
-     * Send the initial bit message to the designated sender
+     * Method to send the initial input bit to other players
+     * @param messageList
      */
     public void sendInputMessagesToPlayers(List<DolevStrongMessage> messageList) {
         for (DolevStrongMessage inputMessage : messageList) {
@@ -57,6 +68,7 @@ public class DolevStrongPlayerController extends PlayerController{
     /**
      * Portal function that if the sender is corrupt then direct to corrupt player's strategy to send input
      * If honest direct to honest strategy to send input
+     * @return
      */
     public List<Task> generatePlayerInputMessageList() {
         if (corruptPlayerMap.containsKey(senderId)) {
@@ -243,6 +255,8 @@ public class DolevStrongPlayerController extends PlayerController{
      * if nothing in extracted set or both bits in extracted set set output FLOOR bit
      * 
      * If there is only one bit, set to that bit
+     *
+     * @param round
      */
     public void createOutputForEveryPlayer(final int round) {
         // corrupt player output

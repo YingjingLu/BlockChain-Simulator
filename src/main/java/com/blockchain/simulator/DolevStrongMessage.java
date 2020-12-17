@@ -13,7 +13,14 @@ public class DolevStrongMessage extends Message {
         message = inMessage;
     }
 
-    /**DolevStrongMessage Constructor */
+    /**
+     * Constructor
+     * @param inRound
+     * @param inMessage
+     * @param inFromPlayerId
+     * @param inToPlayerId
+     * @return
+     */
     public static DolevStrongMessage CreateMessageFromBit(
             final int inRound,
             final Bit inMessage,
@@ -25,7 +32,8 @@ public class DolevStrongMessage extends Message {
     }
 
     /**
-     * Deep copy of object
+     * Deep copy of message object
+     * @return
      */
     public Message deepCopy() {
         List<Bit> newMessageList = new LinkedList<Bit>();
@@ -43,6 +51,7 @@ public class DolevStrongMessage extends Message {
 
     /**
      * Bit message list into string
+     * @return
      */
     public String messageToString() {
         StringBuilder builder = new StringBuilder();
@@ -67,13 +76,16 @@ public class DolevStrongMessage extends Message {
 
     /**
      * Message getter
+     * @return
      */
     public List<Bit> getMessage() {
         return this.message;
     }
 
     /**
-     * string to bit message list
+     * String into bit message list
+     * @param str
+     * @return
      */
     public static List<Bit> stringToMessage(String str) {
         List<Bit> res = new LinkedList<Bit>();

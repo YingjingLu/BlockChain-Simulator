@@ -1,14 +1,31 @@
 package com.blockchain.simulator;
 
+/**
+ * Sample protocol's player object
+ */
 public class SampleProtocolPlayer extends Player {
 
+    /**
+     * Constructor
+     * @param id
+     * @param playerController
+     */
     public SampleProtocolPlayer(final int id, PlayerController playerController) {
         super(id, playerController);
     }
 
+    /**
+     * receive messages of current round
+     * @param message
+     * @param round
+     */
     public void receiveMessage(final Message message, int round) {
     }
 
+    /**
+     * receive current round input
+     * @param message
+     */
     public void receiveInput(final Message message) {
     }
 
@@ -21,7 +38,7 @@ public class SampleProtocolPlayer extends Player {
     }
 
     /**
-     * Clear out the sround specific state for that player
+     * Clear out the round specific state for that player
      * @param round
      */
     public void endRound() {

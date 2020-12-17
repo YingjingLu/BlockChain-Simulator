@@ -5,6 +5,9 @@ import java.util.LinkedList;
 import java.lang.IllegalArgumentException;
 import org.json.simple.parser.ParseException;
 
+/**
+ * Sample protocol's IO class
+ */
 public class SampleProtocolJsonifier extends Jsonifer {
     private final SampleProtocolRoundSimulator roundSimulator;
     public SampleProtocolJsonifier(final SampleProtocolRoundSimulator roundSimulator, final String traceRootPath) {

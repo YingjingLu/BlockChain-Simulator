@@ -5,6 +5,10 @@ import java.lang.IllegalArgumentException;
 import java.util.Map;
 
 import org.json.simple.parser.ParseException;
+
+/**
+ * Dolev Strong round simulator
+ */
 public class DolevStrongRoundSimulator extends RoundSimulator {
 
     // total number of rounds to simulate
@@ -15,6 +19,13 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
 
     DolevStrongPlayerController playerController;
 
+    /**
+     * Constructor, initialize all objects such as network simulator and player controller
+     * @param traceRootPath
+     * @throws IOException
+     * @throws IllegalArgumentException
+     * @throws ParseException
+     */
     public DolevStrongRoundSimulator( final String traceRootPath)
             throws IOException, IllegalArgumentException, ParseException {
         super();
@@ -48,6 +59,12 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
         );
     }
 
+    /**
+     * Driver runner
+     * @throws IOException
+     * @throws IllegalArgumentException
+     * @throws ParseException
+     */
     public void run() throws IOException, IllegalArgumentException, ParseException {
         jsonifier.writeStateTracePath(-1);
         startInitialRound(0);
@@ -62,6 +79,13 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
         jsonifier.writeOutput();
     }
 
+    /**
+     * Initial round is set separately as it requires additional message passes
+     * @param initialRound
+     * @throws IOException
+     * @throws IllegalArgumentException
+     * @throws ParseException
+     */
     public void startInitialRound(final int initialRound) throws IOException, IllegalArgumentException, ParseException {
         playerController.beginRound(initialRound);
         DolevStrongMessageTrace initialMessageTrace = null;
@@ -82,6 +106,13 @@ public class DolevStrongRoundSimulator extends RoundSimulator {
         jsonifier.writeStateTracePath(initialRound);
     }
 
+    /**
+     * Step the following round, each sends messages to other players and dump the traces
+     * @param round
+     * @throws IOException
+     * @throws IllegalArgumentException
+     * @throws ParseException
+     */
     public void stepRound(final int round) throws IOException, IllegalArgumentException, ParseException {
         networkSimulator.beginRound(round);
         networkSimulator.sendMessagesToPlayers(round);

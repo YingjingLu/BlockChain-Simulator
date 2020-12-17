@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.Queue;
 import java.lang.Math;
 
+/**
+ * NetworkSimu;ator class for queueing messages and send messages to players
+ */
 public class NetworkSimulator {
 
     public static final int INFINITE_ROUND = -1;
@@ -40,6 +43,11 @@ public class NetworkSimulator {
         }
     }
 
+    /**
+     * If the protocol has a maximum delay being set, bound all messages into the maxDelay
+     * @param delta
+     * @param taskList
+     */
     public void boundMessageDelayForSynchronousNetwork(final int delta, List<Task> taskList) {
         if (delta != PARTIALLY_SYNC_DELTA) {
             for (Task t : taskList) {
@@ -52,6 +60,11 @@ public class NetworkSimulator {
         }
     }
 
+    /**
+     * Add a task message package to the network queue
+     * @param curRound
+     * @param task
+     */
     public void addTaskToNetworkQueue(final int curRound, final Task task) {
         if (task.getDelay() == INFINITE_ROUND) {
             return;

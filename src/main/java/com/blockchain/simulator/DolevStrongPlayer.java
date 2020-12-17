@@ -19,14 +19,17 @@ public class DolevStrongPlayer extends Player {
     }
 
     /**
-     * Receive inptu from player controller, add to cur round input message list
+     * Receive input add to input message list
+     * @param inputMessage
      */
     public void receiveInput(final Message inputMessage) {
         curRoundMessages.add((DolevStrongMessage) inputMessage);
     }
 
     /**
-     * Receive message from network, add to cur round message list to process
+     * Receive message, add to current round message list
+     * @param message
+     * @param round
      */
     public void receiveMessage(final Message message, int round) {
         curRoundMessages.add((DolevStrongMessage) message);
@@ -34,20 +37,22 @@ public class DolevStrongPlayer extends Player {
 
     /**
      * Do nothing
+     * @param round
      */
     public void beginRound(final int round) {
 
     }
 
     /**
-     * Clear cur messages 
+     * Clear current round messages
      */
     public void endRound() {
         curRoundMessages.clear();
     }
 
     /**
-     * Set output bit given by player controller
+     * Output bit setter
+     * @param b
      */
     public void setOutputBit(Bit b) {
         outputBit = b;
@@ -55,6 +60,7 @@ public class DolevStrongPlayer extends Player {
 
     /**
      * Output bit getter
+     * @return
      */
     public Bit getOutputBit() {
         return outputBit;

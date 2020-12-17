@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.LinkedList;
 
 /**
- * Dolev Strong message trace object
+ * Dolev strong message trace object
  */
 public class DolevStrongMessageTrace {
     List<Task> taskList;

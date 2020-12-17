@@ -2,6 +2,9 @@ package com.blockchain.simulator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * PlayerController responsible for communicating with players to generate messages
+ */
 public abstract class PlayerController {
 
     protected final NetworkSimulator networkSimulator;
@@ -12,6 +15,14 @@ public abstract class PlayerController {
 
     protected int curRound;
 
+    /**
+     * Constructor
+     * @param networkSimulator
+     * @param authenticator
+     * @param honestPlayerMap
+     * @param corruptPlayerMap
+     * @param playerMap
+     */
     public PlayerController(
             final NetworkSimulator networkSimulator,
             final CryptographyAuthenticator authenticator,
