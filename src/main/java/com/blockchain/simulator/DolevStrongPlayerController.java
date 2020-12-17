@@ -19,6 +19,9 @@ public class DolevStrongPlayerController extends PlayerController{
         senderId = -1;
     }
 
+    /**
+     * Begin round, honest player add received bit to the extracted set, corrupt player does nothing
+     */
     public void beginRound(final int round) {
         // corrupt player action
         for (Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
@@ -40,6 +43,9 @@ public class DolevStrongPlayerController extends PlayerController{
         }
     }
 
+    /**
+     * Send the initial bit message to the designated sender
+     */
     public void sendInputMessagesToPlayers(List<DolevStrongMessage> messageList) {
         for (DolevStrongMessage inputMessage : messageList) {
             DolevStrongPlayer targetPlayer = (DolevStrongPlayer) playerMap.get(inputMessage.getToPlayerId());
@@ -232,6 +238,12 @@ public class DolevStrongPlayerController extends PlayerController{
         }
     }
 
+    /**
+     * Create output for honest players. Per Dolev strong, 
+     * if nothing in extracted set or both bits in extracted set set output FLOOR bit
+     * 
+     * If there is only one bit, set to that bit
+     */
     public void createOutputForEveryPlayer(final int round) {
         // corrupt player output
         for (Map.Entry<Integer, Player> destEntry : corruptPlayerMap.entrySet()) {
@@ -252,6 +264,10 @@ public class DolevStrongPlayerController extends PlayerController{
             }
         }
     }
+
+    /**
+     * Print honest players' output to stdout
+     */
     public void printOutput() {
         for (Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {
             final Bit bit = ((DolevStrongPlayer)entry.getValue()).getOutputBit();
