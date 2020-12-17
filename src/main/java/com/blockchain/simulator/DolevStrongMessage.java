@@ -3,6 +3,9 @@ package com.blockchain.simulator;
 import java.util.List;
 import java.util.LinkedList;
 
+/**
+ * Dlev strong message object. 
+ */
 public class DolevStrongMessage extends Message {
     public List<Bit> message;
     public DolevStrongMessage(final int inRound, final List<Bit> inMessage, final int inFromPlayerId, final int inToPlayerId) {
@@ -10,6 +13,7 @@ public class DolevStrongMessage extends Message {
         message = inMessage;
     }
 
+    /**DolevStrongMessage Constructor */
     public static DolevStrongMessage CreateMessageFromBit(
             final int inRound,
             final Bit inMessage,
@@ -20,6 +24,9 @@ public class DolevStrongMessage extends Message {
         return new DolevStrongMessage(inRound, message, inFromPlayerId, inToPlayerId);
     }
 
+    /**
+     * Deep copy of object
+     */
     public Message deepCopy() {
         List<Bit> newMessageList = new LinkedList<Bit>();
         DolevStrongMessage newMessage = new DolevStrongMessage(round, newMessageList, fromPlayerId, toPlayerId);
@@ -34,6 +41,9 @@ public class DolevStrongMessage extends Message {
         return newMessage;
     }
 
+    /**
+     * Bit message list into string
+     */
     public String messageToString() {
         StringBuilder builder = new StringBuilder();
         for (Bit i : message) {
@@ -55,10 +65,16 @@ public class DolevStrongMessage extends Message {
         return builder.toString();
     }
 
+    /**
+     * Message getter
+     */
     public List<Bit> getMessage() {
         return this.message;
     }
 
+    /**
+     * string to bit message list
+     */
     public static List<Bit> stringToMessage(String str) {
         List<Bit> res = new LinkedList<Bit>();
         for (int i = 0; i < str.length(); i++) {
