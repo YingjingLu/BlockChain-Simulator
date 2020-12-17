@@ -1,23 +1,31 @@
 # How to write an attack
-Since our simulator is highly configurable, we have 2 ways to implement attachs. We will use Dolev Strong and Streamlet as examples.
+Since our simulator is highly configurable, we have 2 ways to implement attacks. We will use Dolev Strong and Streamlet as examples.
 
 ## Approach 1: Change the Message Traces
-This is the simplest approach to implement a fine-grained attack while not directly modifying any code. 
+This is the simplest approach to implement a fine-grained attack while not directly modifying any code. This is done by using manually configured `message_trace` to run the protocol as oppose to letting the simulator to generate message runs automatically. You can specify the messages and delay of those messages in each round and tell the simulator to use those messages as oppose to generating them:
 
-As we have mentioned in `config_and_trace` doc, the model comfig can specify whether to use messages specified in `message_trace` to run the protocol or to generate messages when running the simulator. So you can write out what messages to be transmitted at each round manually and let the simulator to execute that, you can implement an attack without changing the code because the simulator will use the messages you wrote to run the protocol.
+1. In your `config.json` you can choose to turn on `use_trace` to be true. This allows the simulator to pick up the messages you specify in specific round as oppose to generate them itself. if `use_trace` is false, the simulator will ignore the messages you specify.
 
-1. In your `config.json` you can choose to turn on `use_trace` to be true. This allows the simulator to pick up the messages you specify in specific round as oppose to generate it itself.
+2. To configure messages in each round, using streamlet as an example, you can modify both `message_trace` and `proposal_trace`. The `proposal_trace` allows you to configure the block proposal in given round while the `message_trace` allows you to change proposal messages, vote messages and implicit message echoings including those for input, proposal, and vote. 
 
-2. To change the messages generated, using streamlet as an example, you can specify a basic `config.json` and let the simulator to generate all the message traces, and modify them later. In both `message_trace` and `proposal_trace` folders you can change any of the proposal, change the delay parameter or delete one message object(for dropping that message), or any other parameters you want. As long as your change will align with the protocol's definition.
-
-3. Run the protocol again with those message traces and you will get the results written in `player_state_traces` for the player states changes for each round as the output. 
+(Of course, for all those you can change, if you leave that field as blank, either some fields in a specific round or the entire file blank of a given run, the simulator will fill the messages needed according to what you have specified in previous rounds and according to the protocol's definition). For example, if you manually configure the messages for round 0, 2, 3 (`0.json`, `2.json`, `3.json` all exists and `1.json` does not exists in `message_trace` folder). The simulator will generate messages for round 1 according to what you have setup from round 0. Another example will be, if the `proposal_task` field in `2.json` does not exists, but round 2 needs to send proposal task according to protocol's definition, the simulator will fill in what proposal tasks should be generated for you.
 
 ## Approach 2: Change the code where adversary is implemented
-This approach requires to change the code where adversary is implemented. YOu can look at the `StreamletPlayerController` which is responsible to communicate with players to generate messages according to their states. You can do any modifications you want, just follow the output format to output the message tasks with delays so that our `RoundSimulator` will pass those to the `NetworkSimulator` to send to players.
+This approach requires to change the code where adversary is implemented. Modifying the `PlayerController` for each protocol is enough as it is responsible to communicating with the players and generate all messages along with delay patameters. Methods that returns `List<Task>` to the round simulator are the key functions. They usually ask both the corrupt player method and honest player methods about what messages corrupt and honest players want to send, aggregrate them into a list of messages and return to `RoundSimulator`. The `RoundSimulator` will then forward those `Task` into `NetworkSimulator` to pass to the players in a given round specified by `delay` in each of the messages.
 
-Using Dolev strong as a more detailed example, You can change the code in the `DolevStrongPlayerController` on how to generate messages for attacks.
+We use the `DolevStrongPlayerController` as an example: At round 0 the designated sender will need to send the input to other player. The below method will ask for corrupt player's way to generate message if the sender is corrupt, or honest way to generate message if the sender is honest.
 
-For example we defined how corrupt players send input to other players in which our current attack strategy is to divide honest players into equally two groups and send one group the bit of input as is, and another group with the inversed bit. Then according to this strategy you construct the messahe tasks and return it to the round simulator to be sent through the network. Code snippet:
+```java
+public List<Task> generatePlayerInputMessageList() {
+    if (corruptPlayerMap.containsKey(senderId)) {
+        return corruptPlayerSendInputToOtherPlayers(senderId);
+    }
+    else {
+        return honestPlayerSendInputToOtherPlayers(senderId);
+    }
+}
+```
+So we can implement an attack that if the honest player needs to send the input bit to other players, it will divide the honest players into two groups and send one group the true input bit and the other the reverse bit.
 
 ```java
 public List<Task> corruptPlayerSendInputToOtherPlayers(final int senderId) {
@@ -57,46 +65,10 @@ public List<Task> corruptPlayerSendInputToOtherPlayers(final int senderId) {
     }
 ```
 
-Here below we implemented how corrupt players send the messages they receive to other players. In our strategy corrupt players only forward the messages received from other corrupt players to honest players. Code snippet:
-
-```java
-public void corruptPlayerGenerateMessagesToOtherPlayers(final int round, final List<Task> taskList) {
-    for (Map.Entry<Integer, Player> entry : corruptPlayerMap.entrySet()) {
-        final DolevStrongPlayer corruptPlayer = (DolevStrongPlayer) entry.getValue();
-        for (DolevStrongMessage srcMessage : corruptPlayer.prevRoundMessages) {
-            assert srcMessage.getMessage().size() == 1 : "Message received should only contain one bit";
-            if (srcMessage.getMessage().get(0) == negatedBit) {
-                // send message to pther players except to itself
-                // send to other corrupt players
-                for (Map.Entry<Integer, Player> destEntry : corruptPlayerMap.entrySet()) {
-                    final DolevStrongPlayer destPlayer = (DolevStrongPlayer) destEntry.getValue();
-                    final DolevStrongMessage destMessage = (DolevStrongMessage) srcMessage.deepCopy();
-                    destMessage.setRound(round);
-                    destMessage.setFromPlayerId(corruptPlayer.getId());
-                    destMessage.setToPlayerId(destPlayer.getId());
-                    authenticator.dolevStrongFAuth(destMessage);
-                    taskList.add(new Task(destPlayer, destMessage, 1));
-                }
-
-                for (Map.Entry<Integer, Player> destEntry : honestPlayerMap.entrySet()) {
-                    final DolevStrongPlayer destPlayer = (DolevStrongPlayer) destEntry.getValue();
-                    final DolevStrongMessage destMessage = (DolevStrongMessage) srcMessage.deepCopy();
-                    destMessage.setRound(round);
-                    destMessage.setFromPlayerId(corruptPlayer.getId());
-                    destMessage.setToPlayerId(destPlayer.getId());
-                    authenticator.dolevStrongFAuth(destMessage);
-                    taskList.add(new Task(destPlayer, destMessage, 1));
-                }
-            }
-        }
-    }
-    }
-```
-
 ## Builtin Native Attacks
 
-Following up from the last section, there are some attack code built-in for both Dolev Strong and Streamlet. **Those attack strategies are not meant to be powerful attacks**. But rather, it serves two purposes:
+Following up from the last section, there are some attack code built-in for both Dolev Strong and Streamlet. **Those attack strategies are not meant to be powerful attacks**. But rather, they serve two purposes:
 1. when you add corrupt player into the protocol, you can notice there are some change in the message pattern. 
-2. They serve as placeholder for furute developers on where they can implement their attack on in the code.
+2. They serve as placeholder for future developers on where they can implement their attack on in the code.
 
-**If you are looking for the vulnerable variant of the protocol, and attack on it as required from the project assignment, we direct you to the report's <Vulnerable Variants> section**
+**If you are looking for the vulnerable variant of the protocol, and attack on it as required from the project assignment, we direct you to the report's Vulnerable Variants section**

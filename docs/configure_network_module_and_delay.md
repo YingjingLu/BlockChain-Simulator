@@ -30,3 +30,5 @@ JSON structure of a task object:
     "delay": "1"
 }
 ```
+
+Delay of 1 means that the message sent in current round will arrive at the beginning of the next round(if there is any). Delay of -1 means the message is being delayed infinitely. Delay of 0 is undefined behavior.
