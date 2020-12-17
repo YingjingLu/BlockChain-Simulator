@@ -9,6 +9,9 @@ import java.util.Collections;
 import java.lang.Math;
 import java.util.Iterator;
 
+/**
+ * Streamlet Player Controller object
+ */
 public class StreamletPlayerController extends PlayerController {
     public List<Integer> honestPlayerIdList;
     public List<Integer> corruptPlayerIdList;
@@ -17,6 +20,14 @@ public class StreamletPlayerController extends PlayerController {
     public List<Integer> honestG1;
     public List<Integer> honestG2;
 
+    /**
+     * Constructor
+     * @param networkSimulator
+     * @param authenticator
+     * @param honestPlayerMap
+     * @param corruptPlayerMap
+     * @param playerMap
+     */
     public StreamletPlayerController(
             final NetworkSimulator networkSimulator,
             final CryptographyAuthenticator authenticator,
@@ -49,6 +60,10 @@ public class StreamletPlayerController extends PlayerController {
         }
     }
 
+    /**
+     * Get the input and send them to the designated player according to targetPlayerId
+     * @param inputMessageList
+     */
     public void sendInputMessagesToPlayers(List<StreamletMessage> inputMessageList) {
         for (StreamletMessage message : inputMessageList) {
             StreamletPlayer targetPlayer = (StreamletPlayer) playerMap.get(message.getToPlayerId());
@@ -101,6 +116,9 @@ public class StreamletPlayerController extends PlayerController {
         return result;
     }
 
+    /**
+     * Call each player to process input
+     */
     public void processInputs() {
         for (Map.Entry<Integer, Player> entry : playerMap.entrySet()) {
             StreamletPlayer player = (StreamletPlayer) entry.getValue();
@@ -108,6 +126,12 @@ public class StreamletPlayerController extends PlayerController {
         }
     }
 
+    /**
+     * helper function to propose block according to whether leader is honest or corrupt
+     * @param leaderId
+     * @param curEpoch
+     * @return
+     */
     public StreamletBlock proposeBlock(final int leaderId, final int curEpoch) {
         if (honestPlayerMap.containsKey(leaderId)) {
             return honestPlayerProposeBlock(leaderId, curEpoch);
@@ -283,6 +307,13 @@ public class StreamletPlayerController extends PlayerController {
         return taskList;
     }
 
+    /**
+     * Convert a proposal to message and add the message into task to the return message list
+     * @param srcPlayer
+     * @param destPlayer
+     * @param block
+     * @param taskList
+     */
     public void addProposalMessageTask(
             final StreamletPlayer srcPlayer,
             final StreamletPlayer destPlayer,
@@ -418,6 +449,10 @@ public class StreamletPlayerController extends PlayerController {
         }
     }
 
+    /**
+     * Call all players to process block proposals being sent to them
+     * @param round
+     */
     public void processBlockProposal(final int round) {
         for (Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {
             final StreamletPlayer destPlayer = (StreamletPlayer) entry.getValue();
@@ -429,6 +464,10 @@ public class StreamletPlayerController extends PlayerController {
         }
     }
 
+    /**
+     * Calls each player to process vote according to the notarization threshold of 2n/3
+     * @param round
+     */
     public void processVotesForEachPlayer(final int round) {
         final int totalNumPlayer = honestPlayerMap.size() + corruptPlayerMap.size();
         //the threshold guarantees at least 2/3 of the player
@@ -445,6 +484,10 @@ public class StreamletPlayerController extends PlayerController {
         }
     }
 
+    /**
+     * Call each player to try finalize chains if there is any
+     * @param round
+     */
     public void finalizeChainForEachPlayer(final int round) {
         // for each of the player look at the chain head
         for (Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {
@@ -457,6 +500,10 @@ public class StreamletPlayerController extends PlayerController {
         }
     }
 
+    /**
+     * Call each player to end round and clear round states
+     * @param round
+     */
     public void endRoundForPlayers(final int round) {
         for (Map.Entry<Integer, Player> entry : honestPlayerMap.entrySet()) {
             final StreamletPlayer destPlayer = (StreamletPlayer) entry.getValue();
