@@ -40,6 +40,7 @@ The `/player_state_trace` folder contains each player's state at the end of ever
 ```
 {
     "protocol": "dolev_strong" or "streamlet" or "new_protocol",
+    // if protocol is dolev_strong, then this field must be defined
     "dolev_strong_config": {
         "round": "3",
         "num_corrupt_player": "3",
@@ -53,7 +54,7 @@ The `/player_state_trace` folder contains each player's state at the end of ever
             [ // this is the 0th array so for round zero
                 {
                     "round": "0",
-                    "message": ["0"], // "-1" for random, "1" or "0" for defined,
+                    "message": ["0"], // "1" or "0",
                     "signatures": [],
                     "from_player_id": "-1", // 
                     "to_player_id": "0" // for Dolev strong this is the designated sender
@@ -61,7 +62,7 @@ The `/player_state_trace` folder contains each player's state at the end of ever
             ]
         ]
     },
-    // if key of protocol is streamlet, then this field must be defined
+    // if protocol is streamlet, then this field must be defined
     "streamlet_config": {
         "round": "10",
         "num_corrupt_player": "3",

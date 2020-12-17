@@ -13,22 +13,22 @@ More detailed on what those classes do and their parent class methods please ref
 class SampleProtocolConfig;
 
 // IO methods converting configurations, message_trace, and state_trace from JSON to Object or from Object to JSON
-class SampleProtocolJsonifier;
+class SampleProtocolJsonifier extends Jsonifier;
 
 // Message class that holds info to be passed during protocol execution. 
 // This should compatible for both input and messages in rounds
-class SampleProtocolMessage;
+class SampleProtocolMessage extends Message;
 
 // Player object that holds states of a single player
 // to be accessed by NetworkSimulator to receive message and for PlayerController to query state
-class SampleProtocolPlayer;
+class SampleProtocolPlayer extends Player;
 
 // Major class that implements methods to generate messsages during protocol execution.
 // This is the major class to implement honest player execution and adversary attack
-class SampleProtocolPlayerController;
+class SampleProtocolPlayerController extends PlayerController;
 
 // Protocol execution procedures
-class SampleProtocolRoundSimulator;
+class SampleProtocolRoundSimulator extends RoundSimulator;
 ```
 
 ### Implement a FAuth() for new protocol
