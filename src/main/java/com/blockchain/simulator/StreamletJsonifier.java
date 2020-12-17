@@ -10,8 +10,17 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Collections;
 
+/**
+ * Streamlet File IO
+ */
 public class StreamletJsonifier extends Jsonifer {
     private final StreamletRoundSimulator roundSimulator;
+
+    /**
+     * Constructor
+     * @param roundSimulator
+     * @param traceRootPath
+     */
     public StreamletJsonifier(final StreamletRoundSimulator roundSimulator, final String traceRootPath) {
         super(traceRootPath);
         this.roundSimulator = roundSimulator;
@@ -19,6 +28,13 @@ public class StreamletJsonifier extends Jsonifer {
         createFolderIfNotExists(proposalFolder);
     }
 
+    /**
+     * Parse streamlet config
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     * @throws IllegalArgumentException
+     */
     public StreamletConfig getConfig() throws IOException, ParseException, IllegalArgumentException {
         final String configPath = getConfigPath();
         JSONObject configObject = fileToJSONObject(configPath);
@@ -29,14 +45,31 @@ public class StreamletJsonifier extends Jsonifer {
         return jsonObjectToConfig(streamletConfigObject);
     }
 
+    /**
+     * Get streamlet proposal trace path of a given round
+     * @param round
+     * @return
+     */
     public String getProposalTracePath(final int round) {
         return traceRootPath + "/proposal_trace/" + round + ".json";
     }
 
+    /**
+     * Returns true if proposal of a given round is specified
+     * @param round
+     * @return
+     */
     public boolean proposalExistsForRound(final int round) {
         return fileExists(getProposalTracePath(round));
     }
 
+    /**
+     * Get proposal block of a given round
+     * @param round
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     */
     public StreamletBlock getRoundProposal(final int round) throws IOException, ParseException {
         final StreamletBlock proposal;
         final String path = getProposalTracePath(round);
@@ -48,11 +81,25 @@ public class StreamletJsonifier extends Jsonifer {
         return proposal;
     }
 
+    /**
+     * Write block proposal to file for a given round
+     * @param round
+     * @param blockProposal
+     * @throws IOException
+     */
     public void writeRoundProposal(final int round, final StreamletBlock blockProposal) throws IOException {
         final String path = getProposalTracePath(round);
         jsonObjectToFile(blockToJSONObject(blockProposal), path);
     }
 
+    /**
+     * Get message trace object for a specific round
+     * @param round
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     * @throws IllegalArgumentException
+     */
     public StreamletMessageTrace getRoundMessageTrace(final int round)
             throws IOException, ParseException, IllegalArgumentException {
         final List<Task> proposalTaskList;
@@ -121,7 +168,12 @@ public class StreamletJsonifier extends Jsonifer {
         );
     }
 
-
+    /**
+     * Convert json object to streamletConfig object
+     * @param jsonObject
+     * @return
+     * @throws IllegalArgumentException
+     */
     public StreamletConfig jsonObjectToConfig(JSONObject jsonObject) throws IllegalArgumentException {
         final int round, numTotalPlayer, numCorruptPlayer, maxDelay;
         final boolean useTrace;
@@ -183,6 +235,15 @@ public class StreamletJsonifier extends Jsonifer {
         );
     }
 
+    /**
+     * Write message trace if a specific round to file
+     * @param round
+     * @param proposalTaskList
+     * @param proposalVoteList
+     * @param broadcastInputTaskList
+     * @param echoMessageTaskList
+     * @throws IOException
+     */
     public void writeMessageTrace(
             final int round,
             final List<Task> proposalTaskList,
@@ -219,6 +280,11 @@ public class StreamletJsonifier extends Jsonifer {
         jsonObjectToFile(traceObject, path);
     }
 
+    /**
+     * Write player state of a specific round to file
+     * @param round
+     * @throws IOException
+     */
     public void writeStateTracePath (final int round) throws IOException {
         final String path = getStateTracePath(round);
         final JSONObject stateObject = new JSONObject();
@@ -235,6 +301,11 @@ public class StreamletJsonifier extends Jsonifer {
         jsonObjectToFile(stateObject, path);
     }
 
+    /**
+     * Convert task to json object
+     * @param task
+     * @return
+     */
     public JSONObject taskToJSONObject(Task task) {
         final JSONObject messageObject = messageToJSONObject((StreamletMessage) task.getMessage());
         final JSONObject taskObject = new JSONObject();
@@ -244,6 +315,11 @@ public class StreamletJsonifier extends Jsonifer {
         return taskObject;
     }
 
+    /**
+     * Message object to json object
+     * @param streamletMessage
+     * @return
+     */
     public JSONObject messageToJSONObject(StreamletMessage streamletMessage) {
         JSONObject messageObject = new JSONObject();
         messageObject.put("is_vote", streamletMessage.getIsVote());
@@ -267,6 +343,11 @@ public class StreamletJsonifier extends Jsonifer {
         return messageObject;
     }
 
+    /**
+     * BLock object to json object
+     * @param streamletBlock
+     * @return
+     */
     public JSONObject blockToJSONObject(StreamletBlock streamletBlock) {
         JSONObject blockObject = new JSONObject();
         blockObject.put("round", streamletBlock.getEpoch());
@@ -288,6 +369,11 @@ public class StreamletJsonifier extends Jsonifer {
         return blockObject;
     }
 
+    /**
+     * Player object to json object
+     * @param player
+     * @return
+     */
     public JSONObject playerToJSONObject(StreamletPlayer player) {
         JSONObject playerObject = new JSONObject();
         StreamletPlayerState playerState = new StreamletPlayerState(player);
@@ -310,6 +396,12 @@ public class StreamletJsonifier extends Jsonifer {
         return playerObject;
     }
 
+    /**
+     * Json object to message object
+     * @param jsonObject
+     * @return
+     * @throws IllegalArgumentException
+     */
     public StreamletMessage jsonObjectToMessage(JSONObject jsonObject) throws IllegalArgumentException {
         final boolean isVote;
         final Bit approved;
@@ -392,6 +484,11 @@ public class StreamletJsonifier extends Jsonifer {
         return newMessage;
     }
 
+    /**
+     * Json object to block object
+     * @param jsonObject
+     * @return
+     */
     public StreamletBlock jsonObjectToBlock(JSONObject jsonObject) {
         final int round, proposerId, prevBlockRound, level;
         final List<Integer> message;
@@ -467,6 +564,11 @@ public class StreamletJsonifier extends Jsonifer {
         return block;
     }
 
+    /**
+     * Json object to task object
+     * @param jsonObject
+     * @return
+     */
     public Task jsonObjectToTask(JSONObject jsonObject) {
         final int targetPlayerId;
         final StreamletPlayer targetPlayer;
@@ -500,6 +602,10 @@ public class StreamletJsonifier extends Jsonifer {
         return new Task(targetPlayer, message, delay);
     }
 
+    /**
+     * Print all chain branch of a spceific player to stdout
+     * @param player
+     */
     public void printPlayerState(StreamletPlayer player) {
         System.out.println("Player: " + player.getId());
         for (Map.Entry<Integer, StreamletBlock> entry : player.chainTailMap.entrySet()) {

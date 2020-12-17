@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Iterator;
 import java.lang.StringBuilder;
 
+/**
+ * Streamlet Message object
+ */
 public class StreamletMessage extends Message {
     // true for vote message, false for block proposal message
     public static final String splitter = "&";
@@ -14,6 +17,16 @@ public class StreamletMessage extends Message {
     Bit approved;
     final int proposerId;
     public List<Integer> message;
+
+    /**
+     * Constructor
+     * @param isVote
+     * @param inRound
+     * @param inMessage
+     * @param inFromPlayerId
+     * @param inToPlayerId
+     * @param proposerId
+     */
     public StreamletMessage(
             final boolean isVote,
             final int inRound,
@@ -28,6 +41,10 @@ public class StreamletMessage extends Message {
         this.message = inMessage;
     }
 
+    /**
+     * Concat message list into a single string
+     * @return
+     */
     public String messageToString() {
         if (message.size() == 0) {
             return EMPTY_MESSAGE;
@@ -43,6 +60,11 @@ public class StreamletMessage extends Message {
         return builder.toString();
     }
 
+    /**
+     * Convert concated string to message list
+     * @param str
+     * @return
+     */
     public static List<Integer> stringToMessage(String str) {
         List<Integer> res = new LinkedList<>();
         if (str.equals(EMPTY_MESSAGE)) {
@@ -55,6 +77,10 @@ public class StreamletMessage extends Message {
         return res;
     }
 
+    /**
+     * Deep copy message object
+     * @return
+     */
     public Message deepCopy() {
         List<Integer> newMessageList = new LinkedList<>();
         StreamletMessage newMessage = new StreamletMessage(

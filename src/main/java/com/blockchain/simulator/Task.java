@@ -1,10 +1,19 @@
 package com.blockchain.simulator;
 
+/**
+ * Network package task object
+ */
 public class Task {
     private final Player targetPlayer;
     private final Message message;
     private int delay;
 
+    /**
+     * Constructor
+     * @param targetPlayer
+     * @param message
+     * @param delay
+     */
     public Task(final Player targetPlayer, final Message message, final int delay) {
         this.targetPlayer = targetPlayer;
         this.message = message;

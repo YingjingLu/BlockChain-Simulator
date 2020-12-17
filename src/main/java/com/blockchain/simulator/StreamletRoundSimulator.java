@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.lang.IllegalArgumentException;
 import org.json.simple.parser.ParseException;
 
+/**
+ * Streamlet round simulator for advancing execution flow
+ */
 public class StreamletRoundSimulator extends RoundSimulator {
     public final int totalRounds;
     public final StreamletJsonifier jsonifier;
@@ -13,6 +16,13 @@ public class StreamletRoundSimulator extends RoundSimulator {
 
     StreamletPlayerController playerController;
 
+    /**
+     * Constructor that initialize all required maps and objects
+     * @param configRootFolderPath
+     * @throws IOException
+     * @throws IllegalArgumentException
+     * @throws ParseException
+     */
     public StreamletRoundSimulator (final String configRootFolderPath)
             throws IOException, IllegalArgumentException, ParseException {
         super();
@@ -47,6 +57,14 @@ public class StreamletRoundSimulator extends RoundSimulator {
         );
     }
 
+    /**
+     * Iterate through all rounds and run procedures for each round,
+     * if max delay is not specified, default each epoch as 2 rounds
+     * If mas delay is specified, then set epoch length as 2 times max delay number of rounds
+     * @throws IOException
+     * @throws IllegalArgumentException
+     * @throws ParseException
+     */
     public void run() throws IOException, IllegalArgumentException, ParseException {
         jsonifier.writeStateTracePath(-1);
         int curRound = 0;
@@ -63,6 +81,25 @@ public class StreamletRoundSimulator extends RoundSimulator {
         }
     }
 
+    /**
+     * Execute the protocol for that round, including:
+     * receive input
+     * echo input
+     * receive message echo
+     * block proposal
+     * send block proposal
+     * receive proposal
+     * send vote
+     * generate message echos
+     * if specific round should do the above any.
+     * @param curRound
+     * @param roundPerEpoch
+     * @param curEpoch
+     * @return
+     * @throws IOException
+     * @throws IllegalArgumentException
+     * @throws ParseException
+     */
     public int stepRound(final int curRound, final int roundPerEpoch, final int curEpoch)
             throws IOException, IllegalArgumentException, ParseException {
         networkSimulator.beginRound(curRound);
@@ -162,10 +199,19 @@ public class StreamletRoundSimulator extends RoundSimulator {
         return resEpoch;
     }
 
+    /**
+     * Default method to elect leader that is using remainder division
+     * @param round
+     * @return
+     */
     public int electLeader(final int round) {
         return round % config.numTotalPlayer;
     }
 
+    /**
+     * Tells player controller to process all kinds of messages received
+     * @param curRound
+     */
     public void processMessagesReceivedForRound(final int curRound) {
         // start network simulator prepared for current round
         playerController.processInputs();
@@ -174,6 +220,13 @@ public class StreamletRoundSimulator extends RoundSimulator {
         playerController.finalizeChainForEachPlayer(curRound);
     }
 
+    /**
+     * Call the networkSimulator th bound the message if synchronous
+     *
+     * Then submit the task package to the NetworkSimulator
+     * @param curRound
+     * @param taskList
+     */
     public void boundAndSubmitMessageToNetwork(final int curRound, final List<Task> taskList) {
         networkSimulator.boundMessageDelayForSynchronousNetwork(config.maxDelay, taskList);
         playerController.sendMessageListViaNetwork(curRound, taskList);

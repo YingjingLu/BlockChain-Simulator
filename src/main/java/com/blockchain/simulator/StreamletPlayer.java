@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.lang.Math;
 
+/**
+ * Streamlet Player Object
+ */
 public class StreamletPlayer extends Player {
     public StreamletBlock chainHead;
     public Map<Integer, StreamletBlock> chainTailMap;
@@ -23,6 +26,11 @@ public class StreamletPlayer extends Player {
     public Set<String> receivedMessageHashSet;
     public int longestNotarizedChainLevel;
 
+    /**
+     * Constructor
+     * @param id
+     * @param playerController
+     */
     public StreamletPlayer(final int id, PlayerController playerController) {
         super(id, playerController);
         chainHead = StreamletBlock.getGenesisBlock();
@@ -42,6 +50,11 @@ public class StreamletPlayer extends Player {
         longestNotarizedChainLevel = 0;
 
     }
+
+    /**
+     * Receive input of unseen, add them into input message list
+     * @param message
+     */
     public void receiveInput(final Message message) {
         // only accept messages not received before
         final String messageHash = ((StreamletMessage) message).getHashString();
@@ -54,6 +67,10 @@ public class StreamletPlayer extends Player {
         receivedMessageHashSet.add(messageHash);
     }
 
+    /**
+     * Add unconfirmed txs from each message to the pendingTransactionSet
+     * @param message
+     */
     public void processInputMessage(StreamletMessage message) {
         final String messageHash = (message).getHashString();
         if (messageHashSeen(messageHash)) {
@@ -85,6 +102,11 @@ public class StreamletPlayer extends Player {
         curRoundMessageList = filteredMessageList;
     }
 
+    /**
+     * Add messages not have seen to the message list to process
+     * @param message
+     * @param round
+     */
     public void receiveMessage(final Message message, final int round) {
         final String messageHash = ((StreamletMessage) message).getHashString();
         if (messageHashSeen(messageHash)) {
@@ -94,12 +116,20 @@ public class StreamletPlayer extends Player {
         receivedMessageHashSet.add(messageHash);
     }
 
+    /**
+     * Add a block chain branch's most recent block to chainMap
+     * @param block
+     */
     public void addTailToMap(final StreamletBlock block) {
         assert block != null : "block should not be null";
         assert ! chainTailMap.containsKey(block.getEpoch()) : "Adding a new block already exists in the chain";
         chainTailMap.put(block.getEpoch(), block);
     }
 
+    /**
+     * Add proposal block to the chain and start to accumulate vote for that block
+     * @param curRound
+     */
     public void processBlockProposal(final int curRound) {
         List<StreamletBlock> pendingAddedBlockList = new LinkedList<>();
         List<StreamletMessage> filteredVoteMessageList = new LinkedList<>();
@@ -184,6 +214,11 @@ public class StreamletPlayer extends Player {
         return res;
     }
 
+    /**
+     * Process each vote, for votes on blocks seen, add the vote count.
+     * If achieve 2n/3 votes, then notarize it and stop accumulating votes for that block
+     * @param notorizedThreshold
+     */
     public void processVotes(final int notorizedThreshold) {
         List<Integer> pendingNotorizedBlockList = new LinkedList<>();
         for (Message msg : curRoundMessageList) {
@@ -215,6 +250,10 @@ public class StreamletPlayer extends Player {
         curRoundMessageList.clear();
     }
 
+    /**
+     * Iterate through every chain branch's most recent block, and try to find if there is any consecutive 3,
+     * if there is, finalize the prefix
+     */
     public void tryFinalizeChain() {
         // iterate through each of tail heads in the map
         for (Map.Entry<Integer, StreamletBlock> entry : chainTailMap.entrySet()) {
@@ -261,6 +300,9 @@ public class StreamletPlayer extends Player {
         }
     }
 
+    /**
+     * Clea all the messages and inputs received for that round
+     */
     public void endRound() {
         // clear out the blocks this player has voted for in current round
         blockPendingVotingForCurRound.clear();
@@ -268,6 +310,11 @@ public class StreamletPlayer extends Player {
         curRoundInputMessageList.clear();
     }
 
+    /**
+     * Return true if that message Hash hash has seen before
+     * @param messageHash
+     * @return
+     */
     public boolean messageHashSeen(final String messageHash) {
         return this.receivedMessageHashSet.contains(messageHash);
     }
