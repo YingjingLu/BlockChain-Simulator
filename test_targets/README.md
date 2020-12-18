@@ -147,10 +147,10 @@ cd BlockChain-UI
 sudo npm install
 ```
 
-Change the line in `Global.js` from top to the bottom one:
+Change the line in `src/Global.js` from top to the bottom one:
 ```
 const SERVER = 'http://54.144.41.15/';
-const SERVER = 'http://localhost:3000/';
+const SERVER = 'http://localhost:4500/';
 ```
 
 Now you can test the server from localhost using 
