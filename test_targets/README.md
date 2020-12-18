@@ -137,7 +137,7 @@ npm install archiver --save
 
 Now you can run the server for local host:
 ```bash
-num start
+npm start
 ```
 
 ## Installing the UI
