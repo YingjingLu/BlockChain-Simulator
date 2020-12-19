@@ -15,13 +15,13 @@ https://www.youtube.com/watch?v=-vBiecf7PV4
 
 In your browser (chrome is preferred):
 ```
-http://54.144.41.15/
+http://3.239.0.238/
 ```
 
 ## To use the interface to submit case for visualization or to get simulation results:
 
 ```
-http://54.144.41.15/file
+http://3.239.0.238/file
 ```
 
 Or click the `Upload` tab on the navigation bar on the visualizer page.
@@ -40,7 +40,7 @@ chmod 400 $SSH_KEY_PATH
 
 3. ssh to the server and cd to the simulator path:
 ```bash 
-ssh -i $SSH_KEY_PATH ubuntu@ec2-54-144-41-15.compute-1.amazonaws.com
+ssh -i $SSH_KEY_PATH ubuntu@ec2-3-239-0-238.compute-1.amazonaws.com
 cd /home/ubuntu/project/blockchain-simulator
 ```
 4. There are some sample configurations you can run:
